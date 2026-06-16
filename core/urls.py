@@ -33,6 +33,7 @@ urlpatterns = [
     # --- URLS DE REDIRECTION (Pour éviter les crashs au clic) ---
     # Pense à créer des vues simples (ou simples renders) pour ces pages de listes :
     path('mon-espace/bailleur/annonces/', views.mes_annonces_bailleur, name='mes_annonces_bailleur'),
+    path('espace-agent/', views.agent_dashboard, name='agent_dashboard'),
     path('espace-agent/annonces-en-attente/', views.annonces_en_attente, name='liste_annonces_en_attente'),
     path('espace-agent/demandes-visites/', views.liste_demandes_agent, name='liste_demandes_agent'),
     path('espace-manager/toutes-les-annonces/', views.liste_utilisateurs, name='toutes_les_annonces_manager'),

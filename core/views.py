@@ -147,6 +147,10 @@ def supprimer_annonce(request, annonce_id):
 
 
 @login_required
+def agent_dashboard(request):
+    return render(request, 'agent/dashboard.html')
+
+@login_required
 def annonces_en_attente(request):
     annonces = Annonce.objects.filter(statut='EN_ATTENTE').order_by('-date_publication')
     return render(request, 'agent/annonces_en_attente.html', {'annonces': annonces})

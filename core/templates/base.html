@@ -24,6 +24,7 @@
                         <a class="nav-link text-white" href="{% url 'mes_demandes_client' %}">Mes visites</a>
                     {% endif %}
                     {% if user.agent %}
+                        <a class="nav-link text-white fw-bold" href="{% url 'agent_dashboard' %}">Tableau de bord</a>
                         <a class="nav-link text-white" href="{% url 'liste_annonces_en_attente' %}">Annonces</a>
                         <a class="nav-link text-white" href="{% url 'liste_demandes_agent' %}">Demandes</a>
                     {% endif %}

@@ -127,3 +127,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # on  dit a django d utiliser notre model d utilisateur 
 AUTH_USER_MODEL = 'core.Utilisateur'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
