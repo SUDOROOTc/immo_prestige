@@ -131,3 +131,7 @@ AUTH_USER_MODEL = 'core.Utilisateur'
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+LOGIN_REDIRECT_URL = 'redirect_after_login'
+LOGOUT_REDIRECT_URL = 'accueil'
+LOGIN_URL = 'login'

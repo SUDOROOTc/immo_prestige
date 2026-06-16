@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.core.exceptions import PermissionDenied as DjangoPermissionDenied
-from .models import Annonce,DemandeVisite,Favori,Utilisateur,Agent,Client
+from .models import Annonce,DemandeVisite,Favori,Utilisateur,Agent,Client,Bailleur
 from .services import AnnonceService ,DemandeVisiteService,FavoriService,UtilisateurService
 
 
@@ -289,3 +289,22 @@ def affecter_client(request):
         messages.error(request, str(e))
         return redirect('accueil')
     return render(request, 'manager/affecter_client.html', data)
+
+
+
+
+from core.models import Manager, Agent, Bailleur, Client
+
+def redirect_after_login(request):
+    user = request.user
+
+    if Manager.objects.filter(pk=user.pk).exists():
+        return redirect('dashboard')
+    elif Agent.objects.filter(pk=user.pk).exists():
+        return redirect('liste_annonces_en_attente')
+    elif Bailleur.objects.filter(pk=user.pk).exists():
+        return redirect('mes_annonces_bailleur')
+    elif Client.objects.filter(pk=user.pk).exists():
+        return redirect('liste_annonces')
+    
+    return redirect('accueil')

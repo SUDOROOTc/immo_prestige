@@ -7,8 +7,9 @@ class AnnonceService:
                         localisation, ville, option, prix, description):
         
         # Règle 1 : l'utilisateur doit être un Bailleur
-        if not hasattr(bailleur, 'bailleur'):
-            raise ValueError("Seul un bailleur peut déposer une annonce")
+        from core.models import Bailleur
+        if not Bailleur.objects.filter(pk=bailleur.pk).exists():
+            raise PermissionDenied("Seul un bailleur peut faire cette action.")
         
         # Règle 2 : prix positif
         if prix <= 0:
@@ -27,8 +28,9 @@ class AnnonceService:
             raise ValueError("L'option doit être LOCATION ou VENTE")
     
         # Création du bien
+        bailleur_obj = Bailleur.objects.get(pk=bailleur.pk)
         bien = BienImmobilier.objects.create(
-            proprietaire=bailleur.bailleur, 
+            proprietaire=bailleur_obj, 
             type=type_bien,
             usage=usage,
             superficie=superficie,
@@ -38,7 +40,7 @@ class AnnonceService:
 
         # Création de l'annonce — statut EN_ATTENTE automatique
         annonce = Annonce.objects.create(
-            bailleur=bailleur.bailleur,
+            bailleur=bailleur_obj,
             bien=bien,
             option=option,
             prix=prix,
@@ -54,8 +56,9 @@ class AnnonceService:
         Règles : L'utilisateur doit être un Agent et l'annonce doit être EN_ATTENTE.
         """
         # 1. Double sécurité : Contrôle du rôle de l'acteur (ENF-8)
-        if not hasattr(agent, 'agent'):
-            raise PermissionDenied("Accès refusé : Seul un agent peut valider une annonce.")
+        from core.models import Agent
+        if not Agent.objects.filter(pk=agent.pk).exists():
+            raise PermissionDenied("Seul un agent peut faire cette action.")
 
         # 2. Vérification de la cohérence de l'état de l'annonce
         # Note : Ajuste "EN_ATTENTE" et "PUBLIEE" selon tes choix exacts de chaînes de caractères ou de choix (Choices) Django
@@ -63,12 +66,11 @@ class AnnonceService:
             raise ValueError("Erreur : Seule une annonce 'En attente de validation' peut être validée.")
 
         # 3. Application des modifications métier
-        annonce.statut = "PUBLIEE"
+        
         
         # Si tu as ajouté un champ ForeignKey vers Agent dans ton modèle Annonce pour la traçabilité (relation modère/valide)
-        if hasattr(annonce, 'agent_validateur'):
-            annonce.agent_validateur = agent
-            
+         
+             
         # Sauvegarde sécurisée via l'ORM Django (ENF-6 : requêtes paramétrées automatiques)
         annonce.save()
         
@@ -82,8 +84,9 @@ class AnnonceService:
         """
         # 1. Double sécurité : Contrôle du rôle (ENF-8)
         # Si ce n'est pas un agent, Django intercepte et génère une erreur 403
-        if not hasattr(agent, 'agent'):
-            raise PermissionDenied("Accès refusé : Seul un agent peut refuser une annonce.")
+        from core.models import Agent
+        if not Agent.objects.filter(pk=agent.pk).exists():
+            raise PermissionDenied("Seul un agent peut faire cette action.")
 
         # 2. Vérification de la cohérence de l'état de l'annonce
         # On ne peut pas refuser une annonce qui est déjà publiée ou retirée
@@ -95,7 +98,8 @@ class AnnonceService:
         
         # Traçabilité : on enregistre l'agent qui a pris la décision de refuser
         if hasattr(annonce, 'agent_validateur'):
-            annonce.agent_validateur = agent
+            agent_obj = Agent.objects.get(pk=agent.pk)
+            annonce.agent_validateur = agent_obj
             
         # Sauvegarde sécurisée dans la base de données
         annonce.save()
@@ -128,8 +132,9 @@ class AnnonceService:
         """
         # 1. Double sécurité : Contrôle du rôle du Manager (ENF-8)
         # Si ce n'est pas un manager, Django intercepte et renvoie une page 403
-        if not hasattr(manager, 'manager'):
-            raise PermissionDenied("Accès refusé : Seul un manager peut retirer une annonce.")
+        from core.models import Manager
+        if not Manager.objects.filter(pk=manager.pk).exists():
+            raise PermissionDenied("Seul un manager peut faire cette action.")
 
         # 2. Vérification de la cohérence de l'état de l'annonce
         # On ne peut retirer qu'une annonce qui est actuellement en ligne
@@ -152,8 +157,9 @@ class DemandeVisiteService:
         Crée une demande de visite pour un client sur une annonce publiée.
         """
         # 1. Contrôle d'accès : Seul un client peut faire une demande
-        if not hasattr(client, 'client'):
-            raise PermissionDenied("Accès refusé : Seul un client connecté peut effectuer une demande de visite.")
+        from core.models import Client
+        if not Client.objects.filter(pk=client.pk).exists():
+            raise PermissionDenied("Seul un client peut faire cette action.")
 
         # 2. Vérification de l'état : L'annonce doit être publiée
         if annonce.statut != "PUBLIEE":
@@ -165,8 +171,9 @@ class DemandeVisiteService:
             raise ValueError("Erreur : Vous avez déjà soumis une demande de visite pour cette annonce.")
 
         # 4. Action : Création en base de données au statut initial "EN_ATTENTE"
+        client_obj = Client.objects.get(pk=client.pk)
         demande = DemandeVisite.objects.create(
-            client=client,
+            client=client_obj,
             annonce=annonce,
             statut="EN_ATTENTE"
         )
@@ -177,8 +184,9 @@ class DemandeVisiteService:
         """
         Permet à un agent de valider ou refuser une demande de visite.
         """
-        if not hasattr(agent, 'agent'):
-            raise PermissionDenied("Accès refusé : Seul un agent peut traiter une demande de visite.")
+        from core.models import Agent
+        if not Agent.objects.filter(pk=agent.pk).exists():
+            raise PermissionDenied("Seul un agent peut faire cette action.")
 
         if demande.statut != "EN_ATTENTE":
             raise ValueError("Erreur : Cette demande de visite a déjà été traitée.")
@@ -193,21 +201,25 @@ class FavoriService:
 
     @staticmethod
     def ajouter_favori(user, annonce):
-        if not hasattr(user, 'client'):
-            raise PermissionDenied("Accès refusé : Seul un client peut ajouter des favoris.")
+        from core.models import Client
+        if not Client.objects.filter(pk=user.pk).exists():
+            raise PermissionDenied("Seul un client peut faire cette action.")
         if annonce.statut != "PUBLIEE":
             raise ValueError("Erreur : Impossible d'ajouter aux favoris une annonce qui n'est pas en ligne.")
-        deja_favori = Favori.objects.filter(client=user.client, annonce=annonce).exists()
+        client_obj = Client.objects.get(pk=user.pk)
+        deja_favori = Favori.objects.filter(client=client_obj, annonce=annonce).exists()
         if deja_favori:
             raise ValueError("Cette annonce est déjà dans vos favoris.")
-        favori = Favori.objects.create(client=user.client, annonce=annonce)
+        favori = Favori.objects.create(client=client_obj, annonce=annonce)
         return favori
 
     @staticmethod
     def retirer_favori(user, annonce):
-        if not hasattr(user, 'client'):
-            raise PermissionDenied("Accès refusé : Seul un client peut retirer des favoris.")
-        favori = Favori.objects.filter(client=user.client, annonce=annonce).first()
+        from core.models import Client
+        if not Client.objects.filter(pk=user.pk).exists():
+            raise PermissionDenied("Seul un client peut faire cette action.")
+        client_obj = Client.objects.get(pk=user.pk)
+        favori = Favori.objects.filter(client=client_obj, annonce=annonce).first()
         if not favori:
             raise ValueError("Erreur : Cette annonce ne fait pas partie de vos favoris.")
         favori.delete()
@@ -215,9 +227,11 @@ class FavoriService:
 
     @staticmethod
     def lister_favoris(user):
-        if not hasattr(user, 'client'):
-            raise PermissionDenied("Accès refusé : Seul un client peut consulter ses favoris.")
-        return Favori.objects.filter(client=user.client).select_related('annonce', 'annonce__bien')
+        from core.models import Client
+        if not Client.objects.filter(pk=user.pk).exists():
+            raise PermissionDenied("Seul un client peut faire cette action.")
+        client_obj = Client.objects.get(pk=user.pk)
+        return Favori.objects.filter(client=client_obj).select_related('annonce', 'annonce__bien')
     
 
 
@@ -226,17 +240,21 @@ class UtilisateurService:
 
     @staticmethod
     def supprimer_utilisateur(manager, utilisateur):
-        if not hasattr(manager, 'manager'):
-            raise PermissionDenied("Seul un manager peut supprimer un compte.")
+        from core.models import Manager
+        if not Manager.objects.filter(pk=manager.pk).exists():
+            raise PermissionDenied("Seul un manager peut faire cette action.")
         utilisateur.delete()
 
     @staticmethod
     def affecter_client(manager, client, agent):
-        if not hasattr(manager, 'manager'):
-            raise PermissionDenied("Seul un manager peut affecter un client.")
-        client.agent_affecte = agent
-        client.save()
-        return client
+        from core.models import Manager
+        if not Manager.objects.filter(pk=manager.pk).exists():
+            raise PermissionDenied("Seul un manager peut faire cette action.")
+        client_obj = Client.objects.get(pk=client.pk)
+        agent_obj = Agent.objects.get(pk=agent.pk)
+        client_obj.agent_affecte = agent_obj
+        client_obj.save()
+        return client_obj
     
 
 
@@ -265,8 +283,9 @@ class UtilisateurService:
 
     @staticmethod
     def get_statistiques(manager):
-        if not hasattr(manager, 'manager'):
-            raise PermissionDenied("Seul un manager peut accéder aux statistiques.")
+        from core.models import Manager
+        if not Manager.objects.filter(pk=manager.pk).exists():
+            raise PermissionDenied("Seul un manager peut faire cette action.")
         return {
             'total_annonces'  : Annonce.objects.count(),
             'en_attente'      : Annonce.objects.filter(statut='EN_ATTENTE').count(),
@@ -280,8 +299,9 @@ class UtilisateurService:
 
     @staticmethod
     def lister_utilisateurs(manager):
-        if not hasattr(manager, 'manager'):
-            raise PermissionDenied("Seul un manager peut lister les utilisateurs.")
+        from core.models import Manager
+        if not Manager.objects.filter(pk=manager.pk).exists():
+            raise PermissionDenied("Seul un manager peut faire cette action.")
         return {
             'clients'   : Client.objects.all(),
             'bailleurs' : Bailleur.objects.all(),

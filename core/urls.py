@@ -55,4 +55,6 @@ urlpatterns = [
     path('manager/utilisateurs/', views.liste_utilisateurs, name='liste_utilisateurs'),
     path('manager/affecter/', views.affecter_client, name='affecter_client'),
     path('client/demandes/', views.mes_demandes_client, name='mes_demandes_client'),
+    path('redirect/', views.redirect_after_login, name='redirect_after_login'),
+    path('manager/utilisateurs/<int:user_id>/supprimer/', views.supprimer_utilisateur, name='supprimer_utilisateur'), 
 ]
