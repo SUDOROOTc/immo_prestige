@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Mes clients — ImmoFaso{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Clients affectés</h2>
+
+{% if clients %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-success">
+                <tr>
+                    <th>Nom d'utilisateur</th>
+                    <th>Nom complet</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for client in clients %}
+                <tr>
+                    <td>{{ client.username }}</td>
+                    <td>{{ client.first_name }} {{ client.last_name }}</td>
+                    <td>{{ client.email }}</td>
+                    <td>{{ client.telephone }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-info">Aucun client ne vous est affecté pour le moment.</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Mes annonces — ImmoFaso{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Mes annonces</h2>
+    <a href="{% url 'deposer_annonce' %}" class="btn btn-success">
+        + Déposer une annonce
+    </a>
+</div>
+
+{% if annonces %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-success">
+                <tr>
+                    <th>Type</th>
+                    <th>Ville</th>
+                    <th>Option</th>
+                    <th>Prix</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for annonce in annonces %}
+                <tr>
+                    <td>{{ annonce.bien.type }}</td>
+                    <td>{{ annonce.bien.ville }}</td>
+                    <td>{{ annonce.option }}</td>
+                    <td>{{ annonce.prix }} FCFA</td>
+                    <td>
+                        {% if annonce.statut == 'EN_ATTENTE' %}
+                            <span class="badge bg-warning text-dark">En attente</span>
+                        {% elif annonce.statut == 'PUBLIEE' %}
+                            <span class="badge bg-success">Publiée</span>
+                        {% elif annonce.statut == 'REFUSEE' %}
+                            <span class="badge bg-danger">Refusée</span>
+                        {% elif annonce.statut == 'RETIREE' %}
+                            <span class="badge bg-secondary">Retirée</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'modifier_annonce' annonce.id %}" class="btn btn-sm btn-outline-success">
+                            ✏️ Modifier
+                        </a>
+                        <a href="{% url 'supprimer_annonce' annonce.id %}" class="btn btn-sm btn-outline-danger">
+                            🗑️ Supprimer
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        Vous n'avez pas encore déposé d'annonce.
+        <a href="{% url 'deposer_annonce' %}">Déposer ma première annonce</a>
+    </div>
+{% endif %}
+
+{% endblock %}

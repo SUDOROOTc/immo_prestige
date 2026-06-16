@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Utilisateurs — ImmoFaso{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Gestion des utilisateurs</h2>
+    <a href="{% url 'affecter_client' %}" class="btn btn-success">
+        🔗 Affecter un client
+    </a>
+</div>
+
+<!-- CLIENTS -->
+<h5 class="mb-3">Clients</h5>
+{% if clients %}
+    <div class="table-responsive mb-4">
+        <table class="table table-bordered table-hover">
+            <thead class="table-success">
+                <tr>
+                    <th>Nom d'utilisateur</th>
+                    <th>Nom complet</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Agent affecté</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for client in clients %}
+                <tr>
+                    <td>{{ client.username }}</td>
+                    <td>{{ client.first_name }} {{ client.last_name }}</td>
+                    <td>{{ client.email }}</td>
+                    <td>{{ client.telephone }}</td>
+                    <td>
+                        {% if client.agent_affecte %}
+                            {{ client.agent_affecte.username }}
+                        {% else %}
+                            <span class="text-muted">Non affecté</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'supprimer_utilisateur' client.id %}" 
+                           class="btn btn-sm btn-outline-danger">
+                            🗑️ Supprimer
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-info mb-4">Aucun client enregistré.</div>
+{% endif %}
+
+<!-- BAILLEURS -->
+<h5 class="mb-3">Bailleurs</h5>
+{% if bailleurs %}
+    <div class="table-responsive mb-4">
+        <table class="table table-bordered table-hover">
+            <thead class="table-warning">
+                <tr>
+                    <th>Nom d'utilisateur</th>
+                    <th>Nom complet</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bailleur in bailleurs %}
+                <tr>
+                    <td>{{ bailleur.username }}</td>
+                    <td>{{ bailleur.first_name }} {{ bailleur.last_name }}</td>
+                    <td>{{ bailleur.email }}</td>
+                    <td>{{ bailleur.telephone }}</td>
+                    <td>
+                        <a href="{% url 'supprimer_utilisateur' bailleur.id %}" 
+                           class="btn btn-sm btn-outline-danger">
+                            🗑️ Supprimer
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-info mb-4">Aucun bailleur enregistré.</div>
+{% endif %}
+
+<!-- AGENTS -->
+<h5 class="mb-3">Agents</h5>
+{% if agents %}
+    <div class="table-responsive mb-4">
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nom d'utilisateur</th>
+                    <th>Nom complet</th>
+                    <th>Email</th>
+                    <th>Matricule</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for agent in agents %}
+                <tr>
+                    <td>{{ agent.username }}</td>
+                    <td>{{ agent.first_name }} {{ agent.last_name }}</td>
+                    <td>{{ agent.email }}</td>
+                    <td>{{ agent.matricule }}</td>
+                    <td>
+                        <a href="{% url 'supprimer_utilisateur' agent.id %}" 
+                           class="btn btn-sm btn-outline-danger">
+                            🗑️ Supprimer
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-info mb-4">Aucun agent enregistré.</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ annonce.bien.type }} — {{ annonce.bien.ville }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    
+    <!-- DÉTAIL DU BIEN -->
+    <div class="col-md-8">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">{{ annonce.bien.type }} — {{ annonce.bien.ville }}</h4>
+            </div>
+            <div class="card-body">
+
+                <!-- PHOTOS -->
+                {% if annonce.bien.photos.all %}
+                    <div class="row mb-3">
+                        {% for photo in annonce.bien.photos.all %}
+                        <div class="col-md-4 mb-2">
+                            <img src="{{ photo.chemin_fichier.url }}" class="img-fluid rounded">
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Type</th>
+                        <td>{{ annonce.bien.type }}</td>
+                    </tr>
+                    <tr>
+                        <th>Usage</th>
+                        <td>{{ annonce.bien.usage }}</td>
+                    </tr>
+                    <tr>
+                        <th>Option</th>
+                        <td>{{ annonce.option }}</td>
+                    </tr>
+                    <tr>
+                        <th>Superficie</th>
+                        <td>{{ annonce.bien.superficie }} m²</td>
+                    </tr>
+                    <tr>
+                        <th>Ville</th>
+                        <td>{{ annonce.bien.ville }}</td>
+                    </tr>
+                    <tr>
+                        <th>Localisation</th>
+                        <td>{{ annonce.bien.localisation }}</td>
+                    </tr>
+                    <tr>
+                        <th>Prix</th>
+                        <td class="fw-bold text-success">{{ annonce.prix }} FCFA</td>
+                    </tr>
+                </table>
+
+                <h6>Description</h6>
+                <p>{{ annonce.description }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Actions</h5>
+            </div>
+            <div class="card-body d-grid gap-2">
+                {% if user.is_authenticated %}
+                    {% if user.client %}
+                        <a href="{% url 'creer_demande_visite' annonce.id %}" class="btn btn-success">
+                            📅 Demander une visite
+                        </a>
+                        <a href="{% url 'ajouter_favori' annonce.id %}" class="btn btn-outline-success">
+                            ❤️ Ajouter aux favoris
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <div class="alert alert-info text-center small">
+                        <a href="{% url 'login' %}">Connectez-vous</a> pour demander une visite ou ajouter aux favoris.
+                    </div>
+                {% endif %}
+
+                <a href="{% url 'liste_annonces' %}" class="btn btn-outline-secondary">
+                    ← Retour aux annonces
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Déposer une annonce - ImmoFaso{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Déposer une nouvelle annonce</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{% url 'deposer_annonce' %}">
+                    {% csrf_token %}
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Type de bien</label>
+                            <select name="type" class="form-select" required>
+                                <option value="TERRAIN">Terrain</option>
+                                <option value="BATIMENT">Bâtiment</option>
+                                <option value="APPARTEMENT">Appartement</option>
+                                <option value="VILLA">Villa</option>
+                                <option value="COMMERCE">Commerce</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Usage</label>
+                            <select name="usage" class="form-select" required>
+                                <option value="RESIDENCE">Résidence</option>
+                                <option value="BUREAU">Bureau</option>
+                                <option value="COMMERCE">Commerce</option>
+                                <option value="AGRICULTURE">Agriculture</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Superficie (m²)</label>
+                            <input type="number" step="0.1" name="superficie" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Ville</label>
+                            <input type="text" name="ville" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Localisation précise (Quartier, secteur...)</label>
+                        <input type="text" name="localisation" class="form-control" required>
+                    </div>
+
+                    <hr>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Option</label>
+                            <select name="option" class="form-select" required>
+                                <option value="LOCATION">Location</option>
+                                <option value="VENTE">Vente</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Prix (FCFA)</label>
+                            <input type="number" name="prix" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Description détaillée</label>
+                        <textarea name="description" class="form-control" rows="4" required></textarea>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">Publier mon annonce</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

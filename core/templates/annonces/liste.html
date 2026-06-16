@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Inscription — ImmoFaso{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">Créer un compte</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label">Je suis un :</label>
+                        <select name="role" class="form-select" required>
+                            <option value="">-- Choisir --</option>
+                            <option value="CLIENT">Client</option>
+                            <option value="BAILLEUR">Bailleur</option>
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label class="form-label">Prénom</label>
+                            <input type="text" name="prenom" class="form-control" required>
+                        </div>
+                        <div class="col mb-3">
+                            <label class="form-label">Nom</label>
+                            <input type="text" name="nom" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Nom d'utilisateur</label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Téléphone</label>
+                        <input type="text" name="telephone" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Mot de passe</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100">
+                        Créer mon compte
+                    </button>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                Déjà un compte ? <a href="{% url 'login' %}">Se connecter</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

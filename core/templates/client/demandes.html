@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Mes demandes de visite — ImmoFaso{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Mes demandes de visite</h2>
+
+{% if demandes %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-success">
+                <tr>
+                    <th>Bien</th>
+                    <th>Ville</th>
+                    <th>Prix</th>
+                    <th>Date demande</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for demande in demandes %}
+                <tr>
+                    <td>{{ demande.annonce.bien.type }}</td>
+                    <td>{{ demande.annonce.bien.ville }}</td>
+                    <td>{{ demande.annonce.prix }} FCFA</td>
+                    <td>{{ demande.date_demande|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        {% if demande.statut == 'EN_ATTENTE' %}
+                            <span class="badge bg-warning text-dark">En attente</span>
+                        {% elif demande.statut == 'VALIDEE' %}
+                            <span class="badge bg-success">Validée</span>
+                        {% elif demande.statut == 'REFUSEE' %}
+                            <span class="badge bg-danger">Refusée</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'detail_annonce' demande.annonce.id %}" 
+                           class="btn btn-sm btn-outline-success">
+                            Voir l'annonce
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        Vous n'avez pas encore fait de demande de visite.
+        <a href="{% url 'liste_annonces' %}">Parcourir les annonces</a>
+    </div>
+{% endif %}
+
+{% endblock %}

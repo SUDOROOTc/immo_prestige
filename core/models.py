@@ -1,17 +1,31 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-# notre classe user herite de la classe user de base de django donc on a automatiquement nom ,prenom etc 
+# --- UTILISATEURS ---
+
 class Utilisateur(AbstractUser):
     telephone = models.CharField(max_length=20, blank=True)
     
     class Meta:
         verbose_name = 'Utilisateur'
 
+class Employe(Utilisateur):
+    matricule = models.CharField(max_length=20, unique=True)
+
+    class Meta:
+        verbose_name = 'Employé'
+
+class Agent(Employe):
+    class Meta:
+        verbose_name = 'Agent'
+
+class Manager(Employe):
+    class Meta:
+        verbose_name = 'Manager'
 
 class Client(Utilisateur):
     agent_affecte = models.ForeignKey(
-        'Agent',
+        Agent,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -21,28 +35,12 @@ class Client(Utilisateur):
     class Meta:
         verbose_name = 'Client'
 
-
 class Bailleur(Utilisateur):
     class Meta:
         verbose_name = 'Bailleur'
 
 
-class Employe(Utilisateur):
-    matricule = models.CharField(max_length=20, unique=True)
-
-    class Meta:
-        verbose_name = 'Employé'
-
-
-class Agent(Employe):
-    class Meta:
-        verbose_name = 'Agent'
-
-
-class Manager(Employe):
-    class Meta:
-        verbose_name = 'Manager'
-
+# --- ENTITÉS MÉTIER ---
 
 class BienImmobilier(models.Model):
     TYPE_CHOICES = [
@@ -59,22 +57,35 @@ class BienImmobilier(models.Model):
         ('AGRICULTURE', 'Agriculture'),
     ]
 
-    type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+    proprietaire = models.ForeignKey(Bailleur, on_delete=models.CASCADE, related_name='biens')
+    type = models.CharField(max_length=20, choices=TYPE_CHOICES) 
     usage = models.CharField(max_length=20, choices=USAGE_CHOICES)
     superficie = models.FloatField()
-    localisation = models.TextField()
     ville = models.CharField(max_length=100)
+    localisation = models.CharField(max_length=255)
+    description = models.TextField()
 
     def __str__(self):
-        return f"{self.type} — {self.ville}"
+        return f"{self.type} - {self.ville} ({self.proprietaire.username})"
 
     class Meta:
         verbose_name = 'Bien Immobilier'
 
 
+class Photo(models.Model):
+    bien = models.ForeignKey(
+        BienImmobilier, 
+        on_delete=models.CASCADE, 
+        related_name='photos'
+    )
+    chemin_fichier = models.ImageField(upload_to='photos/proprietes/')
+    date_ajout = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"Photo du bien : {self.bien}"
 
-
+    class Meta:
+        verbose_name = 'Photo'
 
 
 class Annonce(models.Model):
@@ -85,9 +96,9 @@ class Annonce(models.Model):
     STATUT_CHOICES = [
         ('EN_ATTENTE', 'En attente de validation'),
         ('PUBLIEE', 'Publiée'),
+        ('REFUSEE', 'Refusée'),
         ('RETIREE', 'Retirée'),
     ]
-
     bailleur = models.ForeignKey(
         Bailleur,
         on_delete=models.CASCADE,
@@ -117,20 +128,6 @@ class Annonce(models.Model):
     class Meta:
         verbose_name = 'Annonce'
 
-class Photo(models.Model):
-    annonce = models.ForeignKey(
-        Annonce,
-        on_delete=models.CASCADE,
-        related_name='photos'
-    )
-    chemin_fichier = models.ImageField(upload_to='photos/proprietes/')
-    date_ajout = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Photo de {self.annonce}"
-
-    class Meta:
-        verbose_name = 'Photo'
 
 class DemandeVisite(models.Model):
     STATUT_CHOICES = [

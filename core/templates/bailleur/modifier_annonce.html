@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Modifier l'annonce — ImmoFaso{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">Modifier l'annonce</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label">Option</label>
+                        <select name="option" class="form-select" required>
+                            <option value="LOCATION" {% if annonce.option == 'LOCATION' %}selected{% endif %}>Location</option>
+                            <option value="VENTE" {% if annonce.option == 'VENTE' %}selected{% endif %}>Vente</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Prix (FCFA)</label>
+                        <input type="number" name="prix" class="form-control" value="{{ annonce.prix }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="4" required>{{ annonce.description }}</textarea>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success w-100">
+                            Enregistrer les modifications
+                        </button>
+                        <a href="{% url 'mes_annonces_bailleur' %}" class="btn btn-outline-secondary w-100">
+                            Annuler
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

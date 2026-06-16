@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Mes favoris — ImmoFaso{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Mes favoris</h2>
+
+{% if favoris %}
+    <div class="row">
+        {% for favori in favoris %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ favori.annonce.bien.type }} — {{ favori.annonce.bien.ville }}</h5>
+                    <p class="text-muted">{{ favori.annonce.bien.usage }} | {{ favori.annonce.option }}</p>
+                    <p class="fw-bold text-success">{{ favori.annonce.prix }} FCFA</p>
+                    <p class="text-muted small">{{ favori.annonce.bien.superficie }} m²</p>
+                    <p class="text-muted small">Ajouté le {{ favori.date_ajout|date:"d/m/Y" }}</p>
+                </div>
+                <div class="card-footer d-grid gap-2">
+                    <a href="{% url 'detail_annonce' favori.annonce.id %}" class="btn btn-sm btn-success">
+                        Voir le détail
+                    </a>
+                    <a href="{% url 'retirer_favori' favori.annonce.id %}" class="btn btn-sm btn-outline-danger">
+                        ❌ Retirer des favoris
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        Vous n'avez pas encore de favoris.
+        <a href="{% url 'liste_annonces' %}">Parcourir les annonces</a>
+    </div>
+{% endif %}
+
+{% endblock %}
