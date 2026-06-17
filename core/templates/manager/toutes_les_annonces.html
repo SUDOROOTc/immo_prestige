@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Toutes les annonces{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">
+  Gestion des annonces
+</h2>
+
+<table class="table table-striped">
+
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Type</th>
+      <th>Ville</th>
+      <th>Bailleur</th>
+      <th>Prix</th>
+      <th>Statut</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    {% for annonce in annonces %}
+
+    <tr>
+
+      <td>
+        {{ annonce.id }}
+      </td>
+
+      <td>
+        {{ annonce.bien.type }}
+      </td>
+
+      <td>
+        {{ annonce.bien.ville }}
+      </td>
+
+      <td>
+        {{ annonce.bailleur.username }}
+      </td>
+
+      <td>
+        {{ annonce.prix }}
+      </td>
+
+      <td>
+        {{ annonce.statut }}
+      </td>
+
+      <td>
+
+        <a href="{% url 'detail_annonce' annonce.id %}" class="btn btn-sm btn-primary">
+          Voir
+        </a>
+
+        {% if annonce.statut == 'PUBLIEE' %}
+
+        <a href="{% url 'retirer_annonce' annonce.id %}" class="btn btn-sm btn-danger">
+          Retirer
+        </a>
+
+        {% endif %}
+
+      </td>
+
+    </tr>
+
+    {% endfor %}
+
+  </tbody>
+
+</table>
+
+<div class="row mt-4">
+
+  <div class="col-md-4">
+
+    <div class="card shadow-sm">
+
+      <div class="card-body">
+
+        <h5>
+          Gestion des annonces
+        </h5>
+
+        <p>
+          Consulter toutes les annonces de la plateforme.
+        </p>
+
+        <a href="{% url 'toutes_les_annonces_manager' %}" class="btn btn-primary">
+          Voir les annonces
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

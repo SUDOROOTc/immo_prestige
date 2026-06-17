@@ -10,7 +10,6 @@ urlpatterns = [
     # Il te faudra juste créer un template HTML dans 'registration/login.html'
     path('connexion/', auth_views.LoginView.as_view(), name='login'),
     path('deconnexion/', auth_views.LogoutView.as_view(), name='logout'),
-    path('admin/', admin.site.urls),
 
 
     # --- ENCHAINEMENT DES ANNONCES ---
@@ -36,7 +35,7 @@ urlpatterns = [
     path('espace-agent/', views.agent_dashboard, name='agent_dashboard'),
     path('espace-agent/annonces-en-attente/', views.annonces_en_attente, name='liste_annonces_en_attente'),
     path('espace-agent/demandes-visites/', views.liste_demandes_agent, name='liste_demandes_agent'),
-    path('espace-manager/toutes-les-annonces/', views.liste_utilisateurs, name='toutes_les_annonces_manager'),
+    path('espace-manager/toutes-les-annonces/', views.toutes_les_annonces_manager, name='toutes_les_annonces_manager'),
     path('annonce/<int:annonce_id>/', views.detail_annonce, name='detail_annonce'),
     path('mes-favoris/', views.mes_favoris_client, name='mes_favoris_client'),
 
@@ -69,4 +68,10 @@ path(
     views.mes_annonces_agence,
     name='mes_annonces_agence'
 ),
+path(
+    'client/dashboard/',
+    views.client_dashboard,
+    name='dashboard_client',
+),
+path('manager/utilisateurs/creer/', views.creer_utilisateur, name='creer_utilisateur'),
 ]

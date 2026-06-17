@@ -52,6 +52,15 @@
                         <label class="form-label">Mot de passe</label>
                         <input type="password" name="password" class="form-control" required>
                     </div>
+                    <div class="card mt-3">
+                        {% if annonce.bien.photos.first %}
+                            <img src="{{ annonce.bien.photos.first.chemin_fichier.url }}" class="card-img-top" alt="Photo du bien">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5>{{ annonce.bien.type }}</h5>
+                            <p>{{ annonce.prix }} FCFA</p>
+                        </div>
+                    </div>
 
                     <button type="submit" class="btn btn-success w-100">
                         Créer mon compte

@@ -1,67 +1,61 @@
 {% extends 'base.html' %}
 
-{% block title %}Inscription — ImmoFaso{% endblock %}
+{% block title %}
+Liste des annonces
+{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card shadow-sm">
-            <div class="card-header bg-success text-white">
-                <h4 class="mb-0">Créer un compte</h4>
-            </div>
+
+<h2 class="mb-4">Annonces disponibles</h2>
+
+<div class="row">
+
+    {% for annonce in annonces %}
+
+    <div class="col-md-4 mb-4">
+
+        <div class="card shadow-sm h-100">
+
+            {% if annonce.bien.photos.first %}
+            <img src="{{ annonce.bien.photos.first.chemin_fichier.url }}" class="card-img-top" alt="Photo du bien">
+            {% endif %}
+
             <div class="card-body">
-                <form method="POST">
-                    {% csrf_token %}
 
-                    <div class="mb-3">
-                        <label class="form-label">Je suis un :</label>
-                        <select name="role" class="form-select" required>
-                            <option value="">-- Choisir --</option>
-                            <option value="CLIENT">Client</option>
-                            <option value="BAILLEUR">Bailleur</option>
-                        </select>
-                    </div>
+                <h5>
+                    {{ annonce.bien.type }}
+                </h5>
 
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label class="form-label">Prénom</label>
-                            <input type="text" name="prenom" class="form-control" required>
-                        </div>
-                        <div class="col mb-3">
-                            <label class="form-label">Nom</label>
-                            <input type="text" name="nom" class="form-control" required>
-                        </div>
-                    </div>
+                <p>
+                    {{ annonce.bien.ville }}
+                </p>
 
-                    <div class="mb-3">
-                        <label class="form-label">Nom d'utilisateur</label>
-                        <input type="text" name="username" class="form-control" required>
-                    </div>
+                <p>
+                    {{ annonce.prix }} FCFA
+                </p>
 
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Téléphone</label>
-                        <input type="text" name="telephone" class="form-control">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Mot de passe</label>
-                        <input type="password" name="password" class="form-control" required>
-                    </div>
-
-                    <button type="submit" class="btn btn-success w-100">
-                        Créer mon compte
-                    </button>
-                </form>
             </div>
-            <div class="card-footer text-center">
-                Déjà un compte ? <a href="{% url 'login' %}">Se connecter</a>
+
+            <div class="card-footer">
+
+                <a href="{% url 'detail_annonce' annonce.id %}" class="btn btn-success w-100">
+                    Voir détail
+                </a>
+
             </div>
+
         </div>
+
     </div>
+
+    {% empty %}
+
+    <div class="alert alert-info">
+        Aucune annonce disponible.
+    </div>
+
+    {% endfor %}
+
 </div>
+
 {% endblock %}

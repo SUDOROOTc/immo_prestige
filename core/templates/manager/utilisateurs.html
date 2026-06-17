@@ -5,9 +5,14 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Gestion des utilisateurs</h2>
-    <a href="{% url 'affecter_client' %}" class="btn btn-success">
-        🔗 Affecter un client
-    </a>
+    <div class="d-flex gap-2">
+        <a href="{% url 'creer_utilisateur' %}" class="btn btn-primary">
+            ➕ Créer un utilisateur
+        </a>
+        <a href="{% url 'affecter_client' %}" class="btn btn-success">
+            🔗 Affecter un client
+        </a>
+    </div>
 </div>
 
 <!-- CLIENTS -->

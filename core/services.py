@@ -108,7 +108,7 @@ class AnnonceService:
         return annonce
     @staticmethod
     def modifier_annonce(annonce, bailleur, option, prix, description):
-        if annonce.bailleur != bailleur:
+        if annonce.bailleur.pk != bailleur.pk:
             raise PermissionDenied("Vous ne pouvez pas modifier une annonce qui ne vous appartient pas.")
         if prix <= 0:
             raise ValueError("Le prix doit être supérieur à zéro.")
@@ -122,7 +122,7 @@ class AnnonceService:
 
     @staticmethod
     def supprimer_annonce(annonce, bailleur):
-        if annonce.bailleur != bailleur:
+        if annonce.bailleur.pk != bailleur.pk:
             raise PermissionDenied("Vous ne pouvez pas supprimer une annonce qui ne vous appartient pas.")
         annonce.delete()
     @staticmethod
@@ -294,26 +294,63 @@ class UtilisateurService:
     @staticmethod
     def supprimer_utilisateur(manager, utilisateur):
         from core.models import Manager
+
         if not Manager.objects.filter(pk=manager.pk).exists():
-            raise PermissionDenied("Seul un manager peut faire cette action.")
+            raise PermissionDenied(
+                "Seul un manager peut faire cette action."
+            )
+
         utilisateur.delete()
 
     @staticmethod
     def affecter_client(manager, client, agent):
         from core.models import Manager
+
         if not Manager.objects.filter(pk=manager.pk).exists():
-            raise PermissionDenied("Seul un manager peut faire cette action.")
+            raise PermissionDenied(
+                "Seul un manager peut faire cette action."
+            )
+
         client_obj = Client.objects.get(pk=client.pk)
         agent_obj = Agent.objects.get(pk=agent.pk)
+
         client_obj.agent_affecte = agent_obj
         client_obj.save()
-        return client_obj
-    
 
+        return client_obj
 
     @staticmethod
-    def inscrire(role, username, email, password, telephone, nom, prenom):
+    def inscrire(
+        role,
+        username,
+        email,
+        password,
+        telephone,
+        nom,
+        prenom,
+        createur=None
+    ):
+        """
+        CLIENT et BAILLEUR : inscription libre
+        AGENT et MANAGER : créés uniquement par un manager
+        """
+
+        from core.models import Agent, Manager
+
+        if role in ['AGENT', 'MANAGER']:
+
+            if createur is None:
+                raise PermissionDenied(
+                    "Un Agent ou Manager ne peut être créé que par un Manager."
+                )
+
+            if not Manager.objects.filter(pk=createur.pk).exists():
+                raise PermissionDenied(
+                    "Seul un Manager peut créer un employé."
+                )
+
         if role == 'CLIENT':
+
             return Client.objects.create_user(
                 username=username,
                 email=email,
@@ -322,7 +359,9 @@ class UtilisateurService:
                 first_name=prenom,
                 last_name=nom
             )
+
         elif role == 'BAILLEUR':
+
             return Bailleur.objects.create_user(
                 username=username,
                 email=email,
@@ -331,33 +370,89 @@ class UtilisateurService:
                 first_name=prenom,
                 last_name=nom
             )
-        else:
-            raise ValueError("Rôle invalide. Choisissez Client ou Bailleur.")
+
+        elif role == 'AGENT':
+
+            import random
+            import string
+
+            matricule = (
+                'AG-' +
+                ''.join(random.choices(string.digits, k=6))
+            )
+
+            return Agent.objects.create_user(
+                username=username,
+                email=email,
+                password=password,
+                telephone=telephone,
+                first_name=prenom,
+                last_name=nom,
+                matricule=matricule
+            )
+
+        elif role == 'MANAGER':
+
+            import random
+            import string
+
+            matricule = (
+                'MG-' +
+                ''.join(random.choices(string.digits, k=6))
+            )
+
+            return Manager.objects.create_user(
+                username=username,
+                email=email,
+                password=password,
+                telephone=telephone,
+                first_name=prenom,
+                last_name=nom,
+                matricule=matricule
+            )
+
+        raise ValueError(
+            "Rôle invalide. Choisissez CLIENT, BAILLEUR, AGENT ou MANAGER."
+        )
 
     @staticmethod
     def get_statistiques(manager):
         from core.models import Manager
+
         if not Manager.objects.filter(pk=manager.pk).exists():
-            raise PermissionDenied("Seul un manager peut faire cette action.")
+            raise PermissionDenied(
+                "Seul un manager peut faire cette action."
+            )
+
         return {
-            'total_annonces'  : Annonce.objects.count(),
-            'en_attente'      : Annonce.objects.filter(statut='EN_ATTENTE').count(),
-            'publiees'        : Annonce.objects.filter(statut='PUBLIEE').count(),
-            'retirees'        : Annonce.objects.filter(statut='RETIREE').count(),
-            'total_clients'   : Client.objects.count(),
-            'total_bailleurs' : Bailleur.objects.count(),
-            'total_agents'    : Agent.objects.count(),
-            'total_demandes'  : DemandeVisite.objects.count(),
+            'total_annonces': Annonce.objects.count(),
+            'en_attente': Annonce.objects.filter(
+                statut='EN_ATTENTE'
+            ).count(),
+            'publiees': Annonce.objects.filter(
+                statut='PUBLIEE'
+            ).count(),
+            'retirees': Annonce.objects.filter(
+                statut='RETIREE'
+            ).count(),
+            'total_clients': Client.objects.count(),
+            'total_bailleurs': Bailleur.objects.count(),
+            'total_agents': Agent.objects.count(),
+            'total_demandes': DemandeVisite.objects.count(),
         }
 
     @staticmethod
     def lister_utilisateurs(manager):
         from core.models import Manager
+
         if not Manager.objects.filter(pk=manager.pk).exists():
-            raise PermissionDenied("Seul un manager peut faire cette action.")
+            raise PermissionDenied(
+                "Seul un manager peut faire cette action."
+            )
+
         return {
-            'clients'   : Client.objects.all(),
-            'bailleurs' : Bailleur.objects.all(),
-            'agents'    : Agent.objects.all(),
+            'clients': Client.objects.all(),
+            'bailleurs': Bailleur.objects.all(),
+            'agents': Agent.objects.all(),
+            'managers': Manager.objects.all(),
         }
-    

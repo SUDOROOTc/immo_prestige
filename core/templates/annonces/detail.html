@@ -13,16 +13,26 @@
             </div>
             <div class="card-body">
 
-                <!-- PHOTOS -->
-                {% if annonce.bien.photos.all %}
-                    <div class="row mb-3">
-                        {% for photo in annonce.bien.photos.all %}
-                        <div class="col-md-4 mb-2">
-                            <img src="{{ photo.chemin_fichier.url }}" class="img-fluid rounded">
-                        </div>
-                        {% endfor %}
+                <div class="row">
+
+    {% for photo in annonce.bien.photos.all %}
+
+        <div class="col-md-4 mb-3">
+            <img
+                src="{{ photo.chemin_fichier.url }}"
+                class="img-fluid rounded"
+                alt="Photo du bien">
+        </div>
+
+    {% empty %}
+
+        <p>Aucune photo disponible.</p>
+
+    {% endfor %}
+
+</div>
                     </div>
-                {% endif %}
+                
 
                 <table class="table table-bordered">
                     <tr>

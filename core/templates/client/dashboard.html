@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}Mon espace client - ImmoFaso{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="mb-4">
+        <h2>👋 Bienvenue {{ user.first_name|default:user.username }}</h2>
+        <p class="text-muted">
+            Gérez vos recherches immobilières depuis votre espace personnel.
+        </p>
+    </div>
+
+    <!-- Actions rapides -->
+    <div class="row mb-4">
+
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h4>🏠</h4>
+                    <h5>Rechercher un bien</h5>
+                    <p class="text-muted">
+                        Parcourez les annonces et utilisez les filtres avancés.
+                    </p>
+                    <a href="{% url 'liste_annonces' %}" class="btn btn-success">
+                        Voir les annonces
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h4>❤️</h4>
+                    <h5>Mes favoris</h5>
+                    <p class="text-muted">
+                        Consultez les biens enregistrés.
+                    </p>
+                    <a href="{% url 'mes_favoris_client' %}" class="btn btn-primary">
+                        Mes favoris
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <h4>📅</h4>
+                    <h5>Mes visites</h5>
+                    <p class="text-muted">
+                        Suivez vos demandes de visite.
+                    </p>
+                    <a href="{% url 'mes_demandes_client' %}" class="btn btn-warning">
+                        Mes demandes
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Filtres rapides -->
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">🔎 Recherche rapide</h5>
+        </div>
+
+        <div class="card-body">
+
+            <form method="GET" action="{% url 'liste_annonces' %}">
+
+                <div class="row">
+
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Type</label>
+                        <select name="type" class="form-select">
+                            <option value="">Tous</option>
+                            <option value="TERRAIN">Terrain</option>
+                            <option value="BATIMENT">Bâtiment</option>
+                            <option value="APPARTEMENT">Appartement</option>
+                            <option value="VILLA">Villa</option>
+                            <option value="COMMERCE">Commerce</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Usage</label>
+                        <select name="usage" class="form-select">
+                            <option value="">Tous</option>
+                            <option value="RESIDENCE">Résidence</option>
+                            <option value="BUREAU">Bureau</option>
+                            <option value="COMMERCE">Commerce</option>
+                            <option value="AGRICULTURE">Agriculture</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Option</label>
+                        <select name="option" class="form-select">
+                            <option value="">Toutes</option>
+                            <option value="VENTE">Vente</option>
+                            <option value="LOCATION">Location</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label">Ville</label>
+                        <input type="text" name="ville" class="form-control" placeholder="Ouagadougou">
+                    </div>
+
+                </div>
+
+                <button type="submit" class="btn btn-success">
+                    Rechercher
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

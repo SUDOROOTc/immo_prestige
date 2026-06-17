@@ -9,9 +9,48 @@ from .services import AnnonceService ,DemandeVisiteService,FavoriService,Utilisa
 
 
 def accueil(request):
-    annonces = Annonce.objects.filter(statut='PUBLIEE').order_by('-date_publication')[:6]
-    return render(request, 'accueil.html', {'annonces': annonces})
 
+    dernieres = Annonce.objects.filter(
+        statut='PUBLIEE'
+    ).order_by('-date_publication')[:6]
+
+    villas = Annonce.objects.filter(
+        statut='PUBLIEE',
+        bien__type='VILLA'
+    )[:3]
+
+    terrains = Annonce.objects.filter(
+        statut='PUBLIEE',
+        bien__type='TERRAIN'
+    )[:3]
+
+    appartements = Annonce.objects.filter(
+        statut='PUBLIEE',
+        bien__type='APPARTEMENT'
+    )[:3]
+
+    locations = Annonce.objects.filter(
+        statut='PUBLIEE',
+        option='LOCATION'
+    )[:3]
+
+    ventes = Annonce.objects.filter(
+        statut='PUBLIEE',
+        option='VENTE'
+    )[:3]
+
+    return render(
+        request,
+        'accueil.html',
+        {
+            'dernieres': dernieres,
+            'villas': villas,
+            'terrains': terrains,
+            'appartements': appartements,
+            'locations': locations,
+            'ventes': ventes,
+        }
+    )
 
 
 def liste_annonces(request):
@@ -154,40 +193,102 @@ def supprimer_annonce(request, annonce_id):
 
 @login_required
 def agent_dashboard(request):
-    return render(request, 'agent/dashboard.html')
+
+    if not Agent.objects.filter(pk=request.user.pk).exists():
+        messages.error(
+            request,
+            "Accès réservé aux agents."
+        )
+        return redirect('accueil')
+
+    return render(
+        request,
+        'agent/dashboard.html'
+    )
 
 @login_required
 def annonces_en_attente(request):
-    annonces = Annonce.objects.filter(statut='EN_ATTENTE').order_by('-date_publication')
-    return render(request, 'agent/annonces_en_attente.html', {'annonces': annonces})
+
+    if not Agent.objects.filter(pk=request.user.pk).exists():
+        messages.error(
+            request,
+            "Accès réservé aux agents."
+        )
+        return redirect('accueil')
+
+    annonces = Annonce.objects.filter(
+        statut='EN_ATTENTE'
+    ).order_by('-date_publication')
+
+    return render(
+        request,
+        'agent/annonces_en_attente.html',
+        {
+            'annonces': annonces
+        }
+    )
 
 
 @login_required
 def liste_demandes_agent(request):
+    """
+    Liste les demandes de visite EN_ATTENTE
+    des clients affectés à cet agent (EF-D2).
+    """
+    try:
+        agent = Agent.objects.get(pk=request.user.pk)
+    except Agent.DoesNotExist:
+        messages.error(request, "Accès réservé aux agents.")
+        return redirect('accueil')
+
     demandes = DemandeVisite.objects.filter(
-        annonce__agent_validateur=request.user,
+        client__agent_affecte=agent,   # ← le bon filtre
         statut='EN_ATTENTE'
+    ).select_related(
+        'client', 'annonce', 'annonce__bien'
     ).order_by('-date_demande')
+
     return render(request, 'agent/demandes.html', {'demandes': demandes})
+
 
 
 @login_required
 def traiter_demande_visite_view(request, demande_id, decision):
+    """
+    Valide ou refuse une demande de visite (POST uniquement).
+    """
+    if request.method != 'POST':
+        messages.error(request, "Méthode non autorisée.")
+        return redirect('liste_demandes_agent')
+
     demande = get_object_or_404(DemandeVisite, id=demande_id)
+
     try:
-        DemandeVisiteService.traiter_demande(demande=demande, agent=request.user, decision=decision)
-        messages.success(request, f"Demande {decision.lower()} avec succès.")
+        DemandeVisiteService.traiter_demande(
+            demande=demande,
+            agent=request.user,
+            decision=decision
+        )
+        label = "validée" if decision == "VALIDEE" else "refusée"
+        messages.success(request, f"Demande {label} avec succès.")
     except (DjangoPermissionDenied, ValueError) as e:
         messages.error(request, str(e))
+
     return redirect('liste_demandes_agent')
 
 
 @login_required
 def clients_affectes(request):
     try:
-        clients = Client.objects.filter(agent_affecte=request.user.agent)
-    except Exception:
-        clients = []
+        # Récupère l'objet Agent correspondant à l'utilisateur connecté
+        agent = Agent.objects.get(pk=request.user.pk)
+        clients = Client.objects.filter(
+            agent_affecte=agent
+        ).order_by('username')
+    except Agent.DoesNotExist:
+        messages.error(request, "Accès réservé aux agents.")
+        return redirect('accueil')
+    
     return render(request, 'agent/clients.html', {'clients': clients})
 
 
@@ -307,11 +408,11 @@ def redirect_after_login(request):
     if Manager.objects.filter(pk=user.pk).exists():
         return redirect('dashboard')
     elif Agent.objects.filter(pk=user.pk).exists():
-        return redirect('liste_annonces_en_attente')
+        return redirect('agent_dashboard')
     elif Bailleur.objects.filter(pk=user.pk).exists():
         return redirect('mes_annonces_bailleur')
     elif Client.objects.filter(pk=user.pk).exists():
-        return redirect('liste_annonces')
+        return redirect('dashboard_client')
     
     return redirect('accueil')
 
@@ -377,6 +478,60 @@ def mes_annonces_agence(request):
     return render(
         request,
         'agent/mes_annonces_agence.html',
+        {
+            'annonces': annonces
+        }
+    )
+
+@login_required
+def client_dashboard(request):
+    return render(
+        request,
+        'client/dashboard.html'
+    )
+
+@login_required
+def creer_utilisateur(request):
+    """
+    Permet au manager de créer tout type d'utilisateur (EF-A4, EF-D5).
+    """
+    # Vérification du rôle Manager
+    if not Manager.objects.filter(pk=request.user.pk).exists():
+        messages.error(request, "Accès réservé aux managers.")
+        return redirect('accueil')
+
+    if request.method == 'POST':
+        try:
+            UtilisateurService.inscrire(
+                role=request.POST.get('role'),
+                username=request.POST.get('username'),
+                email=request.POST.get('email'),
+                password=request.POST.get('password'),
+                telephone=request.POST.get('telephone'),
+                nom=request.POST.get('nom'),
+                prenom=request.POST.get('prenom'),
+                createur=request.user  # ← nécessaire pour Agent/Manager
+            )
+            messages.success(request, "Compte créé avec succès.")
+            return redirect('liste_utilisateurs')
+        except (DjangoPermissionDenied, ValueError) as e:
+            messages.error(request, str(e))
+
+    return render(request, 'manager/creer_utilisateur.html')
+
+
+
+
+@login_required
+
+def toutes_les_annonces_manager(request):
+    annonces = Annonce.objects.select_related(
+        'bien',
+        'bailleur'
+    ).order_by('-date_publication')
+    return render(
+        request,
+        'manager/toutes_les_annonces.html',
         {
             'annonces': annonces
         }

@@ -5,46 +5,61 @@
 {% block content %}
 <h2 class="mb-4">Demandes de visite à traiter</h2>
 
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+
 {% if demandes %}
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-            <thead class="table-success">
-                <tr>
-                    <th>Client</th>
-                    <th>Bien</th>
-                    <th>Ville</th>
-                    <th>Date demande</th>
-                    <th>Statut</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for demande in demandes %}
-                <tr>
-                    <td>{{ demande.client.username }}</td>
-                    <td>{{ demande.annonce.bien.type }}</td>
-                    <td>{{ demande.annonce.bien.ville }}</td>
-                    <td>{{ demande.date_demande|date:"d/m/Y H:i" }}</td>
-                    <td>
-                        <span class="badge bg-warning text-dark">En attente</span>
-                    </td>
-                    <td>
-                        <a href="{% url 'traiter_demande_visite' demande.id 'VALIDEE' %}" 
-                           class="btn btn-sm btn-success">
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead class="table-success">
+            <tr>
+                <th>Client</th>
+                <th>Bien</th>
+                <th>Ville</th>
+                <th>Date demande</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for demande in demandes %}
+            <tr>
+                <td>{{ demande.client.username }}</td>
+                <td>{{ demande.annonce.bien.type }}</td>
+                <td>{{ demande.annonce.bien.ville }}</td>
+                <td>{{ demande.date_demande|date:"d/m/Y H:i" }}</td>
+                <td>
+                    <span class="badge bg-warning text-dark">En attente</span>
+                </td>
+                <td class="d-flex gap-2">
+
+                    {# Bouton Valider — POST sécurisé #}
+                    <form method="post" action="{% url 'traiter_demande_visite' demande.id 'VALIDEE' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-success">
                             ✅ Valider
-                        </a>
-                        <a href="{% url 'traiter_demande_visite' demande.id 'REFUSEE' %}" 
-                           class="btn btn-sm btn-danger">
+                        </button>
+                    </form>
+
+                    {# Bouton Refuser — POST sécurisé #}
+                    <form method="post" action="{% url 'traiter_demande_visite' demande.id 'REFUSEE' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-danger">
                             ❌ Refuser
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                        </button>
+                    </form>
+
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% else %}
-    <div class="alert alert-info">Aucune demande de visite en attente.</div>
+<div class="alert alert-info">Aucune demande de visite en attente.</div>
 {% endif %}
 
 {% endblock %}
