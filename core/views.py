@@ -1,3 +1,4 @@
+from core.models import Photo
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -60,7 +61,7 @@ def inscription(request):
 def deposer_annonce_view(request):
     if request.method == 'POST':
         try:
-            AnnonceService.deposer_annonce(
+            annonce = AnnonceService.deposer_annonce(
                 bailleur=request.user,
                 type_bien=request.POST.get('type'),
                 usage=request.POST.get('usage'),
@@ -71,6 +72,11 @@ def deposer_annonce_view(request):
                 prix=float(request.POST.get('prix', 0)),
                 description=request.POST.get('description')
             )
+            for photo in request.FILES.getlist('photos'):
+                Photo.objects.create(
+                    bien=annonce.bien,
+                    chemin_fichier=photo
+                )
             messages.success(request, "Annonce déposée avec succès. En attente de validation.")
             return redirect('mes_annonces_bailleur')
         except (DjangoPermissionDenied, ValueError) as e:
@@ -308,3 +314,70 @@ def redirect_after_login(request):
         return redirect('liste_annonces')
     
     return redirect('accueil')
+
+@login_required
+def ajouter_annonce_agence(request):
+
+    if request.method == 'POST':
+
+        try:
+
+            AnnonceService.ajouter_annonce_agence(
+                agent=request.user,
+                type_bien=request.POST.get('type'),
+                usage=request.POST.get('usage'),
+                superficie=float(
+                    request.POST.get('superficie', 0)
+                ),
+                localisation=request.POST.get(
+                    'localisation'
+                ),
+                ville=request.POST.get('ville'),
+                option=request.POST.get('option'),
+                prix=float(
+                    request.POST.get('prix', 0)
+                ),
+                description=request.POST.get(
+                    'description'
+                )
+            )
+
+            messages.success(
+                request,
+                "Annonce d'agence publiée avec succès."
+            )
+
+            return redirect(
+                'mes_annonces_agence'
+            )
+
+        except (
+            DjangoPermissionDenied,
+            ValueError
+        ) as e:
+
+            messages.error(
+                request,
+                str(e)
+            )
+
+    return render(
+        request,
+        'agent/ajouter_annonce.html'
+    )
+
+
+@login_required
+def mes_annonces_agence(request):
+
+    annonces = Annonce.objects.filter(
+        agent_createur=request.user
+    ).order_by('-date_publication')
+
+    return render(
+        request,
+        'agent/mes_annonces_agence.html',
+        {
+            'annonces': annonces
+        }
+    )

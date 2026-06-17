@@ -57,7 +57,7 @@ class BienImmobilier(models.Model):
         ('AGRICULTURE', 'Agriculture'),
     ]
 
-    proprietaire = models.ForeignKey(Bailleur, on_delete=models.CASCADE, related_name='biens')
+    proprietaire = models.ForeignKey(Bailleur, on_delete=models.CASCADE, related_name='biens',null=True,blank=True  )
     type = models.CharField(max_length=20, choices=TYPE_CHOICES) 
     usage = models.CharField(max_length=20, choices=USAGE_CHOICES)
     superficie = models.FloatField()
@@ -66,7 +66,13 @@ class BienImmobilier(models.Model):
     description = models.TextField()
 
     def __str__(self):
-        return f"{self.type} - {self.ville} ({self.proprietaire.username})"
+        proprietaire = (
+            self.proprietaire.username
+            if self.proprietaire
+            else "Agence"
+        )
+
+        return f"{self.type} - {self.ville} ({proprietaire})"
 
     class Meta:
         verbose_name = 'Bien Immobilier'
@@ -102,7 +108,9 @@ class Annonce(models.Model):
     bailleur = models.ForeignKey(
         Bailleur,
         on_delete=models.CASCADE,
-        related_name='annonces'
+        related_name='annonces',
+        null=True,
+        blank=True
     )
     bien = models.ForeignKey(
         BienImmobilier,
@@ -116,6 +124,13 @@ class Annonce(models.Model):
         blank=True,
         related_name='annonces_validees'
     )
+    agent_createur = models.ForeignKey(
+    Agent,
+    on_delete=models.SET_NULL,
+    null=True,
+    blank=True,
+    related_name='annonces_agence'
+)
     option = models.CharField(max_length=10, choices=OPTION_CHOICES)
     prix = models.FloatField()
     description = models.TextField()

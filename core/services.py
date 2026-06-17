@@ -66,11 +66,12 @@ class AnnonceService:
             raise ValueError("Erreur : Seule une annonce 'En attente de validation' peut être validée.")
 
         # 3. Application des modifications métier
-        
-        
+        annonce.statut = "PUBLIEE"
+
         # Si tu as ajouté un champ ForeignKey vers Agent dans ton modèle Annonce pour la traçabilité (relation modère/valide)
-         
-             
+        if hasattr(annonce, 'agent_validateur'):
+            agent_obj = Agent.objects.get(pk=agent.pk)
+            annonce.agent_validateur = agent_obj
         # Sauvegarde sécurisée via l'ORM Django (ENF-6 : requêtes paramétrées automatiques)
         annonce.save()
         
@@ -97,9 +98,9 @@ class AnnonceService:
         annonce.statut = "REFUSEE"
         
         # Traçabilité : on enregistre l'agent qui a pris la décision de refuser
-        if hasattr(annonce, 'agent_validateur'):
-            agent_obj = Agent.objects.get(pk=agent.pk)
-            annonce.agent_validateur = agent_obj
+
+        agent_obj = Agent.objects.get(pk=agent.pk)
+        annonce.agent_validateur = agent_obj
             
         # Sauvegarde sécurisée dans la base de données
         annonce.save()
@@ -147,6 +148,58 @@ class AnnonceService:
         # Sauvegarde sécurisée dans la base de données
         annonce.save()
         
+        return annonce
+    @staticmethod
+    def ajouter_annonce_agence(
+        agent,
+        type_bien,
+        usage,
+        superficie,
+        localisation,
+        ville,
+        option,
+        prix,
+        description
+    ):
+
+        from core.models import Agent
+
+        if not Agent.objects.filter(pk=agent.pk).exists():
+            raise PermissionDenied(
+                "Seul un agent peut ajouter une annonce agence."
+            )
+
+        if prix <= 0:
+            raise ValueError(
+                "Le prix doit être supérieur à zéro."
+            )
+
+        if superficie <= 0:
+            raise ValueError(
+                "La superficie doit être supérieure à zéro."
+            )
+
+        agent_obj = Agent.objects.get(pk=agent.pk)
+
+        bien = BienImmobilier.objects.create(
+            proprietaire=None,
+            type=type_bien,
+            usage=usage,
+            superficie=superficie,
+            localisation=localisation,
+            ville=ville
+        )
+
+        annonce = Annonce.objects.create(
+            bailleur=None,
+            bien=bien,
+            agent_createur=agent_obj,
+            option=option,
+            prix=prix,
+            description=description,
+            statut='PUBLIEE'
+        )
+
         return annonce
 
 class DemandeVisiteService:

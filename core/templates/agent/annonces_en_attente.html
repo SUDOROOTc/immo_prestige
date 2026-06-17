@@ -6,43 +6,45 @@
 <h2 class="mb-4">Annonces en attente de validation</h2>
 
 {% if annonces %}
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-            <thead class="table-success">
-                <tr>
-                    <th>Type</th>
-                    <th>Ville</th>
-                    <th>Option</th>
-                    <th>Prix</th>
-                    <th>Superficie</th>
-                    <th>Description</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for annonce in annonces %}
-                <tr>
-                    <td>{{ annonce.bien.type }}</td>
-                    <td>{{ annonce.bien.ville }}</td>
-                    <td>{{ annonce.option }}</td>
-                    <td>{{ annonce.prix }} FCFA</td>
-                    <td>{{ annonce.bien.superficie }} m²</td>
-                    <td>{{ annonce.description|truncatechars:50 }}</td>
-                    <td>
-                        <a href="{% url 'valider_annonce' annonce.id %}" class="btn btn-sm btn-success">
-                            ✅ Valider
-                        </a>
-                        <a href="{% url 'refuser_annonce' annonce.id %}" class="btn btn-sm btn-danger">
-                            ❌ Refuser
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead class="table-success">
+            <tr>
+                <th>Type</th>
+                <th>Ville</th>
+                <th>Option</th>
+                <th>Prix</th>
+                <th>Superficie</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for annonce in annonces %}
+            <tr>
+                <td>{{ annonce.bien.type }}</td>
+                <td>{{ annonce.bien.ville }}</td>
+                <td>{{ annonce.option }}</td>
+                <td>{{ annonce.prix }} FCFA</td>
+                <td>{{ annonce.bien.superficie }} m²</td>
+                <td>{{ annonce.description|truncatechars:50 }}</td>
+                <td>
+                    <a href="{% url 'valider_annonce' annonce.id %}" class="btn btn-sm btn-success">
+                        ✅ Valider
+                    </a>
+                    <a href="{% url 'refuser_annonce' annonce.id %}" class="btn btn-sm btn-danger">
+                        ❌ Refuser
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% else %}
-    <div class="alert alert-info">Aucune annonce en attente de validation.</div>
+<div class="alert alert-info">Aucune annonce en attente de validation.</div>
 {% endif %}
-
+<a href="{% url 'ajouter_annonce_agence' %}" class="btn btn-success mb-3">
+    + Ajouter une annonce d'agence
+</a>
 {% endblock %}

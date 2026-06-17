@@ -57,4 +57,16 @@ urlpatterns = [
     path('client/demandes/', views.mes_demandes_client, name='mes_demandes_client'),
     path('redirect/', views.redirect_after_login, name='redirect_after_login'),
     path('manager/utilisateurs/<int:user_id>/supprimer/', views.supprimer_utilisateur, name='supprimer_utilisateur'), 
+    path('agent/annonces/ajouter/', views.ajouter_annonce_agence, name='ajouter_annonce_agence'),
+    path(
+    'agent/annonces/ajouter/',
+    views.ajouter_annonce_agence,
+    name='ajouter_annonce_agence'
+),
+
+path(
+    'agent/mes-annonces/',
+    views.mes_annonces_agence,
+    name='mes_annonces_agence'
+),
 ]
