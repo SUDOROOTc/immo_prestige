@@ -387,7 +387,7 @@ def affecter_client(request):
             agent  = get_object_or_404(Agent, id=request.POST.get('agent_id'))
             UtilisateurService.affecter_client(manager=request.user, client=client, agent=agent)
             messages.success(request, f"{client.username} affecté à {agent.username}.")
-            return redirect('liste_utilisateurs')
+            return redirect('liste_affectations')
         except (DjangoPermissionDenied, ValueError) as e:
             messages.error(request, str(e))
     try:
@@ -423,7 +423,7 @@ def ajouter_annonce_agence(request):
 
         try:
 
-            AnnonceService.ajouter_annonce_agence(
+            annonce= AnnonceService.ajouter_annonce_agence(
                 agent=request.user,
                 type_bien=request.POST.get('type'),
                 usage=request.POST.get('usage'),
@@ -442,7 +442,12 @@ def ajouter_annonce_agence(request):
                     'description'
                 )
             )
+            for photo in request.FILES.getlist('photos'):
 
+                Photo.objects.create(
+                    bien=annonce.bien,
+                    chemin_fichier=photo
+                )
             messages.success(
                 request,
                 "Annonce d'agence publiée avec succès."
@@ -466,6 +471,7 @@ def ajouter_annonce_agence(request):
         request,
         'agent/ajouter_annonce.html'
     )
+
 
 
 @login_required
@@ -534,5 +540,22 @@ def toutes_les_annonces_manager(request):
         'manager/toutes_les_annonces.html',
         {
             'annonces': annonces
+        }
+    )
+
+
+
+@login_required
+def liste_affectations(request):
+
+    clients = Client.objects.filter(
+        agent_affecte__isnull=False
+    )
+
+    return render(
+        request,
+        'manager/liste_affectations.html',
+        {
+            'clients': clients
         }
     )

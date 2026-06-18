@@ -74,4 +74,9 @@ path(
     name='dashboard_client',
 ),
 path('manager/utilisateurs/creer/', views.creer_utilisateur, name='creer_utilisateur'),
+path(
+    'manager/affectations/',
+    views.liste_affectations,
+    name='liste_affectations'
+),
 ]
