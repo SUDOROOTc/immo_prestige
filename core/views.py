@@ -98,6 +98,8 @@ def inscription(request):
 
 @login_required
 def deposer_annonce_view(request):
+    if not Bailleur.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux bailleurs.")
     if request.method == 'POST':
         try:
             annonce = AnnonceService.deposer_annonce(
@@ -124,6 +126,8 @@ def deposer_annonce_view(request):
 
 @login_required
 def mes_annonces_bailleur(request):
+    if not Bailleur.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux bailleurs.")
     annonces = Annonce.objects.filter(
         bailleur=request.user.bailleur
     ).order_by('-date_publication')
@@ -131,7 +135,12 @@ def mes_annonces_bailleur(request):
 
 @login_required
 def modifier_annonce(request, annonce_id):
-    annonce = get_object_or_404(Annonce, id=annonce_id)
+    if not Bailleur.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux bailleurs.")
+    
+
+    annonce = get_object_or_404(Annonce, id=annonce_id,bailleur=request.user)
+
     if request.method == 'POST':
         try:
             AnnonceService.modifier_annonce(
@@ -149,6 +158,8 @@ def modifier_annonce(request, annonce_id):
 
 @login_required
 def valider_annonce_view(request, annonce_id):
+    if not Agent.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux agents.")
     annonce = get_object_or_404(Annonce, id=annonce_id)
     try:
         AnnonceService.valider_annonce(annonce=annonce, agent=request.user)
@@ -159,6 +170,8 @@ def valider_annonce_view(request, annonce_id):
 
 @login_required
 def refuser_annonce_view(request, annonce_id):
+    if not Agent.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux agents.")
     annonce = get_object_or_404(Annonce, id=annonce_id)
     try:
         AnnonceService.refuser_annonce(annonce=annonce, agent=request.user)
@@ -169,6 +182,8 @@ def refuser_annonce_view(request, annonce_id):
 
 @login_required
 def retirer_annonce_view(request, annonce_id):
+    if not Manager.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux managers.")
     annonce = get_object_or_404(Annonce, id=annonce_id)
     try:
         AnnonceService.retirer_annonce(annonce=annonce, manager=request.user)
@@ -180,7 +195,11 @@ def retirer_annonce_view(request, annonce_id):
 
 @login_required
 def supprimer_annonce(request, annonce_id):
-    annonce = get_object_or_404(Annonce, id=annonce_id)
+    if not Bailleur.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied(
+            "Seul un bailleur peut supprimer une annonce."
+        )
+    annonce = get_object_or_404(Annonce, id=annonce_id,bailleur=request.user)
     if request.method == 'POST':
         try:
             AnnonceService.supprimer_annonce(annonce=annonce, bailleur=request.user)
@@ -195,11 +214,7 @@ def supprimer_annonce(request, annonce_id):
 def agent_dashboard(request):
 
     if not Agent.objects.filter(pk=request.user.pk).exists():
-        messages.error(
-            request,
-            "Accès réservé aux agents."
-        )
-        return redirect('accueil')
+        raise DjangoPermissionDenied("Accès réservé aux agents.")
 
     return render(
         request,
@@ -210,11 +225,7 @@ def agent_dashboard(request):
 def annonces_en_attente(request):
 
     if not Agent.objects.filter(pk=request.user.pk).exists():
-        messages.error(
-            request,
-            "Accès réservé aux agents."
-        )
-        return redirect('accueil')
+        raise DjangoPermissionDenied("Accès réservé aux agents.")
 
     annonces = Annonce.objects.filter(
         statut='EN_ATTENTE'
@@ -235,11 +246,10 @@ def liste_demandes_agent(request):
     Liste les demandes de visite EN_ATTENTE
     des clients affectés à cet agent (EF-D2).
     """
-    try:
-        agent = Agent.objects.get(pk=request.user.pk)
-    except Agent.DoesNotExist:
-        messages.error(request, "Accès réservé aux agents.")
-        return redirect('accueil')
+    if not Agent.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux agents.")
+
+    agent = Agent.objects.get(pk=request.user.pk)
 
     demandes = DemandeVisite.objects.filter(
         client__agent_affecte=agent,   # ← le bon filtre
@@ -257,6 +267,9 @@ def traiter_demande_visite_view(request, demande_id, decision):
     """
     Valide ou refuse une demande de visite (POST uniquement).
     """
+    if not Agent.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux agents.")
+
     if request.method != 'POST':
         messages.error(request, "Méthode non autorisée.")
         return redirect('liste_demandes_agent')
@@ -279,21 +292,21 @@ def traiter_demande_visite_view(request, demande_id, decision):
 
 @login_required
 def clients_affectes(request):
-    try:
-        # Récupère l'objet Agent correspondant à l'utilisateur connecté
-        agent = Agent.objects.get(pk=request.user.pk)
-        clients = Client.objects.filter(
-            agent_affecte=agent
-        ).order_by('username')
-    except Agent.DoesNotExist:
-        messages.error(request, "Accès réservé aux agents.")
-        return redirect('accueil')
+    if not Agent.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux agents.")
+    # Récupère l'objet Agent correspondant à l'utilisateur connecté
+    agent = Agent.objects.get(pk=request.user.pk)
+    clients = Client.objects.filter(
+        agent_affecte=agent
+    ).order_by('username')
     
     return render(request, 'agent/clients.html', {'clients': clients})
 
 
 @login_required
 def mes_favoris_client(request):
+    if not Client.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux clients.")
     try:
         favoris = FavoriService.lister_favoris(user=request.user)
     except DjangoPermissionDenied as e:
@@ -304,6 +317,8 @@ def mes_favoris_client(request):
 
 @login_required
 def ajouter_favori_view(request, annonce_id):
+    if not Client.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux clients.")
     annonce = get_object_or_404(Annonce, id=annonce_id)
     try:
         FavoriService.ajouter_favori(user=request.user, annonce=annonce)
@@ -315,6 +330,8 @@ def ajouter_favori_view(request, annonce_id):
 
 @login_required
 def retirer_favori_view(request, annonce_id):
+    if not Client.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux clients.")
     annonce = get_object_or_404(Annonce, id=annonce_id)
     try:
         FavoriService.retirer_favori(user=request.user, annonce=annonce)
@@ -326,6 +343,8 @@ def retirer_favori_view(request, annonce_id):
 
 @login_required
 def creer_demande_visite_view(request, annonce_id):
+    if not Client.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux clients.")
     annonce = get_object_or_404(Annonce, id=annonce_id)
     try:
         DemandeVisiteService.creer_demande(client=request.user, annonce=annonce)
@@ -337,6 +356,8 @@ def creer_demande_visite_view(request, annonce_id):
 
 @login_required
 def mes_demandes_client(request):
+    if not Client.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux clients.")
     try:
         demandes = DemandeVisite.objects.filter(
             client=request.user.client
@@ -348,6 +369,8 @@ def mes_demandes_client(request):
 
 @login_required
 def dashboard(request):
+    if not Manager.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux managers.")
     try:
         stats = UtilisateurService.get_statistiques(manager=request.user)
     except DjangoPermissionDenied as e:
@@ -358,6 +381,8 @@ def dashboard(request):
 
 @login_required
 def liste_utilisateurs(request):
+    if not Manager.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux managers.")
     try:
         data = UtilisateurService.lister_utilisateurs(manager=request.user)
     except DjangoPermissionDenied as e:
@@ -368,6 +393,8 @@ def liste_utilisateurs(request):
 
 @login_required
 def supprimer_utilisateur(request, user_id):
+    if not Manager.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux managers.")
     utilisateur = get_object_or_404(Utilisateur, id=user_id)
     if request.method == 'POST':
         try:
@@ -381,6 +408,8 @@ def supprimer_utilisateur(request, user_id):
 
 @login_required
 def affecter_client(request):
+    if not Manager.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux managers.")
     if request.method == 'POST':
         try:
             client = get_object_or_404(Client, id=request.POST.get('client_id'))
@@ -418,6 +447,8 @@ def redirect_after_login(request):
 
 @login_required
 def ajouter_annonce_agence(request):
+    if not Agent.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux agents.")
 
     if request.method == 'POST':
 
@@ -476,6 +507,8 @@ def ajouter_annonce_agence(request):
 
 @login_required
 def mes_annonces_agence(request):
+    if not Agent.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux agents.")
 
     annonces = Annonce.objects.filter(
         agent_createur=request.user
@@ -491,6 +524,8 @@ def mes_annonces_agence(request):
 
 @login_required
 def client_dashboard(request):
+    if not Client.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux clients.")
     return render(
         request,
         'client/dashboard.html'
@@ -531,6 +566,8 @@ def creer_utilisateur(request):
 @login_required
 
 def toutes_les_annonces_manager(request):
+    if not Manager.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux managers.")
     annonces = Annonce.objects.select_related(
         'bien',
         'bailleur'
@@ -547,6 +584,8 @@ def toutes_les_annonces_manager(request):
 
 @login_required
 def liste_affectations(request):
+    if not Manager.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux managers.")
 
     clients = Client.objects.filter(
         agent_affecte__isnull=False

@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 
 class Utilisateur(AbstractUser):
     telephone = models.CharField(max_length=20, blank=True)
+    email = models.EmailField(unique=True)
     
     class Meta:
         verbose_name = 'Utilisateur'
@@ -124,6 +125,7 @@ class Annonce(models.Model):
         blank=True,
         related_name='annonces_validees'
     )
+    
     agent_createur = models.ForeignKey(
     Agent,
     on_delete=models.SET_NULL,
@@ -131,6 +133,8 @@ class Annonce(models.Model):
     blank=True,
     related_name='annonces_agence'
 )
+
+
     option = models.CharField(max_length=10, choices=OPTION_CHOICES)
     prix = models.FloatField()
     description = models.TextField()

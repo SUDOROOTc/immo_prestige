@@ -26,7 +26,16 @@ class AnnonceService:
         # Règle 5 : option valide
         if option not in ['LOCATION', 'VENTE']:
             raise ValueError("L'option doit être LOCATION ou VENTE")
-    
+        types_valides = [
+            'TERRAIN',
+            'BATIMENT',
+            'APPARTEMENT',
+            'VILLA',
+            'COMMERCE'
+        ]
+
+        if type_bien not in types_valides:
+            raise ValueError("Type de bien invalide.")
         # Création du bien
         bailleur_obj = Bailleur.objects.get(pk=bailleur.pk)
         bien = BienImmobilier.objects.create(
@@ -114,6 +123,10 @@ class AnnonceService:
             raise ValueError("Le prix doit être supérieur à zéro.")
         if not description or not description.strip():
             raise ValueError("La description ne peut pas être vide.")
+        if annonce.statut != "EN_ATTENTE":
+            raise ValueError(
+            "Seules les annonces en attente peuvent être modifiées."
+            )
         annonce.option = option
         annonce.prix = prix
         annonce.description = description
@@ -178,6 +191,16 @@ class AnnonceService:
             raise ValueError(
                 "La superficie doit être supérieure à zéro."
             )
+        types_valides = [
+            'TERRAIN',
+            'BATIMENT',
+            'APPARTEMENT',
+            'VILLA',
+            'COMMERCE'
+        ]
+
+        if type_bien not in types_valides:
+            raise ValueError("Type de bien invalide.")
 
         agent_obj = Agent.objects.get(pk=agent.pk)
 
@@ -300,6 +323,11 @@ class UtilisateurService:
                 "Seul un manager peut faire cette action."
             )
 
+        if Manager.objects.filter(pk=utilisateur.pk).exists():
+            raise PermissionDenied(
+                "Un manager ne peut pas supprimer un autre manager."
+            )
+
         utilisateur.delete()
 
     @staticmethod
@@ -334,7 +362,11 @@ class UtilisateurService:
         CLIENT et BAILLEUR : inscription libre
         AGENT et MANAGER : créés uniquement par un manager
         """
+        
 
+
+
+        
         from core.models import Agent, Manager
 
         if role in ['AGENT', 'MANAGER']:
