@@ -1,130 +1,118 @@
 {% extends 'base.html' %}
+{% load role_tags %}
 
-{% block title %}Mon espace client - ImmoFaso{% endblock %}
+{% block title %}Mon tableau de bord — ImmoFaso{% endblock %}
 
 {% block content %}
+<div class="max-w-[1200px] mx-auto px-4 py-8">
 
-<div class="container">
-
-    <div class="mb-4">
-        <h2>👋 Bienvenue {{ user.first_name|default:user.username }}</h2>
-        <p class="text-muted">
-            Gérez vos recherches immobilières depuis votre espace personnel.
-        </p>
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="font-heading font-bold text-2xl text-text">
+            Bonjour, {{ user.first_name }} {{ user.last_name }}
+        </h1>
+        <p class="font-body text-gray text-sm mt-1">Voici un résumé de votre activité sur ImmoFaso.</p>
     </div>
 
-    <!-- Actions rapides -->
-    <div class="row mb-4">
-
-        <div class="col-md-4 mb-3">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <h4>🏠</h4>
-                    <h5>Rechercher un bien</h5>
-                    <p class="text-muted">
-                        Parcourez les annonces et utilisez les filtres avancés.
-                    </p>
-                    <a href="{% url 'liste_annonces' %}" class="btn btn-success">
-                        Voir les annonces
-                    </a>
+    <!-- Cartes statistiques -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-lg border border-border shadow-sm p-6 hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-lg bg-danger/10 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-2xl text-danger" style="font-variation-settings: 'FILL' 1">favorite</span>
+                </div>
+                <div>
+                    <p class="text-3xl font-heading font-bold text-text">{{ favoris_count }}</p>
+                    <p class="text-sm font-body text-gray">Favoris</p>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4 mb-3">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <h4>❤️</h4>
-                    <h5>Mes favoris</h5>
-                    <p class="text-muted">
-                        Consultez les biens enregistrés.
-                    </p>
-                    <a href="{% url 'mes_favoris_client' %}" class="btn btn-primary">
-                        Mes favoris
-                    </a>
+        <div class="bg-white rounded-lg border border-border shadow-sm p-6 hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-lg bg-info/10 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-2xl text-info">schedule_send</span>
+                </div>
+                <div>
+                    <p class="text-3xl font-heading font-bold text-text">{{ demandes_count }}</p>
+                    <p class="text-sm font-body text-gray">Demandes envoyées</p>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4 mb-3">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <h4>📅</h4>
-                    <h5>Mes visites</h5>
-                    <p class="text-muted">
-                        Suivez vos demandes de visite.
-                    </p>
-                    <a href="{% url 'mes_demandes_client' %}" class="btn btn-warning">
-                        Mes demandes
-                    </a>
+        <div class="bg-white rounded-lg border border-border shadow-sm p-6 hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-lg bg-success/10 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-2xl text-success">check_circle</span>
+                </div>
+                <div>
+                    <p class="text-3xl font-heading font-bold text-text">{{ demandes_validees }}</p>
+                    <p class="text-sm font-body text-gray">Visites validées</p>
                 </div>
             </div>
         </div>
-
     </div>
 
-    <!-- Filtres rapides -->
-    <div class="card shadow-sm">
-
-        <div class="card-header bg-success text-white">
-            <h5 class="mb-0">🔎 Recherche rapide</h5>
+    <!-- Demandes récentes -->
+    <div class="bg-white rounded-lg border border-border shadow-sm">
+        <div class="px-6 py-4 border-b border-border flex items-center justify-between">
+            <h2 class="font-heading font-semibold text-base text-text">Demandes récentes</h2>
+            <a href="{% url 'mes_demandes_client' %}" class="text-sm font-heading text-primary hover:underline">Voir tout</a>
         </div>
-
-        <div class="card-body">
-
-            <form method="GET" action="{% url 'liste_annonces' %}">
-
-                <div class="row">
-
-                    <div class="col-md-3 mb-3">
-                        <label class="form-label">Type</label>
-                        <select name="type" class="form-select">
-                            <option value="">Tous</option>
-                            <option value="TERRAIN">Terrain</option>
-                            <option value="BATIMENT">Bâtiment</option>
-                            <option value="APPARTEMENT">Appartement</option>
-                            <option value="VILLA">Villa</option>
-                            <option value="COMMERCE">Commerce</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-3 mb-3">
-                        <label class="form-label">Usage</label>
-                        <select name="usage" class="form-select">
-                            <option value="">Tous</option>
-                            <option value="RESIDENCE">Résidence</option>
-                            <option value="BUREAU">Bureau</option>
-                            <option value="COMMERCE">Commerce</option>
-                            <option value="AGRICULTURE">Agriculture</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-3 mb-3">
-                        <label class="form-label">Option</label>
-                        <select name="option" class="form-select">
-                            <option value="">Toutes</option>
-                            <option value="VENTE">Vente</option>
-                            <option value="LOCATION">Location</option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-3 mb-3">
-                        <label class="form-label">Ville</label>
-                        <input type="text" name="ville" class="form-control" placeholder="Ouagadougou">
-                    </div>
-
-                </div>
-
-                <button type="submit" class="btn btn-success">
-                    Rechercher
-                </button>
-
-            </form>
-
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-border bg-background/50">
+                        <th class="text-left px-6 py-3 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Propriété</th>
+                        <th class="text-left px-6 py-3 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Date</th>
+                        <th class="text-left px-6 py-3 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for demande in dernieres_demandes %}
+                    <tr class="border-b border-border last:border-0 hover:bg-background/30 transition-colors">
+                        <td class="px-6 py-4">
+                            <a href="{% url 'detail_annonce' demande.annonce.id %}" class="font-body text-sm text-primary hover:underline">
+                                {{ demande.annonce.bien.get_type_display }} — {{ demande.annonce.bien.ville }}
+                            </a>
+                        </td>
+                        <td class="px-6 py-4 font-body text-sm text-gray">{{ demande.date_demande|date:"d/m/Y" }}</td>
+                        <td class="px-6 py-4">
+                            {% if demande.statut == 'EN_ATTENTE' %}
+                                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-heading font-semibold bg-secondary/10 text-secondary">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                    En attente
+                                </span>
+                            {% elif demande.statut == 'VALIDEE' %}
+                                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-heading font-semibold bg-success/10 text-success">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                                    Validée
+                                </span>
+                            {% elif demande.statut == 'REFUSEE' %}
+                                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-heading font-semibold bg-danger/10 text-danger">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-danger"></span>
+                                    Refusée
+                                </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="px-6 py-8 text-center">
+                            <div class="flex flex-col items-center gap-2 text-gray">
+                                <span class="material-symbols-outlined text-4xl">inbox</span>
+                                <p class="font-body text-sm">Aucune demande pour le moment.</p>
+                                <a href="{% url 'liste_annonces' %}" class="font-heading text-sm text-primary hover:underline">
+                                    Parcourir les annonces
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-
     </div>
 
 </div>
-
 {% endblock %}

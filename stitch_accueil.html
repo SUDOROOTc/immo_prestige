@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ImmoFaso - Accueil</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Poppins:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline-variant": "#c4c6cf",
+                    "tertiary": "#002a1a",
+                    "tertiary-fixed": "#6ffbbe",
+                    "on-primary-container": "#8aa4cf",
+                    "surface-container": "#e9edff",
+                    "on-error-container": "#93000a",
+                    "primary-container": "#1e3a5f",
+                    "on-background": "#141b2b",
+                    "secondary-fixed-dim": "#ffb95f",
+                    "on-error": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "secondary-container": "#fea619",
+                    "on-tertiary-fixed-variant": "#005236",
+                    "on-secondary-fixed": "#2a1700",
+                    "surface": "#f9f9ff",
+                    "outline": "#74777f",
+                    "on-primary": "#ffffff",
+                    "background": "#f9f9ff",
+                    "primary-fixed": "#d5e3ff",
+                    "surface-tint": "#455f87",
+                    "on-primary-fixed": "#001c3b",
+                    "on-surface": "#141b2b",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-fixed-variant": "#2d486d",
+                    "on-secondary-container": "#684000",
+                    "on-tertiary-container": "#10b981",
+                    "surface-dim": "#d3daef",
+                    "surface-container-lowest": "#ffffff",
+                    "on-surface-variant": "#43474e",
+                    "tertiary-fixed-dim": "#4edea3",
+                    "on-secondary-fixed-variant": "#653e00",
+                    "surface-variant": "#dce2f7",
+                    "error": "#ba1a1a",
+                    "tertiary-container": "#00422b",
+                    "surface-bright": "#f9f9ff",
+                    "error-container": "#ffdad6",
+                    "surface-container-high": "#e1e8fd",
+                    "primary": "#022448",
+                    "inverse-surface": "#293040",
+                    "surface-container-low": "#f1f3ff",
+                    "primary-fixed-dim": "#adc8f5",
+                    "inverse-on-surface": "#edf0ff",
+                    "inverse-primary": "#adc8f5",
+                    "secondary-fixed": "#ffddb8",
+                    "on-tertiary-fixed": "#002113",
+                    "surface-container-highest": "#dce2f7",
+                    "secondary": "#855300"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit-xl": "48px",
+                    "unit-lg": "24px",
+                    "gutter": "24px",
+                    "unit-xs": "4px",
+                    "margin-mobile": "16px",
+                    "unit-sm": "8px",
+                    "container-max": "1200px",
+                    "unit-md": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Poppins"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Poppins"],
+                    "headline-sm": ["Poppins"],
+                    "label-sm": ["Inter"],
+                    "headline-lg-mobile": ["Poppins"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "500"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-lg text-body-lg antialiased">
+<!-- TopNavBar -->
+<header class="w-full top-0 sticky bg-surface dark:bg-on-background shadow-sm dark:bg-on-background z-50">
+<div class="flex justify-between items-center px-gutter h-16 w-full max-w-container-max mx-auto">
+<!-- Brand -->
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">
+                ImmoFaso
+            </div>
+<!-- Navigation -->
+<nav class="hidden md:flex gap-unit-lg items-center font-headline-sm text-headline-sm">
+<!-- Assuming 'Acheter' is the primary context for the homepage -->
+<a class="text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed pb-1 hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200 ease-in-out" href="#">Acheter</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200 ease-in-out" href="#">Louer</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200 ease-in-out" href="#">Vendre</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200 ease-in-out" href="#">Services</a>
+</nav>
+<!-- Actions -->
+<div class="flex items-center gap-unit-md">
+<button class="hidden md:flex items-center justify-center w-10 h-10 rounded-full text-on-surface-variant hover:bg-surface-variant transition-colors duration-200 ease-in-out">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="bg-transparent border border-outline text-primary px-unit-md py-unit-sm rounded-lg font-headline-sm text-headline-sm hover:bg-surface-variant transition-colors duration-200 ease-in-out">
+                    Connexion
+                </button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main>
+<!-- Hero Section -->
+<section class="relative w-full h-[600px] flex items-center justify-center">
+<!-- Background Image -->
+<div class="absolute inset-0 z-0">
+<div class="w-full h-full bg-cover bg-center" data-alt="A breathtaking, ultra-realistic architectural photograph of a luxurious modern villa in Burkina Faso at golden hour. The multi-story home features sleek geometric lines, expansive floor-to-ceiling glass windows reflecting the warm sunset, and a pristine infinity pool in the foreground. Palm trees and elegant landscaping frame the property. The lighting is soft and inviting, emphasizing the premium, high-end nature of the real estate platform, conveying stability and aspirational living." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDeqoEZFUYpgdJ8Y4SPaQCjHs1oYbpQiVrPhvWvsh5cVV9vSb1saoGJcwJ10KDvrfUF-RZCqpPJ2Eg1x3mNBx4VVrybrgz_e8gCLRtQsNSljcgDkw6sEa1vF6rzkjztqDze0WfpF8YAirPDVNN_xsjHG08-TAIizDEXhE74VXBSMMXpTHrBkmo4HEXOcFQtasWjYEuMf1TLSdAFK1S4EgprCAY7DMo0F2TVrFrJf-ua3cRlKdkfwI3HfbFfUg35pMCTVL1iIdZHbPNT')"></div>
+<div class="absolute inset-0 bg-primary/60"></div>
+</div>
+<!-- Hero Content -->
+<div class="relative z-10 w-full max-w-container-max mx-auto px-gutter flex flex-col items-center text-center gap-unit-lg">
+<h1 class="font-headline-lg text-headline-lg text-on-primary max-w-3xl">
+                    Trouvez la maison de vos rêves au Burkina Faso
+                </h1>
+<p class="font-body-lg text-body-lg text-primary-fixed max-w-2xl">
+                    La référence immobilière pour acheter, louer ou vendre en toute sécurité et confiance.
+                </p>
+<!-- Search Bar -->
+<div class="mt-unit-md w-full max-w-4xl bg-surface-container-lowest p-unit-sm rounded-xl shadow-md flex flex-col md:flex-row items-center gap-unit-sm">
+<div class="flex-1 w-full flex items-center gap-unit-sm px-unit-md py-unit-sm border border-outline-variant rounded-lg focus-within:border-primary transition-colors bg-surface-bright">
+<span class="material-symbols-outlined text-outline">location_on</span>
+<input class="w-full bg-transparent border-none focus:ring-0 text-body-md font-body-md text-on-surface placeholder:text-outline p-0" placeholder="Localisation (ex: Ouagadougou)" type="text"/>
+</div>
+<div class="flex-1 w-full flex items-center gap-unit-sm px-unit-md py-unit-sm border border-outline-variant rounded-lg focus-within:border-primary transition-colors bg-surface-bright">
+<span class="material-symbols-outlined text-outline">home</span>
+<select class="w-full bg-transparent border-none focus:ring-0 text-body-md font-body-md text-on-surface p-0 appearance-none cursor-pointer">
+<option class="text-outline" disabled="" selected="" value="">Type de bien</option>
+<option value="villa">Villa</option>
+<option value="terrain">Terrain</option>
+<option value="appartement">Appartement</option>
+</select>
+</div>
+<div class="flex-1 w-full flex items-center gap-unit-sm px-unit-md py-unit-sm border border-outline-variant rounded-lg focus-within:border-primary transition-colors bg-surface-bright">
+<span class="material-symbols-outlined text-outline">payments</span>
+<select class="w-full bg-transparent border-none focus:ring-0 text-body-md font-body-md text-on-surface p-0 appearance-none cursor-pointer">
+<option class="text-outline" disabled="" selected="" value="">Budget Max</option>
+<option value="50M">50 Millions FCFA</option>
+<option value="100M">100 Millions FCFA</option>
+<option value="200M+">200+ Millions FCFA</option>
+</select>
+</div>
+<button class="w-full md:w-auto bg-secondary-container text-on-secondary-container font-headline-sm text-headline-sm px-unit-lg py-3 rounded-lg hover:bg-secondary transition-colors duration-200 flex items-center justify-center gap-2 shadow-sm hover:shadow-md">
+<span class="material-symbols-outlined">search</span>
+                        Rechercher
+                    </button>
+</div>
+</div>
+</section>
+<!-- Categories Section -->
+<section class="w-full max-w-container-max mx-auto px-gutter py-unit-xl">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-unit-lg">Explorer par catégories</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-unit-lg">
+<!-- Category Card -->
+<a class="bg-surface-container-lowest p-unit-lg rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col items-center justify-center gap-unit-sm border border-transparent hover:border-outline-variant" href="#">
+<div class="w-16 h-16 rounded-full bg-primary-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[32px]">home_work</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-on-surface mt-unit-xs">Villas</span>
+</a>
+<a class="bg-surface-container-lowest p-unit-lg rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col items-center justify-center gap-unit-sm border border-transparent hover:border-outline-variant" href="#">
+<div class="w-16 h-16 rounded-full bg-primary-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[32px]">landscape</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-on-surface mt-unit-xs">Terrains</span>
+</a>
+<a class="bg-surface-container-lowest p-unit-lg rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col items-center justify-center gap-unit-sm border border-transparent hover:border-outline-variant" href="#">
+<div class="w-16 h-16 rounded-full bg-primary-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[32px]">apartment</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-on-surface mt-unit-xs">Appartements</span>
+</a>
+<a class="bg-surface-container-lowest p-unit-lg rounded-xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 flex flex-col items-center justify-center gap-unit-sm border border-transparent hover:border-outline-variant" href="#">
+<div class="w-16 h-16 rounded-full bg-primary-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[32px]">storefront</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-on-surface mt-unit-xs">Commerces</span>
+</a>
+</div>
+</section>
+<!-- Latest Listings Section -->
+<section class="w-full max-w-container-max mx-auto px-gutter pb-unit-xl">
+<div class="flex justify-between items-end mb-unit-lg">
+<h2 class="font-headline-md text-headline-md text-on-surface">Dernières annonces</h2>
+<a class="font-headline-sm text-headline-sm text-primary hover:text-secondary transition-colors flex items-center gap-1" href="#">
+                    Voir tout <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-unit-lg">
+<!-- Property Card 1 -->
+<article class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col overflow-hidden border border-outline-variant/30">
+<div class="relative w-full aspect-[4/3] bg-surface-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A bright, professionally photographed exterior view of a contemporary residential home in Ouagadougou. The property features white stucco walls, dark framed windows, and a beautifully manicured green lawn under a clear blue sky. The image conveys a high-quality, aspirational living standard suitable for a premium real estate listing, bathed in warm, natural daylight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCj8SmFnfH-PFCstDdV6x4N65r46uHavEGIxIeP00VJFyBHgDto8ccIZ2Ro3iLYjyws83m5zNnOQ2yaR7vv0eLPrMkXT2HS_PpkjuSfjEUk1wyjOz50rn1xamFPByFEh9zcSri8La1TyyZzYYtwiKDKwRQWyrs3PA4sJo9nNEX-3L7orhzL3mcAIexSZWeXgBarxrHBU_0NjyVFUheF1UJzTaR7CcnBCs1znxp7XFQPWRPjxHHSy1B9FzkWiinTl77mGX_T9XBAfO_r"/>
+<div class="absolute top-unit-sm left-unit-sm bg-tertiary-container text-on-tertiary-container px-2 py-1 rounded font-label-sm text-label-sm">
+                            À Vendre
+                        </div>
+</div>
+<div class="p-unit-md flex flex-col flex-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface line-clamp-1 mb-1">Villa Duplex Moderne 5 Pièces</h3>
+<p class="font-body-md text-body-md text-outline flex items-center gap-1 mb-unit-md">
+<span class="material-symbols-outlined text-[16px]">location_on</span> Ouaga 2000, Ouagadougou
+                        </p>
+<div class="flex items-center gap-unit-md border-y border-outline-variant/30 py-unit-sm my-auto">
+<div class="flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">bed</span> 4
+                            </div>
+<div class="flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">shower</span> 3
+                            </div>
+<div class="flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">straighten</span> 400 m²
+                            </div>
+</div>
+<div class="mt-unit-md flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-primary font-bold">120M <span class="text-body-md font-body-md text-outline font-normal">FCFA</span></span>
+<button class="bg-primary text-on-primary px-unit-md py-2 rounded-lg font-headline-sm text-headline-sm hover:bg-primary/90 transition-colors">
+                                Détails
+                            </button>
+</div>
+</div>
+</article>
+<!-- Property Card 2 -->
+<article class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col overflow-hidden border border-outline-variant/30">
+<div class="relative w-full aspect-[4/3] bg-surface-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="An interior shot of a spacious, light-filled living room in a modern apartment. The room features minimalist decor with neutral tones, large windows letting in abundant natural light, and elegant hardwood flooring. A sleek sofa and contemporary art pieces complete the scene. The overall aesthetic is clean, sophisticated, and professional, perfectly suited for a premium real estate platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqb8MuNtDpYOneZ1DHKA8aEDfAo1cpgpwNJIEHCoaniMme94D-SD13NMFb8LW0Hg2PFR5ZBW_mRdpLCqrw5QfadTmyn89afrMnNkNQEIC1vUU5OsjFdUKVB3dHIEIQAtJ-UJcAZzMuaVx_W-9D9Smi_N1BsWCx_d9hSJ8b6LrO1mdei9YVFwb7suAnaxYzz7DuPDUyAOynr4TOPHQHkk0NJ1q6klOaVwA-EoNnS_G-zvB19P_dwaIZYVzgyCVB3AZMUckKeZQupw9t"/>
+<div class="absolute top-unit-sm left-unit-sm bg-primary-container text-on-primary-container px-2 py-1 rounded font-label-sm text-label-sm">
+                            À Louer
+                        </div>
+</div>
+<div class="p-unit-md flex flex-col flex-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface line-clamp-1 mb-1">Appartement Haut Standing</h3>
+<p class="font-body-md text-body-md text-outline flex items-center gap-1 mb-unit-md">
+<span class="material-symbols-outlined text-[16px]">location_on</span> ZAD, Ouagadougou
+                        </p>
+<div class="flex items-center gap-unit-md border-y border-outline-variant/30 py-unit-sm my-auto">
+<div class="flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">bed</span> 2
+                            </div>
+<div class="flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">shower</span> 2
+                            </div>
+<div class="flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">straighten</span> 120 m²
+                            </div>
+</div>
+<div class="mt-unit-md flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-primary font-bold">350K <span class="text-body-md font-body-md text-outline font-normal">FCFA/mois</span></span>
+<button class="bg-primary text-on-primary px-unit-md py-2 rounded-lg font-headline-sm text-headline-sm hover:bg-primary/90 transition-colors">
+                                Détails
+                            </button>
+</div>
+</div>
+</article>
+<!-- Property Card 3 -->
+<article class="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col overflow-hidden border border-outline-variant/30">
+<div class="relative w-full aspect-[4/3] bg-surface-variant overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A high-quality architectural render of a large, vacant plot of land situated in a developing residential area. The terrain is relatively flat with scattered small trees and shrubs under a bright, sunny sky. Boundary markers are subtly visible. The image conveys potential and opportunity for real estate development, maintaining a clean and realistic aesthetic for an online property listing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmxqUFP-JoIJ0-O98F3xR2Aygj9sRY25i1kpYFghUslX_jRm83w0WnochdBzXrVhJFVACJ25lMu6t1P4ZX2mM829B8nqbt0pC3IWZNKvtE71X0yEdzbZiN2GX3JPWeGV3BCDsPD_W59hBWr8N_52K0TDx4Kt6aBrUdYWJFCLaFxCt0t97FXZC-pRsEuOaFrwnybt1ZXfRaQ_8sZoTuPVglm6zb03F5B-3uyGycOw1WYQEaGQ2gN-tjWHIAlC1o4KPUlKUOrqd9FImy"/>
+<div class="absolute top-unit-sm left-unit-sm bg-tertiary-container text-on-tertiary-container px-2 py-1 rounded font-label-sm text-label-sm">
+                            À Vendre
+                        </div>
+</div>
+<div class="p-unit-md flex flex-col flex-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface line-clamp-1 mb-1">Terrain Clôturé Panoramique</h3>
+<p class="font-body-md text-body-md text-outline flex items-center gap-1 mb-unit-md">
+<span class="material-symbols-outlined text-[16px]">location_on</span> Saaba, Ouagadougou
+                        </p>
+<div class="flex items-center gap-unit-md border-y border-outline-variant/30 py-unit-sm my-auto">
+<div class="flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">terrain</span> Terrain nu
+                            </div>
+<div class="flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">straighten</span> 600 m²
+                            </div>
+</div>
+<div class="mt-unit-md flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-primary font-bold">25M <span class="text-body-md font-body-md text-outline font-normal">FCFA</span></span>
+<button class="bg-primary text-on-primary px-unit-md py-2 rounded-lg font-headline-sm text-headline-sm hover:bg-primary/90 transition-colors">
+                                Détails
+                            </button>
+</div>
+</div>
+</article>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full bottom-0 bg-primary dark:bg-tertiary-container">
+<div class="flex flex-col md:flex-row justify-between items-center py-unit-lg px-gutter w-full max-w-container-max mx-auto gap-unit-md">
+<div class="font-headline-sm text-headline-sm text-on-primary">
+                ImmoFaso
+            </div>
+<nav class="flex flex-wrap justify-center gap-unit-md font-body-md text-body-md">
+<a class="text-primary-fixed-dim hover:text-secondary-container transition-colors opacity-80 hover:opacity-100" href="#">À propos</a>
+<a class="text-primary-fixed-dim hover:text-secondary-container transition-colors opacity-80 hover:opacity-100" href="#">Contact</a>
+<a class="text-primary-fixed-dim hover:text-secondary-container transition-colors opacity-80 hover:opacity-100" href="#">Mentions Légales</a>
+<a class="text-primary-fixed-dim hover:text-secondary-container transition-colors opacity-80 hover:opacity-100" href="#">Aide</a>
+</nav>
+<div class="font-body-md text-body-md text-primary-fixed-dim opacity-80 text-center md:text-right text-sm">
+                © 2024 ImmoFaso. Tous droits réservés. La référence immobilière au Burkina Faso.
+            </div>
+</div>
+</footer>
+</body></html>

@@ -1,134 +1,172 @@
 {% extends 'base.html' %}
+{% load role_tags %}
 
 {% block title %}Utilisateurs — ImmoFaso{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Gestion des utilisateurs</h2>
-    <div class="d-flex gap-2">
-        <a href="{% url 'creer_utilisateur' %}" class="btn btn-primary">
-            ➕ Créer un utilisateur
-        </a>
-        <a href="{% url 'affecter_client' %}" class="btn btn-success">
-            🔗 Affecter un client
-        </a>
+<div class="max-w-[1200px] mx-auto px-4 py-8">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+            <h1 class="font-heading font-bold text-2xl text-text">Gestion des utilisateurs</h1>
+            <p class="font-body text-sm text-gray mt-1">Gérez les comptes de la plateforme.</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="{% url 'creer_utilisateur' %}"
+               class="inline-flex items-center gap-2 bg-primary text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-md hover:bg-primary/90 transition-colors">
+                <span class="material-symbols-outlined text-[18px]">person_add</span>
+                Créer un utilisateur
+            </a>
+            <a href="{% url 'affecter_client' %}"
+               class="inline-flex items-center gap-2 bg-secondary text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-md hover:opacity-90 transition-opacity">
+                <span class="material-symbols-outlined text-[18px]">link</span>
+                Affecter un client
+            </a>
+        </div>
     </div>
+
+    <!-- CLIENTS -->
+    <h2 class="font-heading font-bold text-base text-text mb-4 flex items-center gap-2">
+        <span class="material-symbols-outlined text-info text-xl">group</span>
+        Clients
+    </h2>
+    {% if clients %}
+    <div class="bg-white rounded-lg border border-border shadow-sm overflow-hidden mb-8">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-border bg-background/50">
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Nom d'utilisateur</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Nom complet</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Email</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Téléphone</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Agent affecté</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for client in clients %}
+                    <tr class="border-b border-border last:border-0 hover:bg-background/30 transition-colors">
+                        <td class="px-6 py-4 font-body text-sm font-medium text-text">{{ client.username }}</td>
+                        <td class="px-6 py-4 font-body text-sm text-text">{{ client.first_name }} {{ client.last_name }}</td>
+                        <td class="px-6 py-4 font-body text-sm text-gray">{{ client.email }}</td>
+                        <td class="px-6 py-4 font-body text-sm text-gray">{{ client.telephone|default:"—" }}</td>
+                        <td class="px-6 py-4">
+                            {% if client.agent_affecte %}
+                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-heading font-semibold bg-info/10 text-info">
+                                    {{ client.agent_affecte.username }}
+                                </span>
+                            {% else %}
+                                <span class="font-body text-xs text-gray">Non affecté</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4">
+                            <a href="{% url 'supprimer_utilisateur' client.id %}"
+                               class="inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-heading font-semibold text-danger bg-danger/10 hover:bg-danger/20 transition-colors">
+                                <span class="material-symbols-outlined text-[14px]">delete</span>
+                                Supprimer
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="bg-background rounded-lg border border-border p-6 mb-8 text-center">
+        <p class="font-body text-sm text-gray">Aucun client enregistré.</p>
+    </div>
+    {% endif %}
+
+    <!-- BAILLEURS -->
+    <h2 class="font-heading font-bold text-base text-text mb-4 flex items-center gap-2">
+        <span class="material-symbols-outlined text-secondary text-xl">real_estate_agent</span>
+        Bailleurs
+    </h2>
+    {% if bailleurs %}
+    <div class="bg-white rounded-lg border border-border shadow-sm overflow-hidden mb-8">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-border bg-background/50">
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Nom d'utilisateur</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Nom complet</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Email</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Téléphone</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bailleur in bailleurs %}
+                    <tr class="border-b border-border last:border-0 hover:bg-background/30 transition-colors">
+                        <td class="px-6 py-4 font-body text-sm font-medium text-text">{{ bailleur.username }}</td>
+                        <td class="px-6 py-4 font-body text-sm text-text">{{ bailleur.first_name }} {{ bailleur.last_name }}</td>
+                        <td class="px-6 py-4 font-body text-sm text-gray">{{ bailleur.email }}</td>
+                        <td class="px-6 py-4 font-body text-sm text-gray">{{ bailleur.telephone|default:"—" }}</td>
+                        <td class="px-6 py-4">
+                            <a href="{% url 'supprimer_utilisateur' bailleur.id %}"
+                               class="inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-heading font-semibold text-danger bg-danger/10 hover:bg-danger/20 transition-colors">
+                                <span class="material-symbols-outlined text-[14px]">delete</span>
+                                Supprimer
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="bg-background rounded-lg border border-border p-6 mb-8 text-center">
+        <p class="font-body text-sm text-gray">Aucun bailleur enregistré.</p>
+    </div>
+    {% endif %}
+
+    <!-- AGENTS -->
+    <h2 class="font-heading font-bold text-base text-text mb-4 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary text-xl">badge</span>
+        Agents
+    </h2>
+    {% if agents %}
+    <div class="bg-white rounded-lg border border-border shadow-sm overflow-hidden mb-8">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-border bg-background/50">
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Nom d'utilisateur</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Nom complet</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Email</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Matricule</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for agent in agents %}
+                    <tr class="border-b border-border last:border-0 hover:bg-background/30 transition-colors">
+                        <td class="px-6 py-4 font-body text-sm font-medium text-text">{{ agent.username }}</td>
+                        <td class="px-6 py-4 font-body text-sm text-text">{{ agent.first_name }} {{ agent.last_name }}</td>
+                        <td class="px-6 py-4 font-body text-sm text-gray">{{ agent.email }}</td>
+                        <td class="px-6 py-4 font-body text-sm font-mono text-gray">{{ agent.matricule }}</td>
+                        <td class="px-6 py-4">
+                            <a href="{% url 'supprimer_utilisateur' agent.id %}"
+                               class="inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-heading font-semibold text-danger bg-danger/10 hover:bg-danger/20 transition-colors">
+                                <span class="material-symbols-outlined text-[14px]">delete</span>
+                                Supprimer
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="bg-background rounded-lg border border-border p-6 mb-8 text-center">
+        <p class="font-body text-sm text-gray">Aucun agent enregistré.</p>
+    </div>
+    {% endif %}
+
 </div>
-
-<!-- CLIENTS -->
-<h5 class="mb-3">Clients</h5>
-{% if clients %}
-    <div class="table-responsive mb-4">
-        <table class="table table-bordered table-hover">
-            <thead class="table-success">
-                <tr>
-                    <th>Nom d'utilisateur</th>
-                    <th>Nom complet</th>
-                    <th>Email</th>
-                    <th>Téléphone</th>
-                    <th>Agent affecté</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for client in clients %}
-                <tr>
-                    <td>{{ client.username }}</td>
-                    <td>{{ client.first_name }} {{ client.last_name }}</td>
-                    <td>{{ client.email }}</td>
-                    <td>{{ client.telephone }}</td>
-                    <td>
-                        {% if client.agent_affecte %}
-                            {{ client.agent_affecte.username }}
-                        {% else %}
-                            <span class="text-muted">Non affecté</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <a href="{% url 'supprimer_utilisateur' client.id %}" 
-                           class="btn btn-sm btn-outline-danger">
-                            🗑️ Supprimer
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-{% else %}
-    <div class="alert alert-info mb-4">Aucun client enregistré.</div>
-{% endif %}
-
-<!-- BAILLEURS -->
-<h5 class="mb-3">Bailleurs</h5>
-{% if bailleurs %}
-    <div class="table-responsive mb-4">
-        <table class="table table-bordered table-hover">
-            <thead class="table-warning">
-                <tr>
-                    <th>Nom d'utilisateur</th>
-                    <th>Nom complet</th>
-                    <th>Email</th>
-                    <th>Téléphone</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for bailleur in bailleurs %}
-                <tr>
-                    <td>{{ bailleur.username }}</td>
-                    <td>{{ bailleur.first_name }} {{ bailleur.last_name }}</td>
-                    <td>{{ bailleur.email }}</td>
-                    <td>{{ bailleur.telephone }}</td>
-                    <td>
-                        <a href="{% url 'supprimer_utilisateur' bailleur.id %}" 
-                           class="btn btn-sm btn-outline-danger">
-                            🗑️ Supprimer
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-{% else %}
-    <div class="alert alert-info mb-4">Aucun bailleur enregistré.</div>
-{% endif %}
-
-<!-- AGENTS -->
-<h5 class="mb-3">Agents</h5>
-{% if agents %}
-    <div class="table-responsive mb-4">
-        <table class="table table-bordered table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>Nom d'utilisateur</th>
-                    <th>Nom complet</th>
-                    <th>Email</th>
-                    <th>Matricule</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for agent in agents %}
-                <tr>
-                    <td>{{ agent.username }}</td>
-                    <td>{{ agent.first_name }} {{ agent.last_name }}</td>
-                    <td>{{ agent.email }}</td>
-                    <td>{{ agent.matricule }}</td>
-                    <td>
-                        <a href="{% url 'supprimer_utilisateur' agent.id %}" 
-                           class="btn btn-sm btn-outline-danger">
-                            🗑️ Supprimer
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-{% else %}
-    <div class="alert alert-info mb-4">Aucun agent enregistré.</div>
-{% endif %}
-
 {% endblock %}

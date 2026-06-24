@@ -69,7 +69,16 @@ def liste_annonces(request):
 
 def detail_annonce(request, annonce_id):
     annonce = get_object_or_404(Annonce, id=annonce_id, statut='PUBLIEE')
-    return render(request, 'annonces/detail.html', {'annonce': annonce})
+    est_favori = False
+    if request.user.is_authenticated and Client.objects.filter(pk=request.user.pk).exists():
+        est_favori = Favori.objects.filter(
+            client=request.user.client,
+            annonce=annonce
+        ).exists()
+    return render(request, 'annonces/detail.html', {
+        'annonce': annonce,
+        'est_favori': est_favori,
+    })
 
 
 
@@ -526,9 +535,15 @@ def mes_annonces_agence(request):
 def client_dashboard(request):
     if not Client.objects.filter(pk=request.user.pk).exists():
         raise DjangoPermissionDenied("Accès réservé aux clients.")
+    try:
+        data = UtilisateurService.get_client_dashboard_data(client=request.user)
+    except DjangoPermissionDenied as e:
+        messages.error(request, str(e))
+        return redirect('accueil')
     return render(
         request,
-        'client/dashboard.html'
+        'client/dashboard.html',
+        data
     )
 
 @login_required

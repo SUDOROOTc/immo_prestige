@@ -3,74 +3,99 @@
 {% block title %}Inscription — ImmoFaso{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card shadow-sm">
-            <div class="card-header bg-success text-white">
-                <h4 class="mb-0">Créer un compte</h4>
+<section class="max-w-[1200px] mx-auto px-4 py-16 flex justify-center">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-sm border border-border p-8">
+
+        <h1 class="font-heading font-bold text-2xl text-text mb-1 text-center">
+            Créer un compte
+        </h1>
+        <p class="font-body text-sm text-gray text-center mb-6">
+            Rejoignez ImmoFaso en quelques secondes.
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="grid grid-cols-2 gap-3 mb-4">
+                <div>
+                    <label class="block font-heading text-sm font-medium text-text mb-1.5">Prénom</label>
+                    <input type="text" name="prenom" required
+                           class="w-full px-4 py-2.5 rounded-md border border-border font-body text-sm text-text
+                                  focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
+                </div>
+                <div>
+                    <label class="block font-heading text-sm font-medium text-text mb-1.5">Nom</label>
+                    <input type="text" name="nom" required
+                           class="w-full px-4 py-2.5 rounded-md border border-border font-body text-sm text-text
+                                  focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
+                </div>
             </div>
-            <div class="card-body">
-                <form method="POST">
-                    {% csrf_token %}
 
-                    <div class="mb-3">
-                        <label class="form-label">Je suis un :</label>
-                        <select name="role" class="form-select" required>
-                            <option value="">-- Choisir --</option>
-                            <option value="CLIENT">Client</option>
-                            <option value="BAILLEUR">Bailleur</option>
-                        </select>
-                    </div>
-
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label class="form-label">Prénom</label>
-                            <input type="text" name="prenom" class="form-control" required>
-                        </div>
-                        <div class="col mb-3">
-                            <label class="form-label">Nom</label>
-                            <input type="text" name="nom" class="form-control" required>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Nom d'utilisateur</label>
-                        <input type="text" name="username" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Téléphone</label>
-                        <input type="text" name="telephone" class="form-control">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Mot de passe</label>
-                        <input type="password" name="password" class="form-control" required>
-                    </div>
-                    <div class="card mt-3">
-                        {% if annonce.bien.photos.first %}
-                            <img src="{{ annonce.bien.photos.first.chemin_fichier.url }}" class="card-img-top" alt="Photo du bien">
-                        {% endif %}
-                        <div class="card-body">
-                            <h5>{{ annonce.bien.type }}</h5>
-                            <p>{{ annonce.prix }} FCFA</p>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-success w-100">
-                        Créer mon compte
-                    </button>
-                </form>
+            <div class="mb-4">
+                <label class="block font-heading text-sm font-medium text-text mb-1.5">
+                    Nom d'utilisateur
+                </label>
+                <input type="text" name="username" required
+                       class="w-full px-4 py-2.5 rounded-md border border-border font-body text-sm text-text
+                              focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
             </div>
-            <div class="card-footer text-center">
-                Déjà un compte ? <a href="{% url 'login' %}">Se connecter</a>
+
+            <div class="mb-4">
+                <label class="block font-heading text-sm font-medium text-text mb-1.5">Email</label>
+                <input type="email" name="email" required
+                       placeholder="votre@email.com"
+                       class="w-full px-4 py-2.5 rounded-md border border-border font-body text-sm text-text
+                              focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
             </div>
-        </div>
+
+            <div class="mb-4">
+                <label class="block font-heading text-sm font-medium text-text mb-1.5">Téléphone</label>
+                <input type="text" name="telephone"
+                       placeholder="70 00 00 00"
+                       class="w-full px-4 py-2.5 rounded-md border border-border font-body text-sm text-text
+                              focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
+            </div>
+
+            <div class="mb-5">
+                <label class="block font-heading text-sm font-medium text-text mb-1.5">Mot de passe</label>
+                <input type="password" name="password" required
+                       placeholder="••••••••"
+                       class="w-full px-4 py-2.5 rounded-md border border-border font-body text-sm text-text
+                              focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
+            </div>
+
+            <!-- CHOIX DE RÔLE -->
+            <div class="mb-6">
+                <label class="block font-heading text-sm font-medium text-text mb-2">Je suis un</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="flex items-center justify-center gap-2 border border-border rounded-md py-2.5 cursor-pointer
+                                  font-body text-sm text-text has-[:checked]:border-primary has-[:checked]:bg-primary/5
+                                  has-[:checked]:text-primary transition-colors">
+                        <input type="radio" name="role" value="CLIENT" required class="accent-primary">
+                        Client
+                    </label>
+                    <label class="flex items-center justify-center gap-2 border border-border rounded-md py-2.5 cursor-pointer
+                                  font-body text-sm text-text has-[:checked]:border-primary has-[:checked]:bg-primary/5
+                                  has-[:checked]:text-primary transition-colors">
+                        <input type="radio" name="role" value="BAILLEUR" required class="accent-primary">
+                        Bailleur
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit"
+                    class="w-full bg-primary text-white font-heading font-semibold text-sm py-2.5 rounded-md
+                           hover:opacity-90 transition-opacity">
+                S'inscrire
+            </button>
+        </form>
+
+        <p class="font-body text-sm text-gray text-center mt-6">
+            Déjà un compte ?
+            <a href="{% url 'login' %}" class="text-primary font-medium hover:underline">
+                Se connecter
+            </a>
+        </p>
     </div>
-</div>
+</section>
 {% endblock %}

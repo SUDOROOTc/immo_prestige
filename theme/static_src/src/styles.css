@@ -1,0 +1,31 @@
+
+
+@import "tailwindcss";
+
+@theme {
+  /* Couleurs principales — Design System Immo Prestige */
+  --color-primary: #1E3A5F;
+  --color-secondary: #F59E0B;
+  --color-success: #10B981;
+  --color-danger: #EF4444;
+  --color-info: #3B82F6;
+
+  /* Couleurs neutres */
+  --color-background: #F8FAFC;
+  --color-text: #111827;
+  --color-gray: #6B7280;
+  --color-border: #E5E7EB;
+
+  /* Typographie */
+  --font-heading: "Poppins", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+/**
+  * A catch-all path to Django template files, JavaScript, and Python files
+  * that contain Tailwind CSS classes and will be scanned by Tailwind to generate the final CSS file.
+  *
+  * If your final CSS file is not being updated after code changes, you may want to broaden or narrow
+  * the scope of this path.
+  */
+@source "../../../**/*.{html,py,js}";

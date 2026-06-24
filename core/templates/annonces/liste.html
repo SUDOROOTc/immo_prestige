@@ -1,61 +1,160 @@
 {% extends 'base.html' %}
+{% load static role_tags %}
 
-{% block title %}
-Liste des annonces
-{% endblock %}
+{% block title %}Annonces disponibles — ImmoFaso{% endblock %}
 
 {% block content %}
+<div class="max-w-[1200px] mx-auto px-4 py-8">
 
-<h2 class="mb-4">Annonces disponibles</h2>
-
-<div class="row">
-
-    {% for annonce in annonces %}
-
-    <div class="col-md-4 mb-4">
-
-        <div class="card shadow-sm h-100">
-
-            {% if annonce.bien.photos.first %}
-            <img src="{{ annonce.bien.photos.first.chemin_fichier.url }}" class="card-img-top" alt="Photo du bien">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="font-heading font-bold text-2xl text-text">Annonces disponibles</h1>
+        <p class="font-body text-sm text-gray mt-1">
+            {% if request.GET.option == 'VENTE' %}Biens à vendre
+            {% elif request.GET.option == 'LOCATION' %}Biens à louer
+            {% else %}Découvrez toutes nos annonces immobilières
             {% endif %}
+        </p>
+    </div>
 
-            <div class="card-body">
-
-                <h5>
-                    {{ annonce.bien.type }}
-                </h5>
-
-                <p>
-                    {{ annonce.bien.ville }}
-                </p>
-
-                <p>
-                    {{ annonce.prix }} FCFA
-                </p>
-
+    <!-- Filtres -->
+    <div class="bg-white rounded-lg border border-border shadow-sm p-4 mb-8">
+        <form method="GET" class="flex flex-wrap items-end gap-3">
+            <div class="flex-1 min-w-[150px]">
+                <label class="block font-heading font-semibold text-xs text-gray uppercase tracking-wider mb-1.5">Type</label>
+                <select name="type" class="w-full px-3 py-2 rounded-md border border-border bg-white font-body text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors">
+                    <option value="">Tous</option>
+                    <option value="TERRAIN" {% if request.GET.type == 'TERRAIN' %}selected{% endif %}>Terrain</option>
+                    <option value="BATIMENT" {% if request.GET.type == 'BATIMENT' %}selected{% endif %}>Bâtiment</option>
+                    <option value="APPARTEMENT" {% if request.GET.type == 'APPARTEMENT' %}selected{% endif %}>Appartement</option>
+                    <option value="VILLA" {% if request.GET.type == 'VILLA' %}selected{% endif %}>Villa</option>
+                    <option value="COMMERCE" {% if request.GET.type == 'COMMERCE' %}selected{% endif %}>Commerce</option>
+                </select>
             </div>
+            <div class="flex-1 min-w-[150px]">
+                <label class="block font-heading font-semibold text-xs text-gray uppercase tracking-wider mb-1.5">Usage</label>
+                <select name="usage" class="w-full px-3 py-2 rounded-md border border-border bg-white font-body text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors">
+                    <option value="">Tous</option>
+                    <option value="RESIDENCE" {% if request.GET.usage == 'RESIDENCE' %}selected{% endif %}>Résidence</option>
+                    <option value="BUREAU" {% if request.GET.usage == 'BUREAU' %}selected{% endif %}>Bureau</option>
+                    <option value="COMMERCE" {% if request.GET.usage == 'COMMERCE' %}selected{% endif %}>Commerce</option>
+                    <option value="AGRICULTURE" {% if request.GET.usage == 'AGRICULTURE' %}selected{% endif %}>Agriculture</option>
+                </select>
+            </div>
+            <div class="flex-1 min-w-[150px]">
+                <label class="block font-heading font-semibold text-xs text-gray uppercase tracking-wider mb-1.5">Option</label>
+                <select name="option" class="w-full px-3 py-2 rounded-md border border-border bg-white font-body text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors">
+                    <option value="">Toutes</option>
+                    <option value="LOCATION" {% if request.GET.option == 'LOCATION' %}selected{% endif %}>Location</option>
+                    <option value="VENTE" {% if request.GET.option == 'VENTE' %}selected{% endif %}>Vente</option>
+                </select>
+            </div>
+            <div class="flex-1 min-w-[150px]">
+                <label class="block font-heading font-semibold text-xs text-gray uppercase tracking-wider mb-1.5">Ville</label>
+                <input type="text" name="ville" value="{{ request.GET.ville }}" placeholder="Rechercher..." class="w-full px-3 py-2 rounded-md border border-border bg-white font-body text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors">
+            </div>
+            <button type="submit" class="flex items-center gap-1.5 bg-primary text-white font-heading font-semibold text-sm px-5 py-2 rounded-md hover:bg-primary/90 transition-colors h-[38px]">
+                <span class="material-symbols-outlined text-[16px]">search</span>
+                Filtrer
+            </button>
+            <a href="{% url 'liste_annonces' %}" class="flex items-center gap-1.5 text-gray font-heading text-sm px-4 py-2 rounded-md border border-border hover:bg-background transition-colors h-[38px]">
+                <span class="material-symbols-outlined text-[16px]">close</span>
+                Réinitialiser
+            </a>
+        </form>
+    </div>
 
-            <div class="card-footer">
-
-                <a href="{% url 'detail_annonce' annonce.id %}" class="btn btn-success w-100">
-                    Voir détail
+    <!-- Résultats -->
+    {% if annonces %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for annonce in annonces %}
+            <div class="bg-white rounded-lg border border-border shadow-sm overflow-hidden hover:shadow-md transition-shadow group flex flex-col">
+                <!-- Image -->
+                <a href="{% url 'detail_annonce' annonce.id %}" class="block relative aspect-[4/3] bg-background overflow-hidden flex-shrink-0">
+                    {% with photos=annonce.bien.photos.all %}
+                        {% if photos %}
+                            <img src="{{ photos.first.chemin_fichier.url }}"
+                                 alt="{{ annonce.bien.get_type_display }} — {{ annonce.bien.ville }}"
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        {% else %}
+                            <div class="w-full h-full flex items-center justify-center">
+                                <span class="material-symbols-outlined text-5xl text-gray">image</span>
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    <!-- Badge option -->
+                    <span class="absolute top-3 left-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-heading font-semibold
+                        {% if annonce.option == 'LOCATION' %}bg-info text-white{% else %}bg-success text-white{% endif %}">
+                        {{ annonce.get_option_display }}
+                    </span>
                 </a>
 
+                <!-- Infos -->
+                <div class="p-4 flex flex-col flex-1">
+                    <div class="flex items-start justify-between gap-2 mb-2">
+                        <div>
+                            <a href="{% url 'detail_annonce' annonce.id %}" class="block">
+                                <h3 class="font-heading font-semibold text-sm text-text hover:text-primary transition-colors">
+                                    {{ annonce.bien.get_type_display }} — {{ annonce.bien.ville }}
+                                </h3>
+                            </a>
+                            <p class="font-body text-xs text-gray mt-0.5 flex items-center gap-1">
+                                <span class="material-symbols-outlined text-[12px]">location_on</span>
+                                {{ annonce.bien.localisation }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Caractéristiques mini -->
+                    <div class="flex flex-wrap gap-3 mt-1 mb-3">
+                        <span class="inline-flex items-center gap-1 text-xs font-body text-gray">
+                            <span class="material-symbols-outlined text-[14px] text-primary">square_foot</span>
+                            {{ annonce.bien.superficie|floatformat:0 }} m²
+                        </span>
+                        <span class="inline-flex items-center gap-1 text-xs font-body text-gray">
+                            <span class="material-symbols-outlined text-[14px] text-primary">category</span>
+                            {{ annonce.bien.get_usage_display }}
+                        </span>
+                    </div>
+
+                    <!-- Prix et CTA -->
+                    <div class="flex items-center justify-between mt-auto pt-3 border-t border-border">
+                        <p class="font-heading font-bold text-base text-primary">
+                            {{ annonce.prix|floatformat:0 }} <span class="text-xs font-medium">FCFA</span>
+                        </p>
+                        <a href="{% url 'detail_annonce' annonce.id %}"
+                           class="inline-flex items-center gap-1 text-xs font-heading font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-md hover:bg-primary/20 transition-colors">
+                            Voir détail
+                            <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
             </div>
-
+            {% endfor %}
         </div>
+    {% else %}
+        <!-- Aucun résultat -->
+        <div class="bg-white rounded-lg border border-border shadow-sm p-12 text-center">
+            <div class="flex flex-col items-center gap-3 text-gray">
+                <span class="material-symbols-outlined text-6xl">search_off</span>
+                <h2 class="font-heading font-semibold text-lg text-text">Aucune annonce trouvée</h2>
+                <p class="font-body text-sm max-w-md">
+                    Aucune annonce ne correspond à vos critères de recherche.
+                    Essayez de modifier vos filtres ou consultez toutes les annonces disponibles.
+                </p>
+                <a href="{% url 'liste_annonces' %}"
+                   class="inline-flex items-center gap-2 bg-primary text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-md hover:bg-primary/90 transition-colors mt-2">
+                    <span class="material-symbols-outlined text-[18px]">refresh</span>
+                    Voir toutes les annonces
+                </a>
+            </div>
+        </div>
+    {% endif %}
 
-    </div>
-
-    {% empty %}
-
-    <div class="alert alert-info">
-        Aucune annonce disponible.
-    </div>
-
-    {% endfor %}
+    <!-- Compteur -->
+    <p class="font-body text-sm text-gray text-center mt-8">
+        {{ annonces|length }} annonce{% if annonces|length != 1 %}s{% endif %} trouvée{% if annonces|length != 1 %}s{% endif %}
+    </p>
 
 </div>
-
 {% endblock %}

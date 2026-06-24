@@ -1,35 +1,51 @@
 {% extends 'base.html' %}
+{% load role_tags %}
 
 {% block title %}Mes clients — ImmoFaso{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">Clients affectés</h2>
+<div class="max-w-[1200px] mx-auto px-4 py-8">
 
-{% if clients %}
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-            <thead class="table-success">
-                <tr>
-                    <th>Nom d'utilisateur</th>
-                    <th>Nom complet</th>
-                    <th>Email</th>
-                    <th>Téléphone</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for client in clients %}
-                <tr>
-                    <td>{{ client.username }}</td>
-                    <td>{{ client.first_name }} {{ client.last_name }}</td>
-                    <td>{{ client.email }}</td>
-                    <td>{{ client.telephone }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="font-heading font-bold text-2xl text-text">Clients affectés</h1>
+        <p class="font-body text-sm text-gray mt-1">Liste des clients qui vous sont attribués pour suivi.</p>
     </div>
-{% else %}
-    <div class="alert alert-info">Aucun client ne vous est affecté pour le moment.</div>
-{% endif %}
 
+    {% if clients %}
+    <div class="bg-white rounded-lg border border-border shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-border bg-background/50">
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Nom d'utilisateur</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Nom complet</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Email</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Téléphone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for client in clients %}
+                    <tr class="border-b border-border last:border-0 hover:bg-background/30 transition-colors">
+                        <td class="px-6 py-4 font-body text-sm font-medium text-text">{{ client.username }}</td>
+                        <td class="px-6 py-4 font-body text-sm text-text">{{ client.first_name }} {{ client.last_name }}</td>
+                        <td class="px-6 py-4 font-body text-sm text-gray">{{ client.email }}</td>
+                        <td class="px-6 py-4 font-body text-sm text-gray">{{ client.telephone|default:"—" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="bg-white rounded-lg border border-border shadow-sm p-12 text-center">
+        <div class="flex flex-col items-center gap-3 text-gray">
+            <span class="material-symbols-outlined text-6xl">group_off</span>
+            <h2 class="font-heading font-semibold text-lg text-text">Aucun client affecté</h2>
+            <p class="font-body text-sm">Aucun client ne vous est affecté pour le moment.</p>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
 {% endblock %}

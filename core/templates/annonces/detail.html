@@ -1,197 +1,203 @@
 {% extends 'base.html' %}
+{% load static role_tags %}
 
-{% block title %}{{ annonce.bien.type }} — {{ annonce.bien.ville }}{% endblock %}
+{% block title %}{{ annonce.bien.get_type_display }} — {{ annonce.bien.ville }}{% endblock %}
 
 {% block content %}
+<div class="max-w-[1200px] mx-auto px-4 py-8">
 
-<div class="row">
+    <!-- Fil d'Ariane -->
+    <nav class="flex items-center gap-2 text-sm text-gray font-body mb-6">
+        <a href="{% url 'accueil' %}" class="hover:text-primary transition-colors">Accueil</a>
+        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+        <a href="{% url 'liste_annonces' %}" class="hover:text-primary transition-colors">Annonces</a>
+        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+        <span class="text-text font-medium">{{ annonce.bien.get_type_display }} — {{ annonce.bien.ville }}</span>
+    </nav>
 
-    <!-- DÉTAIL DU BIEN -->
-    <div class="col-md-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-        <div class="card shadow-sm mb-4">
+        <!-- COLONNE DE GAUCHE : Galerie + Description -->
+        <div class="lg:col-span-2 space-y-6">
 
-            <div class="card-header bg-success text-white">
-                <h4 class="mb-0">
-                    {{ annonce.bien.type }} — {{ annonce.bien.ville }}
-                </h4>
+            <!-- Galerie Photos -->
+            <div class="bg-white rounded-lg border border-border shadow-sm overflow-hidden">
+                {% with photos=annonce.bien.photos.all %}
+                    {% if photos %}
+                        <!-- Image principale -->
+                        <div class="relative aspect-[16/9] bg-background">
+                            <img src="{{ photos.first.chemin_fichier.url }}"
+                                 alt="Photo de {{ annonce.bien.type }}"
+                                 class="w-full h-full object-cover" id="main-image">
+                        </div>
+                        <!-- Miniatures -->
+                        {% if photos|length > 1 %}
+                            <div class="flex gap-2 p-3 overflow-x-auto">
+                                {% for photo in photos %}
+                                    <button onclick="document.getElementById('main-image').src='{{ photo.chemin_fichier.url }}'; document.querySelectorAll('.thumb').forEach(t=>t.classList.remove('ring-2','ring-primary')); this.classList.add('ring-2','ring-primary')"
+                                            class="thumb flex-shrink-0 w-20 h-16 rounded-md overflow-hidden border border-border {% if forloop.first %}ring-2 ring-primary{% endif %} hover:opacity-90 transition-opacity">
+                                        <img src="{{ photo.chemin_fichier.url }}" alt="Miniature" class="w-full h-full object-cover">
+                                    </button>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <!-- Placeholder -->
+                        <div class="aspect-[16/9] bg-background flex items-center justify-center">
+                            <div class="text-center text-gray">
+                                <span class="material-symbols-outlined text-6xl">image</span>
+                                <p class="mt-2 font-body text-sm">Aucune photo disponible</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endwith %}
             </div>
 
-            <div class="card-body">
+            <!-- Description -->
+            <div class="bg-white rounded-lg border border-border shadow-sm p-6">
+                <h2 class="font-heading font-semibold text-lg text-text mb-3">Description</h2>
+                <p class="font-body text-text leading-relaxed">{{ annonce.description }}</p>
+            </div>
 
-                <div class="row">
+        </div>
 
-                    {% for photo in annonce.bien.photos.all %}
+        <!-- COLONNE DE DROITE : Infos + Actions -->
+        <div class="space-y-6">
 
-                    <div class="col-md-4 mb-3">
-                        <img src="{{ photo.chemin_fichier.url }}" class="img-fluid rounded" alt="Photo du bien">
+            <!-- Prix et option -->
+            <div class="bg-white rounded-lg border border-border shadow-sm p-6">
+                <div class="flex items-start justify-between mb-4">
+                    <div>
+                        <p class="text-sm text-gray font-body">{% if annonce.option == 'LOCATION' %}Loyer mensuel{% else %}Prix de vente{% endif %}</p>
+                        <p class="font-heading font-bold text-3xl text-primary">{{ annonce.prix|floatformat:0 }} <span class="text-lg font-medium">FCFA</span></p>
                     </div>
-
-                    {% empty %}
-
-                    <p>Aucune photo disponible.</p>
-
-                    {% endfor %}
-
+                    <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-heading font-semibold
+                        {% if annonce.option == 'LOCATION' %}bg-info/10 text-info{% else %}bg-success/10 text-success{% endif %}">
+                        <span class="material-symbols-outlined text-[14px]">
+                            {% if annonce.option == 'LOCATION' %}real_estate_agent{% else %}payments{% endif %}
+                        </span>
+                        {{ annonce.get_option_display }}
+                    </span>
                 </div>
-
             </div>
 
-            <table class="table table-bordered">
-
-                <tr>
-                    <th>Type</th>
-                    <td>{{ annonce.bien.type }}</td>
-                </tr>
-
-                <tr>
-                    <th>Usage</th>
-                    <td>{{ annonce.bien.usage }}</td>
-                </tr>
-
-                <tr>
-                    <th>Option</th>
-                    <td>{{ annonce.option }}</td>
-                </tr>
-
-                <tr>
-                    <th>Superficie</th>
-                    <td>{{ annonce.bien.superficie }} m²</td>
-                </tr>
-
-                <tr>
-                    <th>Ville</th>
-                    <td>{{ annonce.bien.ville }}</td>
-                </tr>
-
-                <tr>
-                    <th>Localisation</th>
-                    <td>{{ annonce.bien.localisation }}</td>
-                </tr>
-
-                <tr>
-                    <th>Prix</th>
-                    <td class="fw-bold text-success">
-                        {{ annonce.prix }} FCFA
-                    </td>
-                </tr>
-
-                {% if user.is_authenticated and user.client %}
-
-                <tr>
-                    <th>Nom du propriétaire</th>
-                    <td>
-                        {{ annonce.bailleur.first_name }}
-                        {{ annonce.bailleur.last_name }}
-                    </td>
-                </tr>
-
-                <tr>
-                    <th>Téléphone</th>
-                    <td>
-                        {{ annonce.bailleur.telephone }}
-                    </td>
-                </tr>
-
-                <tr>
-                    <th>Email</th>
-                    <td>
-                        {{ annonce.bailleur.email }}
-                    </td>
-                </tr>
-
-                {% endif %}
-
-            </table>
-
-            <div class="card-body">
-
-                <h6>Description</h6>
-
-                <p>
-                    {{ annonce.description }}
-                </p>
-
+            <!-- Caractéristiques -->
+            <div class="bg-white rounded-lg border border-border shadow-sm p-6">
+                <h3 class="font-heading font-semibold text-sm text-gray uppercase tracking-wider mb-4">Caractéristiques</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-2 text-sm text-gray font-body">
+                            <span class="material-symbols-outlined text-[18px] text-primary">category</span>
+                            Type
+                        </span>
+                        <span class="font-body text-sm text-text font-medium">{{ annonce.bien.get_type_display }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-2 text-sm text-gray font-body">
+                            <span class="material-symbols-outlined text-[18px] text-primary">home_work</span>
+                            Usage
+                        </span>
+                        <span class="font-body text-sm text-text font-medium">{{ annonce.bien.get_usage_display }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-2 text-sm text-gray font-body">
+                            <span class="material-symbols-outlined text-[18px] text-primary">sell</span>
+                            Option
+                        </span>
+                        <span class="font-body text-sm text-text font-medium">{{ annonce.get_option_display }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-2 text-sm text-gray font-body">
+                            <span class="material-symbols-outlined text-[18px] text-primary">square_foot</span>
+                            Superficie
+                        </span>
+                        <span class="font-body text-sm text-text font-medium">{{ annonce.bien.superficie|floatformat:0 }} m²</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-2 text-sm text-gray font-body">
+                            <span class="material-symbols-outlined text-[18px] text-primary">location_on</span>
+                            Ville
+                        </span>
+                        <span class="font-body text-sm text-text font-medium">{{ annonce.bien.ville }}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="flex items-center gap-2 text-sm text-gray font-body">
+                            <span class="material-symbols-outlined text-[18px] text-primary">map</span>
+                            Localisation
+                        </span>
+                        <span class="font-body text-sm text-text font-medium">{{ annonce.bien.localisation }}</span>
+                    </div>
+                </div>
             </div>
 
-        </div>
+            <!-- Actions -->
+            <div class="bg-white rounded-lg border border-border shadow-sm p-6 space-y-3">
+                <h3 class="font-heading font-semibold text-sm text-gray uppercase tracking-wider mb-2">Actions</h3>
 
-    </div>
+                {% if user.is_authenticated and user|is_client %}
+                    <form method="POST" action="{% url 'creer_demande_visite' annonce.id %}">
+                        {% csrf_token %}
+                        <button type="submit"
+                                class="w-full flex items-center justify-center gap-2 bg-primary text-white font-heading font-semibold text-sm px-4 py-3 rounded-md hover:bg-primary/90 transition-colors">
+                            <span class="material-symbols-outlined text-[20px]">calendar_today</span>
+                            Demander une visite
+                        </button>
+                    </form>
 
-    <!-- ACTIONS -->
-    <div class="col-md-4">
+                    {% if est_favori %}
+                        <form method="POST" action="{% url 'retirer_favori' annonce.id %}">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="w-full flex items-center justify-center gap-2 bg-danger/10 text-danger font-heading font-semibold text-sm px-4 py-3 rounded-md border border-danger/20 hover:bg-danger/20 transition-colors">
+                                <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1">favorite</span>
+                                Retirer des favoris
+                            </button>
+                        </form>
+                    {% else %}
+                        <form method="POST" action="{% url 'ajouter_favori' annonce.id %}">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="w-full flex items-center justify-center gap-2 bg-secondary/10 text-secondary font-heading font-semibold text-sm px-4 py-3 rounded-md border border-secondary/20 hover:bg-secondary/20 transition-colors">
+                                <span class="material-symbols-outlined text-[20px]">favorite</span>
+                                Ajouter aux favoris
+                            </button>
+                        </form>
+                    {% endif %}
 
-        <div class="card shadow-sm">
-
-            <div class="card-header bg-success text-white">
-                <h5 class="mb-0">
-                    Actions
-                </h5>
-            </div>
-
-            <div class="card-body d-grid gap-2">
-
-                {% if user.is_authenticated %}
-
-                {% if user.client %}
-
-                <a href="{% url 'creer_demande_visite' annonce.id %}" class="btn btn-success">
-                    📅 Demander une visite
-                </a>
-
-                <a href="{% url 'ajouter_favori' annonce.id %}" class="btn btn-outline-success">
-                    ❤️ Ajouter aux favoris
-                </a>
-
-                {% endif %}
-
+                {% elif user.is_authenticated %}
+                    <div class="p-3 rounded-md bg-info/10 border border-info/20 text-sm text-info font-body text-center">
+                        Seuls les clients peuvent demander une visite ou ajouter aux favoris.
+                    </div>
                 {% else %}
-
-                <div class="alert alert-info text-center small">
-
-                    <a href="{% url 'login' %}">
-                        Connectez-vous
-                    </a>
-
-                    pour demander une visite,
-                    ajouter aux favoris
-                    et voir les coordonnées du propriétaire.
-
-                </div>
-
+                    <div class="p-4 rounded-md bg-background border border-border text-center">
+                        <p class="font-body text-sm text-gray mb-3">
+                            Connectez-vous avec un compte client pour interagir.
+                        </p>
+                        <a href="{% url 'login' %}?next={{ request.path }}"
+                           class="inline-flex items-center gap-2 bg-secondary text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-md hover:opacity-90 transition-opacity">
+                            <span class="material-symbols-outlined text-[18px]">login</span>
+                            Se connecter
+                        </a>
+                    </div>
                 {% endif %}
 
-                <a href="{% url 'liste_annonces' %}" class="btn btn-outline-secondary">
-                    ← Retour aux annonces
+                <a href="{% url 'liste_annonces' %}"
+                   class="w-full flex items-center justify-center gap-2 text-gray font-heading text-sm px-4 py-2.5 rounded-md border border-border hover:bg-background transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                    Retour aux annonces
                 </a>
-
             </div>
+
+            <!-- Coordonnées bailleur : JAMAIS affichées (EF-A1) -->
+            {% if annonce.agent_createur %}
+            <div class="bg-white rounded-lg border border-border shadow-sm p-6">
+                <h3 class="font-heading font-semibold text-xs text-gray uppercase tracking-wider mb-2">Agence</h3>
+                <p class="font-body text-sm text-text">Annonce déposée par l'agence ImmoFaso</p>
+            </div>
+            {% endif %}
 
         </div>
-
-        {% if not user.is_authenticated %}
-
-        <div class="card mt-3 border-warning">
-
-            <div class="card-header bg-warning">
-                Coordonnées du propriétaire
-            </div>
-
-            <div class="card-body">
-
-                <p class="mb-0">
-                    Connectez-vous avec un compte client
-                    pour voir les coordonnées du propriétaire.
-                </p>
-
-            </div>
-
-        </div>
-
-        {% endif %}
 
     </div>
-
 </div>
-
 {% endblock %}

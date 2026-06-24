@@ -3,50 +3,77 @@
 {% block title %}Supprimer l'annonce — ImmoFaso{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card shadow-sm">
-            <div class="card-header bg-danger text-white">
-                <h4 class="mb-0">Confirmer la suppression</h4>
+<div class="max-w-[600px] mx-auto px-4 py-8">
+
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="font-heading font-bold text-2xl text-text">Confirmer la suppression</h1>
+        <p class="font-body text-sm text-gray mt-1">Cette action est irréversible.</p>
+    </div>
+
+    <div class="bg-white rounded-lg border border-border shadow-sm overflow-hidden">
+        <!-- En-tête danger -->
+        <div class="bg-danger/10 border-b border-danger/20 px-6 py-4 flex items-center gap-3">
+            <span class="material-symbols-outlined text-danger text-2xl">warning</span>
+            <div>
+                <h2 class="font-heading font-semibold text-sm text-danger">Vous êtes sur le point de supprimer cette annonce</h2>
+                <p class="font-body text-xs text-danger/70">Êtes-vous sûr de vouloir continuer ?</p>
             </div>
-            <div class="card-body">
-                <p>Êtes-vous sûr de vouloir supprimer cette annonce ?</p>
+        </div>
 
-                <table class="table table-bordered">
-                    <tr>
-                        <th>Type</th>
-                        <td>{{ annonce.bien.type }}</td>
-                    </tr>
-                    <tr>
-                        <th>Ville</th>
-                        <td>{{ annonce.bien.ville }}</td>
-                    </tr>
-                    <tr>
-                        <th>Prix</th>
-                        <td>{{ annonce.prix }} FCFA</td>
-                    </tr>
-                    <tr>
-                        <th>Statut</th>
-                        <td>{{ annonce.statut }}</td>
-                    </tr>
-                </table>
-
-                <div class="alert alert-warning">
-                    ⚠️ Cette action est irréversible.
+        <div class="p-6">
+            <!-- Détails de l'annonce -->
+            <div class="space-y-3 mb-6">
+                <div class="flex items-center justify-between py-2 border-b border-border">
+                    <span class="font-body text-sm text-gray">Type</span>
+                    <span class="font-heading text-sm text-text font-medium">{{ annonce.bien.get_type_display }}</span>
                 </div>
-
-                <form method="POST">
-                    {% csrf_token %}
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-danger w-100">
-                            🗑️ Oui, supprimer
-                        </button>
-                        <a href="{% url 'mes_annonces_bailleur' %}" class="btn btn-outline-secondary w-100">
-                            Annuler
-                        </a>
-                    </div>
-                </form>
+                <div class="flex items-center justify-between py-2 border-b border-border">
+                    <span class="font-body text-sm text-gray">Ville</span>
+                    <span class="font-heading text-sm text-text font-medium">{{ annonce.bien.ville }}</span>
+                </div>
+                <div class="flex items-center justify-between py-2 border-b border-border">
+                    <span class="font-body text-sm text-gray">Prix</span>
+                    <span class="font-heading text-sm text-text font-medium">{{ annonce.prix|floatformat:0 }} FCFA</span>
+                </div>
+                <div class="flex items-center justify-between py-2">
+                    <span class="font-body text-sm text-gray">Statut</span>
+                    <span class="font-heading text-sm font-medium">
+                        {% if annonce.statut == 'EN_ATTENTE' %}
+                            <span class="text-secondary">En attente</span>
+                        {% elif annonce.statut == 'PUBLIEE' %}
+                            <span class="text-success">Publiée</span>
+                        {% elif annonce.statut == 'REFUSEE' %}
+                            <span class="text-danger">Refusée</span>
+                        {% elif annonce.statut == 'RETIREE' %}
+                            <span class="text-gray">Retirée</span>
+                        {% endif %}
+                    </span>
+                </div>
             </div>
+
+            <!-- Alerte -->
+            <div class="flex items-start gap-2 p-3 rounded-md bg-danger/5 border border-danger/20 mb-6">
+                <span class="material-symbols-outlined text-[18px] text-danger flex-shrink-0 mt-0.5">error</span>
+                <p class="font-body text-sm text-danger text-balance">Cette action est irréversible. L'annonce et ses données associées seront définitivement supprimées.</p>
+            </div>
+
+            <!-- Actions -->
+            <form method="POST">
+                {% csrf_token %}
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <button type="submit"
+                            class="flex-1 flex items-center justify-center gap-2 bg-danger text-white font-heading font-semibold text-sm px-5 py-3 rounded-md hover:bg-danger/90 transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">delete_forever</span>
+                        Oui, supprimer
+                    </button>
+                    <a href="{% url 'mes_annonces_bailleur' %}"
+                       class="flex-1 flex items-center justify-center gap-2 text-gray font-heading text-sm px-5 py-3 rounded-md border border-border hover:bg-background transition-colors">
+                        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                        Annuler
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
 </div>

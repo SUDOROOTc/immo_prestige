@@ -1,116 +1,138 @@
 {% extends 'base.html' %}
+{% load role_tags %}
 
 {% block title %}Dashboard — ImmoFaso{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">Tableau de bord</h2>
+<div class="max-w-[1200px] mx-auto px-4 py-8">
 
-<div class="row mb-4">
-    <div class="col-md-3 mb-3">
-        <div class="card text-white bg-success shadow-sm">
-            <div class="card-body text-center">
-                <h1>{{ stats.total_annonces }}</h1>
-                <p class="mb-0">Total annonces</p>
-            </div>
-        </div>
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="font-heading font-bold text-2xl text-text">Tableau de bord</h1>
+        <p class="font-body text-sm text-gray mt-1">Vue d'ensemble de la plateforme ImmoFaso.</p>
     </div>
-    <div class="col-md-3 mb-3">
-        <div class="card text-white bg-warning shadow-sm">
-            <div class="card-body text-center">
-                <h1>{{ stats.en_attente }}</h1>
-                <p class="mb-0">En attente</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 mb-3">
-        <div class="card text-white bg-primary shadow-sm">
-            <div class="card-body text-center">
-                <h1>{{ stats.publiees }}</h1>
-                <p class="mb-0">Publiées</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 mb-3">
-        <div class="card text-white bg-secondary shadow-sm">
-            <div class="card-body text-center">
-                <h1>{{ stats.retirees }}</h1>
-                <p class="mb-0">Retirées</p>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="row mb-4">
-    <div class="col-md-4 mb-3">
-        <div class="card text-white bg-info shadow-sm">
-            <div class="card-body text-center">
-                <h1>{{ stats.total_clients }}</h1>
-                <p class="mb-0">Clients</p>
+    <!-- Stats annonces -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white rounded-lg border border-border shadow-sm p-5 hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-primary text-xl">real_estate_agent</span>
+                </div>
+                <div>
+                    <p class="text-2xl font-heading font-bold text-text">{{ stats.total_annonces }}</p>
+                    <p class="text-xs font-body text-gray">Total annonces</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg border border-border shadow-sm p-5 hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-secondary text-xl">pending_actions</span>
+                </div>
+                <div>
+                    <p class="text-2xl font-heading font-bold text-text">{{ stats.en_attente }}</p>
+                    <p class="text-xs font-body text-gray">En attente</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg border border-border shadow-sm p-5 hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-lg bg-success/10 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-success text-xl">check_circle</span>
+                </div>
+                <div>
+                    <p class="text-2xl font-heading font-bold text-text">{{ stats.publiees }}</p>
+                    <p class="text-xs font-body text-gray">Publiées</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg border border-border shadow-sm p-5 hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-lg bg-gray/10 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-gray text-xl">archive</span>
+                </div>
+                <div>
+                    <p class="text-2xl font-heading font-bold text-text">{{ stats.retirees }}</p>
+                    <p class="text-xs font-body text-gray">Retirées</p>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-4 mb-3">
-        <div class="card text-white bg-danger shadow-sm">
-            <div class="card-body text-center">
-                <h1>{{ stats.total_bailleurs }}</h1>
-                <p class="mb-0">Bailleurs</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-3">
-        <div class="card text-white bg-dark shadow-sm">
-            <div class="card-body text-center">
-                <h1>{{ stats.total_agents }}</h1>
-                <p class="mb-0">Agents</p>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="row">
-    <div class="col-md-4">
-        <a href="{% url 'liste_utilisateurs' %}" class="btn btn-success w-100 mb-3">
-            👥 Gérer les utilisateurs
+    <!-- Stats utilisateurs -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        <div class="bg-white rounded-lg border border-border shadow-sm p-5 hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-lg bg-info/10 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-info text-xl">group</span>
+                </div>
+                <div>
+                    <p class="text-2xl font-heading font-bold text-text">{{ stats.total_clients }}</p>
+                    <p class="text-xs font-body text-gray">Clients</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg border border-border shadow-sm p-5 hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-lg bg-danger/10 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-danger text-xl">real_estate_agent</span>
+                </div>
+                <div>
+                    <p class="text-2xl font-heading font-bold text-text">{{ stats.total_bailleurs }}</p>
+                    <p class="text-xs font-body text-gray">Bailleurs</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-lg border border-border shadow-sm p-5 hover:shadow-md transition-shadow">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-lg bg-dark/10 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-text text-xl">badge</span>
+                </div>
+                <div>
+                    <p class="text-2xl font-heading font-bold text-text">{{ stats.total_agents }}</p>
+                    <p class="text-xs font-body text-gray">Agents</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cartes d'action -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <a href="{% url 'liste_utilisateurs' %}"
+           class="flex items-center justify-center gap-2 bg-primary text-white font-heading font-semibold text-sm px-5 py-3 rounded-md hover:bg-primary/90 transition-colors">
+            <span class="material-symbols-outlined text-[18px]">people</span>
+            Gérer les utilisateurs
         </a>
-    </div>
-    <div class="col-md-4">
-        <a href="{% url 'affecter_client' %}" class="btn btn-outline-success w-100 mb-3">
-            🔗 Affecter un client
+        <a href="{% url 'affecter_client' %}"
+           class="flex items-center justify-center gap-2 bg-secondary text-white font-heading font-semibold text-sm px-5 py-3 rounded-md hover:opacity-90 transition-opacity">
+            <span class="material-symbols-outlined text-[18px]">link</span>
+            Affecter un client
         </a>
-    </div>
-    <div class="col-md-4">
-        <a href="{% url 'liste_affectations' %}" class="btn btn-info">
+        <a href="{% url 'liste_affectations' %}"
+           class="flex items-center justify-center gap-2 bg-info text-white font-heading font-semibold text-sm px-5 py-3 rounded-md hover:opacity-90 transition-opacity">
+            <span class="material-symbols-outlined text-[18px]">list_alt</span>
             Voir les affectations
         </a>
+        <a href="{% url 'toutes_les_annonces_manager' %}"
+           class="flex items-center justify-center gap-2 bg-success text-white font-heading font-semibold text-sm px-5 py-3 rounded-md hover:opacity-90 transition-opacity">
+            <span class="material-symbols-outlined text-[18px]">view_list</span>
+            Toutes les annonces
+        </a>
     </div>
-</div>
 
-<div class="row mt-4">
-
-    <div class="col-md-4">
-
-        <div class="card shadow-sm">
-
-            <div class="card-body">
-
-                <h5>
-                    Gestion des annonces
-                </h5>
-
-                <p>
-                    Consulter toutes les annonces de la plateforme.
-                </p>
-
-                <a href="{% url 'toutes_les_annonces_manager' %}" class="btn btn-primary">
-                    Voir les annonces
-                </a>
-
+    <!-- Carte demandes -->
+    <div class="bg-white rounded-lg border border-border shadow-sm p-6">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                <span class="material-symbols-outlined text-primary text-2xl">bar_chart</span>
             </div>
-
+            <div>
+                <p class="font-heading font-bold text-lg text-text">{{ stats.total_demandes }}</p>
+                <p class="font-body text-sm text-gray">Total des demandes de visite</p>
+            </div>
         </div>
-
     </div>
 
 </div>
-
 {% endblock %}

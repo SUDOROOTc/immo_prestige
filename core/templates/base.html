@@ -1,4 +1,4 @@
-{% load role_tags %}
+{% load static tailwind_tags role_tags %}
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -6,65 +6,161 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}ImmoFaso{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    {% tailwind_css %}
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Material Symbols (icônes) -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
 </head>
 
-<body>
+<body class="bg-background text-text font-body antialiased min-h-screen flex flex-col">
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="{% url 'accueil' %}">🏠 ImmoFaso</a>
-            <div class="navbar-nav ms-auto">
+    <header class="bg-primary sticky top-0 z-50 shadow-sm">
+        <div class="max-w-[1200px] mx-auto px-4 h-16 flex items-center justify-between">
+
+            <!-- Logo -->
+            <a href="{% url 'accueil' %}" class="flex items-center gap-2 font-heading font-bold text-lg text-white">
+                <span class="material-symbols-outlined text-2xl text-secondary">home</span>
+                ImmoFaso
+            </a>
+
+            <!-- Navigation -->
+            <nav class="hidden md:flex items-center gap-6 font-heading text-sm text-white/90">
+                <a href="{% url 'liste_annonces' %}?option=VENTE" class="hover:text-secondary transition-colors">Acheter</a>
+                <a href="{% url 'liste_annonces' %}?option=LOCATION" class="hover:text-secondary transition-colors">Louer</a>
+                <a href="{% url 'liste_annonces' %}" class="hover:text-secondary transition-colors">Propriétés</a>
+                {% if user.is_authenticated and user.bailleur %}
+                    <a href="{% url 'deposer_annonce' %}" class="hover:text-secondary transition-colors">Déposer une annonce</a>
+                {% endif %}
+            </nav>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-3">
                 {% if user.is_authenticated %}
-                {% if user.bailleur %}
-                <a class="nav-link text-white" href="{% url 'mes_annonces_bailleur' %}">Mes annonces</a>
-                <a class="nav-link text-white" href="{% url 'deposer_annonce' %}">Déposer</a>
-                {% endif %}
-                {% if user.client %}
-                <a class="nav-link text-white" href="{% url 'dashboard_client' %}">
-                    Mon espace
-                </a>
-                {% endif %}
-                {% if user|is_agent %}
-                <a class="nav-link text-warning" href="{% url 'agent_dashboard' %}">
-                    Espace agent
-                </a>
-                {% endif %}
-                {% if user|is_manager %}
-                <a class="nav-link text-white" href="{% url 'dashboard' %}">Dashboard</a>
-                <a class="nav-link text-white" href="{% url 'liste_utilisateurs' %}">Utilisateurs</a>
-                {% endif %}
-                <form method="POST" action="{% url 'logout' %}" class="d-inline">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-link nav-link text-white p-0">
-                        Déconnexion
-                    </button>
-                </form>
+                    <div class="relative" id="user-menu-container">
+                        <button onclick="toggleUserMenu()"
+                                class="flex items-center gap-1 text-white font-heading text-sm px-3 py-1.5 rounded-md hover:bg-white/10 transition-colors">
+                            <span class="material-symbols-outlined text-[20px]">account_circle</span>
+                            {{ user.username }}
+                            <span class="material-symbols-outlined text-[16px]">keyboard_arrow_down</span>
+                        </button>
+
+                        <div id="user-menu" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-md border border-border py-2 z-50">
+                            {% if user.bailleur %}
+                                <a href="{% url 'mes_annonces_bailleur' %}" class="flex items-center gap-2 px-4 py-2 text-sm text-text hover:bg-background transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">list_alt</span> Mes annonces
+                                </a>
+                                <a href="{% url 'deposer_annonce' %}" class="flex items-center gap-2 px-4 py-2 text-sm text-text hover:bg-background transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">add_circle</span> Déposer une annonce
+                                </a>
+                            {% endif %}
+                            {% if user.client %}
+                                <a href="{% url 'mes_favoris_client' %}" class="flex items-center gap-2 px-4 py-2 text-sm text-text hover:bg-background transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">favorite</span> Mes favoris
+                                </a>
+                                <a href="{% url 'mes_demandes_client' %}" class="flex items-center gap-2 px-4 py-2 text-sm text-text hover:bg-background transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">schedule_send</span> Mes demandes
+                                </a>
+                            {% endif %}
+                            {% if user|is_agent %}
+                                <a href="{% url 'liste_annonces_en_attente' %}" class="flex items-center gap-2 px-4 py-2 text-sm text-text hover:bg-background transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">pending_actions</span> Annonces en attente
+                                </a>
+                                <a href="{% url 'liste_demandes_agent' %}" class="flex items-center gap-2 px-4 py-2 text-sm text-text hover:bg-background transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">chat</span> Demandes de visite
+                                </a>
+                                <a href="{% url 'clients_affectes' %}" class="flex items-center gap-2 px-4 py-2 text-sm text-text hover:bg-background transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">group</span> Clients affectés
+                                </a>
+                            {% endif %}
+                            {% if user|is_manager %}
+                                <a href="{% url 'dashboard' %}" class="flex items-center gap-2 px-4 py-2 text-sm text-text hover:bg-background transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">dashboard</span> Dashboard
+                                </a>
+                                <a href="{% url 'liste_utilisateurs' %}" class="flex items-center gap-2 px-4 py-2 text-sm text-text hover:bg-background transition-colors">
+                                    <span class="material-symbols-outlined text-[18px]">people</span> Utilisateurs
+                                </a>
+                            {% endif %}
+                            <div class="border-t border-border mt-2 pt-2">
+                                <form method="POST" action="{% url 'logout' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="flex items-center gap-2 w-full px-4 py-2 text-sm text-danger hover:bg-danger/10 transition-colors">
+                                        <span class="material-symbols-outlined text-[18px]">logout</span> Déconnexion
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 {% else %}
-                <a class="nav-link text-white" href="{% url 'login' %}">Connexion</a>
-                <a class="nav-link text-white" href="{% url 'inscription' %}">Inscription</a>
+                    <a href="{% url 'login' %}" class="text-white font-heading text-sm px-4 py-1.5 hover:text-secondary transition-colors">
+                        Connexion
+                    </a>
+                    <a href="{% url 'inscription' %}" class="bg-secondary text-white font-heading font-medium text-sm px-4 py-1.5 rounded-md hover:opacity-90 transition-opacity">
+                        Inscription
+                    </a>
                 {% endif %}
             </div>
         </div>
-    </nav>
+    </header>
 
     <!-- MESSAGES -->
-    <div class="container mt-3">
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    {% if messages %}
+        <div class="max-w-[1200px] mx-auto px-4 mt-4 flex flex-col gap-2">
+            {% for message in messages %}
+                <div class="flex items-center justify-between p-3 rounded-md border text-sm font-body
+                    {% if message.tags == 'error' %} bg-danger/10 text-danger border-danger/20
+                    {% elif message.tags == 'success' %} bg-success/10 text-success border-success/20
+                    {% else %} bg-info/10 text-info border-info/20 {% endif %}">
+                    <span>{{ message }}</span>
+                    <button onclick="this.parentElement.remove()" class="text-gray hover:text-text">
+                        <span class="material-symbols-outlined text-[18px]">close</span>
+                    </button>
+                </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-    </div>
+    {% endif %}
 
     <!-- CONTENU -->
-    <div class="container mt-4">
+    <main class="flex-grow">
         {% block content %}{% endblock %}
-    </div>
+    </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- FOOTER -->
+    <footer class="bg-primary mt-auto">
+        <div class="max-w-[1200px] mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-3">
+            <span class="font-heading font-semibold text-white">ImmoFaso</span>
+            <nav class="flex gap-4 text-sm text-white/80">
+                <a href="#" class="hover:text-secondary transition-colors">À propos</a>
+                <a href="#" class="hover:text-secondary transition-colors">Contact</a>
+                <a href="#" class="hover:text-secondary transition-colors">Mentions légales</a>
+            </nav>
+            <span class="text-xs text-white/60">© 2026 ImmoFaso. Tous droits réservés.</span>
+        </div>
+    </footer>
+
+    <script>
+        function toggleUserMenu() {
+            document.getElementById('user-menu')?.classList.toggle('hidden');
+        }
+        window.addEventListener('click', function (e) {
+            const container = document.getElementById('user-menu-container');
+            const menu = document.getElementById('user-menu');
+            if (container && menu && !container.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+    </script>
 </body>
 
 </html>

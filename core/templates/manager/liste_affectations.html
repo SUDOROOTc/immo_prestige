@@ -1,57 +1,80 @@
 {% extends 'base.html' %}
+{% load role_tags %}
+
+{% block title %}Affectations — ImmoFaso{% endblock %}
+
 {% block content %}
+<div class="max-w-[1200px] mx-auto px-4 py-8">
 
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+            <h1 class="font-heading font-bold text-2xl text-text">Affectations</h1>
+            <p class="font-body text-sm text-gray mt-1">Liste des clients affectés à un agent.</p>
+        </div>
+        <a href="{% url 'affecter_client' %}"
+           class="inline-flex items-center gap-2 bg-primary text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-md hover:bg-primary/90 transition-colors">
+            <span class="material-symbols-outlined text-[18px]">add_link</span>
+            Nouvelle affectation
+        </a>
+    </div>
 
-<table class="table table-bordered">
+    {% if clients %}
+    <div class="bg-white rounded-lg border border-border shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-border bg-background/50">
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Client</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Email</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Téléphone</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Agent affecté</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for client in clients %}
+                    <tr class="border-b border-border last:border-0 hover:bg-background/30 transition-colors">
+                        <td class="px-6 py-4">
+                            <div class="font-body text-sm font-medium text-text">{{ client.first_name }} {{ client.last_name }}</div>
+                            <div class="font-body text-xs text-gray">{{ client.username }}</div>
+                        </td>
+                        <td class="px-6 py-4 font-body text-sm text-gray">{{ client.email }}</td>
+                        <td class="px-6 py-4 font-body text-sm text-gray">{{ client.telephone|default:"—" }}</td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-heading font-semibold bg-info/10 text-info">
+                                <span class="material-symbols-outlined text-[14px]">support_agent</span>
+                                {{ client.agent_affecte.username }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="px-6 py-8 text-center">
+                            <div class="flex flex-col items-center gap-2 text-gray">
+                                <span class="material-symbols-outlined text-4xl">group_off</span>
+                                <p class="font-body text-sm">Aucun client affecté.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="bg-white rounded-lg border border-border shadow-sm p-12 text-center">
+        <div class="flex flex-col items-center gap-3 text-gray">
+            <span class="material-symbols-outlined text-6xl">group_off</span>
+            <h2 class="font-heading font-semibold text-lg text-text">Aucune affectation</h2>
+            <p class="font-body text-sm">Aucun client n'est actuellement affecté à un agent.</p>
+            <a href="{% url 'affecter_client' %}"
+               class="inline-flex items-center gap-2 bg-primary text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-md hover:bg-primary/90 transition-colors mt-2">
+                <span class="material-symbols-outlined text-[18px]">add_link</span>
+                Créer une affectation
+            </a>
+        </div>
+    </div>
+    {% endif %}
 
-    <thead>
-        <tr>
-            <th>Client</th>
-            <th>Email</th>
-            <th>Téléphone</th>
-            <th>Agent affecté</th>
-        </tr>
-    </thead>
-
-    <tbody>
-
-        {% for client in clients %}
-
-        <tr>
-
-            <td>
-                {{ client.first_name }}
-                {{ client.last_name }}
-            </td>
-
-            <td>
-                {{ client.email }}
-            </td>
-
-            <td>
-                {{ client.telephone }}
-            </td>
-
-            <td>
-                {{ client.agent_affecte.username }}
-            </td>
-
-        </tr>
-
-        {% empty %}
-
-        <tr>
-            <td colspan="4">
-                Aucun client affecté.
-            </td>
-        </tr>
-
-        {% endfor %}
-
-    </tbody>
-
-</table>
-
-
-
+</div>
 {% endblock %}

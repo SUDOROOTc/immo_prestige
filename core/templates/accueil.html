@@ -4,213 +4,131 @@
 
 {% block content %}
 
-<h2 class="mb-4">Bienvenue sur ImmoFaso 🏠</h2>
-<p class="text-muted">Trouvez le bien immobilier idéal au Burkina Faso.</p>
+<!-- HERO SECTION -->
+<section class="bg-primary">
+    <div class="max-w-[1200px] mx-auto px-4 py-16 text-center">
+        <h1 class="font-heading font-bold text-3xl md:text-4xl text-white mb-3">
+            Trouvez votre propriété idéale au Burkina Faso
+        </h1>
+        <p class="font-body text-white/80 text-base mb-8">
+            Vente et location de biens immobiliers de haute sécurité.
+        </p>
 
-<!-- DERNIÈRES ANNONCES -->
-<h4 class="mb-3">Dernières annonces</h4>
+        <!-- BARRE DE RECHERCHE -->
+        <form method="GET" action="{% url 'liste_annonces' %}"
+              class="bg-white rounded-lg shadow-md p-3 flex flex-col md:flex-row gap-2 max-w-3xl mx-auto">
+            <input type="text" name="ville" placeholder="Localisation"
+                   class="flex-1 px-4 py-2 rounded-md border border-border text-text font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
 
-<div class="row">
-    {% for annonce in dernieres %}
-    <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm">
+            <select name="option"
+                    class="px-4 py-2 rounded-md border border-border text-text font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/30">
+                <option value="">Option</option>
+                <option value="LOCATION">Location</option>
+                <option value="VENTE">Vente</option>
+            </select>
 
-            {% if annonce.bien.photos.first %}
-            <img src="{{ annonce.bien.photos.first.chemin_fichier.url }}" class="card-img-top img-fluid"
-                alt="Photo du bien">
-            {% endif %}
+            <button type="submit"
+                    class="bg-secondary hover:opacity-90 transition-opacity text-white font-heading font-semibold text-sm px-6 py-2 rounded-md">
+                Rechercher
+            </button>
+        </form>
+    </div>
+</section>
 
-            <div class="card-body">
-                <h5 class="card-title">
-                    {{ annonce.bien.type }} — {{ annonce.bien.ville }}
-                </h5>
+<!-- CATEGORIES RAPIDES -->
+<section class="max-w-[1200px] mx-auto px-4 -mt-8 relative z-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
 
-                <p class="text-muted">
-                    {{ annonce.bien.usage }} | {{ annonce.option }}
-                </p>
+        <a href="{% url 'liste_annonces' %}?type=VILLA"
+           class="bg-white rounded-lg shadow-sm border border-border p-5 flex flex-col items-center gap-2 hover:shadow-md transition-shadow">
+            <span class="material-symbols-outlined text-primary text-3xl">villa</span>
+            <span class="font-heading font-medium text-sm text-text">Villa</span>
+            <span class="font-body text-xs text-gray">{{ type_counts.VILLA }} biens</span>
+        </a>
 
-                <p class="fw-bold text-success">
-                    {{ annonce.prix }} FCFA
-                </p>
+        <a href="{% url 'liste_annonces' %}?type=TERRAIN"
+           class="bg-white rounded-lg shadow-sm border border-border p-5 flex flex-col items-center gap-2 hover:shadow-md transition-shadow">
+            <span class="material-symbols-outlined text-primary text-3xl">landscape</span>
+            <span class="font-heading font-medium text-sm text-text">Terrain</span>
+            <span class="font-body text-xs text-gray">{{ type_counts.TERRAIN }} biens</span>
+        </a>
 
-                <p class="text-muted small">
-                    {{ annonce.bien.superficie }} m²
-                </p>
+        <a href="{% url 'liste_annonces' %}?type=APPARTEMENT"
+           class="bg-white rounded-lg shadow-sm border border-border p-5 flex flex-col items-center gap-2 hover:shadow-md transition-shadow">
+            <span class="material-symbols-outlined text-primary text-3xl">apartment</span>
+            <span class="font-heading font-medium text-sm text-text">Appartement</span>
+            <span class="font-body text-xs text-gray">{{ type_counts.APPARTEMENT }} biens</span>
+        </a>
+
+        <a href="{% url 'liste_annonces' %}?type=COMMERCE"
+           class="bg-white rounded-lg shadow-sm border border-border p-5 flex flex-col items-center gap-2 hover:shadow-md transition-shadow">
+            <span class="material-symbols-outlined text-primary text-3xl">storefront</span>
+            <span class="font-heading font-medium text-sm text-text">Commerce</span>
+            <span class="font-body text-xs text-gray">{{ type_counts.COMMERCE }} biens</span>
+        </a>
+
+    </div>
+</section>
+
+
+
+<!-- DERNIERES ANNONCES -->
+<section class="max-w-[1200px] mx-auto px-4 py-12">
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="font-heading font-semibold text-xl text-text">Dernières annonces</h2>
+        <a href="{% url 'liste_annonces' %}" class="font-body text-sm text-primary hover:underline">
+            Voir tout →
+        </a>
+    </div>
+
+    {% if dernieres %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {% for annonce in dernieres %}
+            <div class="bg-white rounded-lg border border-border overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+
+                <div class="relative h-40 bg-border">
+                    {% with annonce.bien.photos.first as photo %}
+                        {% if photo %}
+                            <img src="{{ photo.chemin_fichier.url }}" alt="{{ annonce.bien.type }}"
+                                 class="w-full h-full object-cover">
+                        {% else %}
+                            <div class="w-full h-full flex items-center justify-center text-gray">
+                                <span class="material-symbols-outlined text-4xl">image</span>
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+
+                    <span class="absolute top-2 left-2 bg-primary text-white text-xs font-heading font-medium px-2 py-1 rounded">
+                        {{ annonce.bien.get_type_display }}
+                    </span>
+                    <span class="absolute top-2 right-2 bg-secondary text-white text-xs font-heading font-medium px-2 py-1 rounded">
+                        {% if annonce.option == 'VENTE' %}En vente{% else %}À louer{% endif %}
+                    </span>
+                </div>
+
+                <div class="p-4">
+                    <h3 class="font-heading font-semibold text-sm text-text mb-1 truncate">
+                        {{ annonce.bien.get_type_display }} — {{ annonce.bien.ville }}
+                    </h3>
+                    <p class="font-body text-xs text-gray mb-3">
+                        {{ annonce.bien.superficie }} m² · {{ annonce.bien.ville }}
+                    </p>
+                    <p class="font-heading font-bold text-base text-primary mb-3">
+                        {{ annonce.prix|floatformat:0 }} FCFA
+                    </p>
+                    <a href="{% url 'detail_annonce' annonce.id %}"
+                       class="block text-center bg-primary text-white font-heading font-medium text-sm py-2 rounded-md hover:opacity-90 transition-opacity">
+                        Voir détails
+                    </a>
+                </div>
             </div>
-
-            <div class="card-footer">
-                <a href="{% url 'detail_annonce' annonce.id %}" class="btn btn-success w-100">
-                    Voir le détail
-                </a>
-            </div>
-
+            {% endfor %}
         </div>
-    </div>
-    {% empty %}
-    <div class="alert alert-info">
-        Aucune annonce disponible.
-    </div>
-    {% endfor %}
-</div>
-
-<div class="text-center mb-5">
-    <a href="{% url 'liste_annonces' %}" class="btn btn-outline-success">
-        Voir toutes les annonces
-    </a>
-</div>
-
-<hr>
-
-<!-- VILLAS -->
-<h4 class="mb-3 mt-4">Villas disponibles</h4>
-
-<div class="row">
-    {% for annonce in villas %}
-    <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm">
-
-            {% if annonce.bien.photos.first %}
-            <img src="{{ annonce.bien.photos.first.chemin_fichier.url }}" class="card-img-top">
-            {% endif %}
-
-            <div class="card-body">
-                <h5>{{ annonce.bien.ville }}</h5>
-                <p class="fw-bold text-success">{{ annonce.prix }} FCFA</p>
-            </div>
-
-            <div class="card-footer">
-                <a href="{% url 'detail_annonce' annonce.id %}" class="btn btn-success w-100">
-                    Voir le détail
-                </a>
-            </div>
-
+    {% else %}
+        <div class="bg-white border border-border rounded-lg p-8 text-center text-gray font-body text-sm">
+            Aucune annonce disponible pour le moment.
         </div>
-    </div>
-    {% empty %}
-    <div class="alert alert-info">
-        Aucune villa disponible.
-    </div>
-    {% endfor %}
-</div>
-
-<hr>
-
-<!-- TERRAINS -->
-<h4 class="mb-3 mt-4">Terrains disponibles</h4>
-
-<div class="row">
-    {% for annonce in terrains %}
-    <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h5>{{ annonce.bien.ville }}</h5>
-                <p class="fw-bold text-success">{{ annonce.prix }} FCFA</p>
-            </div>
-
-            <div class="card-footer">
-                <a href="{% url 'detail_annonce' annonce.id %}" class="btn btn-success w-100">
-                    Voir le détail
-                </a>
-            </div>
-        </div>
-    </div>
-    {% empty %}
-    <div class="alert alert-info">
-        Aucun terrain disponible.
-    </div>
-    {% endfor %}
-</div>
-
-<hr>
-
-<!-- APPARTEMENTS -->
-<h4 class="mb-3 mt-4">Appartements disponibles</h4>
-
-<div class="row">
-    {% for annonce in appartements %}
-    <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm">
-
-            <div class="card-body">
-                <h5>{{ annonce.bien.ville }}</h5>
-                <p class="fw-bold text-success">{{ annonce.prix }} FCFA</p>
-            </div>
-
-            <div class="card-footer">
-                <a href="{% url 'detail_annonce' annonce.id %}" class="btn btn-success w-100">
-                    Voir le détail
-                </a>
-            </div>
-
-        </div>
-    </div>
-    {% empty %}
-    <div class="alert alert-info">
-        Aucun appartement disponible.
-    </div>
-    {% endfor %}
-</div>
-
-<hr>
-
-<!-- LOCATIONS -->
-<h4 class="mb-3 mt-4">Biens à louer</h4>
-
-<div class="row">
-    {% for annonce in locations %}
-    <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm">
-
-            <div class="card-body">
-                <h5>{{ annonce.bien.type }}</h5>
-                <p>{{ annonce.bien.ville }}</p>
-                <p class="fw-bold text-success">{{ annonce.prix }} FCFA</p>
-            </div>
-
-            <div class="card-footer">
-                <a href="{% url 'detail_annonce' annonce.id %}" class="btn btn-success w-100">
-                    Voir le détail
-                </a>
-            </div>
-
-        </div>
-    </div>
-    {% empty %}
-    <div class="alert alert-info">
-        Aucun bien en location.
-    </div>
-    {% endfor %}
-</div>
-
-<hr>
-
-<!-- VENTES -->
-<h4 class="mb-3 mt-4">Biens à vendre</h4>
-
-<div class="row">
-    {% for annonce in ventes %}
-    <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm">
-
-            <div class="card-body">
-                <h5>{{ annonce.bien.type }}</h5>
-                <p>{{ annonce.bien.ville }}</p>
-                <p class="fw-bold text-success">{{ annonce.prix }} FCFA</p>
-            </div>
-
-            <div class="card-footer">
-                <a href="{% url 'detail_annonce' annonce.id %}" class="btn btn-success w-100">
-                    Voir le détail
-                </a>
-            </div>
-
-        </div>
-    </div>
-    {% empty %}
-    <div class="alert alert-info">
-        Aucun bien à vendre.
-    </div>
-    {% endfor %}
-</div>
+    {% endif %}
+</section>
 
 {% endblock %}

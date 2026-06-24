@@ -1,98 +1,89 @@
 {% extends 'base.html' %}
+{% load role_tags %}
+
+{% block title %}Mes annonces d'agence — ImmoFaso{% endblock %}
 
 {% block content %}
+<div class="max-w-[1200px] mx-auto px-4 py-8">
 
-<div class="container mt-4">
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
-        <h2>
-            Mes annonces d'agence
-        </h2>
-
-        <a href="{% url 'ajouter_annonce_agence' %}" class="btn btn-success">
-            + Nouvelle annonce
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+            <h1 class="font-heading font-bold text-2xl text-text">Mes annonces d'agence</h1>
+            <p class="font-body text-sm text-gray mt-1">Annonces créées directement par l'agence ImmoFaso.</p>
+        </div>
+        <a href="{% url 'ajouter_annonce_agence' %}"
+           class="inline-flex items-center gap-2 bg-secondary text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-md hover:opacity-90 transition-opacity">
+            <span class="material-symbols-outlined text-[18px]">add_circle</span>
+            Nouvelle annonce
         </a>
-
     </div>
 
     {% if annonces %}
-
-    <div class="table-responsive">
-
-        <table class="table table-striped table-hover">
-
-            <thead class="table-dark">
-
-                <tr>
-                    <th>Type</th>
-                    <th>Ville</th>
-                    <th>Option</th>
-                    <th>Prix</th>
-                    <th>Statut</th>
-                    <th>Date</th>
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-                {% for annonce in annonces %}
-
-                <tr>
-
-                    <td>
-                        {{ annonce.bien.get_type_display }}
-                    </td>
-
-                    <td>
-                        {{ annonce.bien.ville }}
-                    </td>
-
-                    <td>
-                        {{ annonce.get_option_display }}
-                    </td>
-
-                    <td>
-                        {{ annonce.prix }} FCFA
-                    </td>
-
-                    <td>
-
-                        <span class="badge bg-success">
-
-                            {{ annonce.get_statut_display }}
-
-                        </span>
-
-                    </td>
-
-                    <td>
-
-                        {{ annonce.date_publication|date:"d/m/Y" }}
-
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
+    <div class="bg-white rounded-lg border border-border shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-border bg-background/50">
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Type</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Ville</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Option</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Prix</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Statut</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for annonce in annonces %}
+                    <tr class="border-b border-border last:border-0 hover:bg-background/30 transition-colors">
+                        <td class="px-6 py-4 font-body text-sm font-medium text-text">{{ annonce.bien.get_type_display }}</td>
+                        <td class="px-6 py-4 font-body text-sm text-text">{{ annonce.bien.ville }}</td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-heading font-semibold
+                                {% if annonce.option == 'LOCATION' %}bg-info/10 text-info{% else %}bg-success/10 text-success{% endif %}">
+                                {{ annonce.get_option_display }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 font-heading font-semibold text-sm text-primary">{{ annonce.prix|floatformat:0 }} FCFA</td>
+                        <td class="px-6 py-4">
+                            {% if annonce.statut == 'PUBLIEE' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold bg-success/10 text-success">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                                    Publiée
+                                </span>
+                            {% elif annonce.statut == 'RETIREE' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold bg-gray/10 text-gray">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-gray"></span>
+                                    Retirée
+                                </span>
+                            {% else %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold bg-secondary/10 text-secondary">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                    {{ annonce.get_statut_display }}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 font-body text-sm text-gray">{{ annonce.date_publication|date:"d/m/Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-
     {% else %}
-
-    <div class="alert alert-info">
-
-        Vous n'avez encore créé aucune annonce d'agence.
-
+    <div class="bg-white rounded-lg border border-border shadow-sm p-12 text-center">
+        <div class="flex flex-col items-center gap-3 text-gray">
+            <span class="material-symbols-outlined text-6xl">business</span>
+            <h2 class="font-heading font-semibold text-lg text-text">Aucune annonce d'agence</h2>
+            <p class="font-body text-sm">Vous n'avez encore créé aucune annonce d'agence.</p>
+            <a href="{% url 'ajouter_annonce_agence' %}"
+               class="inline-flex items-center gap-2 bg-primary text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-md hover:bg-primary/90 transition-colors mt-2">
+                <span class="material-symbols-outlined text-[18px]">add_circle</span>
+                Créer une annonce
+            </a>
+        </div>
     </div>
-
     {% endif %}
 
 </div>
-
 {% endblock %}

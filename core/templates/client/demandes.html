@@ -1,55 +1,83 @@
 {% extends 'base.html' %}
+{% load role_tags %}
 
 {% block title %}Mes demandes de visite — ImmoFaso{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">Mes demandes de visite</h2>
+<div class="max-w-[1200px] mx-auto px-4 py-8">
 
-{% if demandes %}
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-            <thead class="table-success">
-                <tr>
-                    <th>Bien</th>
-                    <th>Ville</th>
-                    <th>Prix</th>
-                    <th>Date demande</th>
-                    <th>Statut</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for demande in demandes %}
-                <tr>
-                    <td>{{ demande.annonce.bien.type }}</td>
-                    <td>{{ demande.annonce.bien.ville }}</td>
-                    <td>{{ demande.annonce.prix }} FCFA</td>
-                    <td>{{ demande.date_demande|date:"d/m/Y H:i" }}</td>
-                    <td>
-                        {% if demande.statut == 'EN_ATTENTE' %}
-                            <span class="badge bg-warning text-dark">En attente</span>
-                        {% elif demande.statut == 'VALIDEE' %}
-                            <span class="badge bg-success">Validée</span>
-                        {% elif demande.statut == 'REFUSEE' %}
-                            <span class="badge bg-danger">Refusée</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <a href="{% url 'detail_annonce' demande.annonce.id %}" 
-                           class="btn btn-sm btn-outline-success">
-                            Voir l'annonce
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="font-heading font-bold text-2xl text-text">Mes demandes de visite</h1>
+        <p class="font-body text-gray text-sm mt-1">Suivez l'état de vos demandes de visite.</p>
     </div>
-{% else %}
-    <div class="alert alert-info">
-        Vous n'avez pas encore fait de demande de visite.
-        <a href="{% url 'liste_annonces' %}">Parcourir les annonces</a>
-    </div>
-{% endif %}
 
+    {% if demandes %}
+        <div class="bg-white rounded-lg border border-border shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-border bg-background/50">
+                            <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Propriété</th>
+                            <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Date de la demande</th>
+                            <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for demande in demandes %}
+                        <tr class="border-b border-border last:border-0 hover:bg-background/30 transition-colors">
+                            <td class="px-6 py-4">
+                                <a href="{% url 'detail_annonce' demande.annonce.id %}" class="font-body text-sm text-primary hover:underline font-medium">
+                                    {{ demande.annonce.bien.get_type_display }} — {{ demande.annonce.bien.ville }}
+                                </a>
+                                <p class="font-body text-xs text-gray mt-0.5">{{ demande.annonce.bien.localisation }}</p>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="font-body text-sm text-text">{{ demande.date_demande|date:"d/m/Y" }}</span>
+                                <span class="font-body text-xs text-gray block">{{ demande.date_demande|date:"H:i" }}</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                {% if demande.statut == 'EN_ATTENTE' %}
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold bg-secondary/10 text-secondary">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                        En attente
+                                    </span>
+                                {% elif demande.statut == 'VALIDEE' %}
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold bg-success/10 text-success">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                                        Validée
+                                    </span>
+                                {% elif demande.statut == 'REFUSEE' %}
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold bg-danger/10 text-danger">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-danger"></span>
+                                        Refusée
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <!-- État vide -->
+        <div class="bg-white rounded-lg border border-border shadow-sm p-12 text-center">
+            <div class="flex flex-col items-center gap-3 text-gray">
+                <span class="material-symbols-outlined text-6xl">calendar_today</span>
+                <h2 class="font-heading font-semibold text-lg text-text">Aucune demande</h2>
+                <p class="font-body text-sm max-w-md">
+                    Vous n'avez encore effectué aucune demande de visite.
+                    Parcourez les annonces et demandez une visite pour les biens qui vous intéressent.
+                </p>
+                <a href="{% url 'liste_annonces' %}"
+                   class="inline-flex items-center gap-2 bg-primary text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-md hover:bg-primary/90 transition-colors mt-2">
+                    <span class="material-symbols-outlined text-[18px]">search</span>
+                    Parcourir les annonces
+                </a>
+            </div>
+        </div>
+    {% endif %}
+
+</div>
 {% endblock %}

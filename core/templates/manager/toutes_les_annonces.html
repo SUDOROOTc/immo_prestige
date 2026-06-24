@@ -1,107 +1,101 @@
 {% extends 'base.html' %}
+{% load role_tags %}
 
-{% block title %}Toutes les annonces{% endblock %}
+{% block title %}Toutes les annonces — ImmoFaso{% endblock %}
 
 {% block content %}
+<div class="max-w-[1200px] mx-auto px-4 py-8">
 
-<h2 class="mb-4">
-  Gestion des annonces
-</h2>
-
-<table class="table table-striped">
-
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Type</th>
-      <th>Ville</th>
-      <th>Bailleur</th>
-      <th>Prix</th>
-      <th>Statut</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-
-  <tbody>
-
-    {% for annonce in annonces %}
-
-    <tr>
-
-      <td>
-        {{ annonce.id }}
-      </td>
-
-      <td>
-        {{ annonce.bien.type }}
-      </td>
-
-      <td>
-        {{ annonce.bien.ville }}
-      </td>
-
-      <td>
-        {{ annonce.bailleur.username }}
-      </td>
-
-      <td>
-        {{ annonce.prix }}
-      </td>
-
-      <td>
-        {{ annonce.statut }}
-      </td>
-
-      <td>
-
-        <a href="{% url 'detail_annonce' annonce.id %}" class="btn btn-sm btn-primary">
-          Voir
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+            <h1 class="font-heading font-bold text-2xl text-text">Gestion des annonces</h1>
+            <p class="font-body text-sm text-gray mt-1">Consultez et gérez toutes les annonces de la plateforme.</p>
+        </div>
+        <a href="{% url 'dashboard' %}"
+           class="inline-flex items-center gap-2 text-gray font-heading text-sm px-4 py-2 rounded-md border border-border hover:bg-background transition-colors">
+            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+            Retour au dashboard
         </a>
-
-        {% if annonce.statut == 'PUBLIEE' %}
-
-        <a href="{% url 'retirer_annonce' annonce.id %}" class="btn btn-sm btn-danger">
-          Retirer
-        </a>
-
-        {% endif %}
-
-      </td>
-
-    </tr>
-
-    {% endfor %}
-
-  </tbody>
-
-</table>
-
-<div class="row mt-4">
-
-  <div class="col-md-4">
-
-    <div class="card shadow-sm">
-
-      <div class="card-body">
-
-        <h5>
-          Gestion des annonces
-        </h5>
-
-        <p>
-          Consulter toutes les annonces de la plateforme.
-        </p>
-
-        <a href="{% url 'toutes_les_annonces_manager' %}" class="btn btn-primary">
-          Voir les annonces
-        </a>
-
-      </div>
-
     </div>
 
-  </div>
+    {% if annonces %}
+    <div class="bg-white rounded-lg border border-border shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-border bg-background/50">
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">ID</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Type</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Ville</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Bailleur</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Prix</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Statut</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for annonce in annonces %}
+                    <tr class="border-b border-border last:border-0 hover:bg-background/30 transition-colors">
+                        <td class="px-6 py-4 font-body text-sm font-mono text-gray">#{{ annonce.id }}</td>
+                        <td class="px-6 py-4 font-body text-sm text-text">{{ annonce.bien.get_type_display }}</td>
+                        <td class="px-6 py-4 font-body text-sm text-text">{{ annonce.bien.ville }}</td>
+                        <td class="px-6 py-4 font-body text-sm text-gray">{{ annonce.bailleur.username|default:"Agence" }}</td>
+                        <td class="px-6 py-4 font-heading font-semibold text-sm text-primary">{{ annonce.prix|floatformat:0 }} FCFA</td>
+                        <td class="px-6 py-4">
+                            {% if annonce.statut == 'EN_ATTENTE' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold bg-secondary/10 text-secondary">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                    En attente
+                                </span>
+                            {% elif annonce.statut == 'PUBLIEE' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold bg-success/10 text-success">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                                    Publiée
+                                </span>
+                            {% elif annonce.statut == 'REFUSEE' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold bg-danger/10 text-danger">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-danger"></span>
+                                    Refusée
+                                </span>
+                            {% elif annonce.statut == 'RETIREE' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold bg-gray/10 text-gray">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-gray"></span>
+                                    Retirée
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <a href="{% url 'detail_annonce' annonce.id %}"
+                                   class="inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-heading font-semibold text-primary bg-primary/10 hover:bg-primary/20 transition-colors">
+                                    <span class="material-symbols-outlined text-[14px]">visibility</span>
+                                    Voir
+                                </a>
+                                {% if annonce.statut == 'PUBLIEE' %}
+                                <a href="{% url 'retirer_annonce' annonce.id %}"
+                                   class="inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-heading font-semibold text-danger bg-danger/10 hover:bg-danger/20 transition-colors">
+                                    <span class="material-symbols-outlined text-[14px]">archive</span>
+                                    Retirer
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="bg-white rounded-lg border border-border shadow-sm p-12 text-center">
+        <div class="flex flex-col items-center gap-3 text-gray">
+            <span class="material-symbols-outlined text-6xl">inbox</span>
+            <h2 class="font-heading font-semibold text-lg text-text">Aucune annonce</h2>
+            <p class="font-body text-sm">Aucune annonce n'est présente sur la plateforme.</p>
+        </div>
+    </div>
+    {% endif %}
 
 </div>
-
 {% endblock %}

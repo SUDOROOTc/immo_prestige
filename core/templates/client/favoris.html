@@ -1,39 +1,85 @@
 {% extends 'base.html' %}
+{% load role_tags %}
 
 {% block title %}Mes favoris — ImmoFaso{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">Mes favoris</h2>
+<div class="max-w-[1200px] mx-auto px-4 py-8">
 
-{% if favoris %}
-    <div class="row">
-        {% for favori in favoris %}
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">{{ favori.annonce.bien.type }} — {{ favori.annonce.bien.ville }}</h5>
-                    <p class="text-muted">{{ favori.annonce.bien.usage }} | {{ favori.annonce.option }}</p>
-                    <p class="fw-bold text-success">{{ favori.annonce.prix }} FCFA</p>
-                    <p class="text-muted small">{{ favori.annonce.bien.superficie }} m²</p>
-                    <p class="text-muted small">Ajouté le {{ favori.date_ajout|date:"d/m/Y" }}</p>
-                </div>
-                <div class="card-footer d-grid gap-2">
-                    <a href="{% url 'detail_annonce' favori.annonce.id %}" class="btn btn-sm btn-success">
-                        Voir le détail
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="font-heading font-bold text-2xl text-text">Mes favoris ({{ favoris|length }})</h1>
+        <p class="font-body text-gray text-sm mt-1">Retrouvez toutes les annonces que vous avez ajoutées à vos favoris.</p>
+    </div>
+
+    {% if favoris %}
+        <!-- Grille de favoris -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for favori in favoris %}
+            <div class="bg-white rounded-lg border border-border shadow-sm overflow-hidden hover:shadow-md transition-shadow group">
+                <!-- Image -->
+                <a href="{% url 'detail_annonce' favori.annonce.id %}" class="block relative aspect-[4/3] bg-background overflow-hidden">
+                    {% with photos=favori.annonce.bien.photos.all %}
+                        {% if photos %}
+                            <img src="{{ photos.first.chemin_fichier.url }}"
+                                 alt="{{ favori.annonce.bien.get_type_display }}"
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                        {% else %}
+                            <div class="w-full h-full flex items-center justify-center">
+                                <span class="material-symbols-outlined text-5xl text-gray">image</span>
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    <!-- Badge option -->
+                    <span class="absolute top-3 left-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-heading font-semibold
+                        {% if favori.annonce.option == 'LOCATION' %}bg-info text-white{% else %}bg-success text-white{% endif %}">
+                        {{ favori.annonce.get_option_display }}
+                    </span>
+                </a>
+
+                <!-- Infos -->
+                <div class="p-4">
+                    <a href="{% url 'detail_annonce' favori.annonce.id %}" class="block">
+                        <h3 class="font-heading font-semibold text-sm text-text hover:text-primary transition-colors">
+                            {{ favori.annonce.bien.get_type_display }} — {{ favori.annonce.bien.ville }}
+                        </h3>
                     </a>
-                    <a href="{% url 'retirer_favori' favori.annonce.id %}" class="btn btn-sm btn-outline-danger">
-                        ❌ Retirer des favoris
-                    </a>
+                    <p class="font-body text-xs text-gray mt-1">{{ favori.annonce.bien.localisation }}</p>
+                    <div class="flex items-center justify-between mt-3">
+                        <p class="font-heading font-bold text-base text-primary">
+                            {{ favori.annonce.prix|floatformat:0 }} <span class="text-xs font-medium">FCFA</span>
+                        </p>
+                        <form method="POST" action="{% url 'retirer_favori' favori.annonce.id %}">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="flex items-center gap-1 text-xs font-heading font-medium text-danger hover:text-danger/80 transition-colors px-2 py-1 rounded-md hover:bg-danger/5">
+                                <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1">favorite</span>
+                                Retirer
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-    </div>
-{% else %}
-    <div class="alert alert-info">
-        Vous n'avez pas encore de favoris.
-        <a href="{% url 'liste_annonces' %}">Parcourir les annonces</a>
-    </div>
-{% endif %}
+    {% else %}
+        <!-- État vide -->
+        <div class="bg-white rounded-lg border border-border shadow-sm p-12 text-center">
+            <div class="flex flex-col items-center gap-3 text-gray">
+                <span class="material-symbols-outlined text-6xl" style="font-variation-settings: 'FILL' 0">favorite</span>
+                <h2 class="font-heading font-semibold text-lg text-text">Aucun favori</h2>
+                <p class="font-body text-sm max-w-md">
+                    Vous n'avez pas encore ajouté d'annonces à vos favoris.
+                    Parcourez les annonces et ajoutez celles qui vous intéressent.
+                </p>
+                <a href="{% url 'liste_annonces' %}"
+                   class="inline-flex items-center gap-2 bg-primary text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-md hover:bg-primary/90 transition-colors mt-2">
+                    <span class="material-symbols-outlined text-[18px]">search</span>
+                    Parcourir les annonces
+                </a>
+            </div>
+        </div>
+    {% endif %}
 
+</div>
 {% endblock %}

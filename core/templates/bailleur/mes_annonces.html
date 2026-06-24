@@ -1,64 +1,107 @@
 {% extends 'base.html' %}
+{% load role_tags %}
 
 {% block title %}Mes annonces — ImmoFaso{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Mes annonces</h2>
-    <a href="{% url 'deposer_annonce' %}" class="btn btn-success">
-        + Déposer une annonce
-    </a>
+<div class="max-w-[1200px] mx-auto px-4 py-8">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+            <h1 class="font-heading font-bold text-2xl text-text">Mes annonces</h1>
+            <p class="font-body text-sm text-gray mt-1">Gérez vos annonces immobilières.</p>
+        </div>
+        <a href="{% url 'deposer_annonce' %}"
+           class="inline-flex items-center gap-2 bg-secondary text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-md hover:opacity-90 transition-opacity">
+            <span class="material-symbols-outlined text-[18px]">add_circle</span>
+            Déposer une annonce
+        </a>
+    </div>
+
+    {% if annonces %}
+    <div class="bg-white rounded-lg border border-border shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-border bg-background/50">
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Type</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Ville</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Option</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Prix</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Statut</th>
+                        <th class="text-left px-6 py-4 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for annonce in annonces %}
+                    <tr class="border-b border-border last:border-0 hover:bg-background/30 transition-colors">
+                        <td class="px-6 py-4 font-body text-sm text-text">{{ annonce.bien.get_type_display }}</td>
+                        <td class="px-6 py-4 font-body text-sm text-text">{{ annonce.bien.ville }}</td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-heading font-semibold
+                                {% if annonce.option == 'LOCATION' %}bg-info/10 text-info{% else %}bg-success/10 text-success{% endif %}">
+                                {{ annonce.get_option_display }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 font-heading font-semibold text-sm text-primary">{{ annonce.prix|floatformat:0 }} FCFA</td>
+                        <td class="px-6 py-4">
+                            {% if annonce.statut == 'EN_ATTENTE' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold bg-secondary/10 text-secondary">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                    En attente
+                                </span>
+                            {% elif annonce.statut == 'PUBLIEE' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold bg-success/10 text-success">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                                    Publiée
+                                </span>
+                            {% elif annonce.statut == 'REFUSEE' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold bg-danger/10 text-danger">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-danger"></span>
+                                    Refusée
+                                </span>
+                            {% elif annonce.statut == 'RETIREE' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold bg-gray/10 text-gray">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-gray"></span>
+                                    Retirée
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <a href="{% url 'modifier_annonce' annonce.id %}"
+                                   class="inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-heading font-semibold text-primary bg-primary/10 hover:bg-primary/20 transition-colors">
+                                    <span class="material-symbols-outlined text-[14px]">edit</span>
+                                    Modifier
+                                </a>
+                                <a href="{% url 'supprimer_annonce' annonce.id %}"
+                                   class="inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-heading font-semibold text-danger bg-danger/10 hover:bg-danger/20 transition-colors">
+                                    <span class="material-symbols-outlined text-[14px]">delete</span>
+                                    Supprimer
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="bg-white rounded-lg border border-border shadow-sm p-12 text-center">
+        <div class="flex flex-col items-center gap-3 text-gray">
+            <span class="material-symbols-outlined text-6xl">real_estate_agent</span>
+            <h2 class="font-heading font-semibold text-lg text-text">Aucune annonce</h2>
+            <p class="font-body text-sm">Vous n'avez pas encore déposé d'annonce.</p>
+            <a href="{% url 'deposer_annonce' %}"
+               class="inline-flex items-center gap-2 bg-primary text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-md hover:bg-primary/90 transition-colors mt-2">
+                <span class="material-symbols-outlined text-[18px]">add_circle</span>
+                Déposer ma première annonce
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
 </div>
-
-{% if annonces %}
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-            <thead class="table-success">
-                <tr>
-                    <th>Type</th>
-                    <th>Ville</th>
-                    <th>Option</th>
-                    <th>Prix</th>
-                    <th>Statut</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for annonce in annonces %}
-                <tr>
-                    <td>{{ annonce.bien.type }}</td>
-                    <td>{{ annonce.bien.ville }}</td>
-                    <td>{{ annonce.option }}</td>
-                    <td>{{ annonce.prix }} FCFA</td>
-                    <td>
-                        {% if annonce.statut == 'EN_ATTENTE' %}
-                            <span class="badge bg-warning text-dark">En attente</span>
-                        {% elif annonce.statut == 'PUBLIEE' %}
-                            <span class="badge bg-success">Publiée</span>
-                        {% elif annonce.statut == 'REFUSEE' %}
-                            <span class="badge bg-danger">Refusée</span>
-                        {% elif annonce.statut == 'RETIREE' %}
-                            <span class="badge bg-secondary">Retirée</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <a href="{% url 'modifier_annonce' annonce.id %}" class="btn btn-sm btn-outline-success">
-                            ✏️ Modifier
-                        </a>
-                        <a href="{% url 'supprimer_annonce' annonce.id %}" class="btn btn-sm btn-outline-danger">
-                            🗑️ Supprimer
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-{% else %}
-    <div class="alert alert-info">
-        Vous n'avez pas encore déposé d'annonce.
-        <a href="{% url 'deposer_annonce' %}">Déposer ma première annonce</a>
-    </div>
-{% endif %}
-
 {% endblock %}

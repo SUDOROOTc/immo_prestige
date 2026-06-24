@@ -1,56 +1,61 @@
 {% extends 'base.html' %}
+{% load role_tags %}
 
 {% block title %}Affecter un client — ImmoFaso{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card shadow-sm">
-            <div class="card-header bg-success text-white">
-                <h4 class="mb-0">Affecter un client à un agent</h4>
+<div class="max-w-[700px] mx-auto px-4 py-8">
+
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="font-heading font-bold text-2xl text-text">Affecter un client à un agent</h1>
+        <p class="font-body text-sm text-gray mt-1">Associez un client à un agent pour le suivi des demandes.</p>
+    </div>
+
+    <div class="bg-white rounded-lg border border-border shadow-sm p-6 sm:p-8">
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-5">
+                <label class="block font-heading font-semibold text-sm text-text mb-1.5">Client <span class="text-danger">*</span></label>
+                <select name="client_id" class="w-full px-3 py-2.5 rounded-md border border-border bg-white font-body text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors" required>
+                    <option value="">— Choisir un client —</option>
+                    {% for client in clients %}
+                        <option value="{{ client.id }}">
+                            {{ client.username }} — {{ client.first_name }} {{ client.last_name }}
+                            {% if client.agent_affecte %}
+                                (actuellement : {{ client.agent_affecte.username }})
+                            {% endif %}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
-            <div class="card-body">
-                <form method="POST">
-                    {% csrf_token %}
 
-                    <div class="mb-3">
-                        <label class="form-label">Client</label>
-                        <select name="client_id" class="form-select" required>
-                            <option value="">-- Choisir un client --</option>
-                            {% for client in clients %}
-                                <option value="{{ client.id }}">
-                                    {{ client.username }} — {{ client.first_name }} {{ client.last_name }}
-                                    {% if client.agent_affecte %}
-                                        (actuellement : {{ client.agent_affecte.username }})
-                                    {% endif %}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Agent</label>
-                        <select name="agent_id" class="form-select" required>
-                            <option value="">-- Choisir un agent --</option>
-                            {% for agent in agents %}
-                                <option value="{{ agent.id }}">
-                                    {{ agent.username }} — {{ agent.first_name }} {{ agent.last_name }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-success w-100">
-                            🔗 Affecter
-                        </button>
-                        <a href="{% url 'liste_utilisateurs' %}" class="btn btn-outline-secondary w-100">
-                            Annuler
-                        </a>
-                    </div>
-                </form>
+            <div class="mb-6">
+                <label class="block font-heading font-semibold text-sm text-text mb-1.5">Agent <span class="text-danger">*</span></label>
+                <select name="agent_id" class="w-full px-3 py-2.5 rounded-md border border-border bg-white font-body text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors" required>
+                    <option value="">— Choisir un agent —</option>
+                    {% for agent in agents %}
+                        <option value="{{ agent.id }}">
+                            {{ agent.username }} — {{ agent.first_name }} {{ agent.last_name }}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
-        </div>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button type="submit"
+                        class="flex-1 flex items-center justify-center gap-2 bg-primary text-white font-heading font-semibold text-sm px-5 py-3 rounded-md hover:bg-primary/90 transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">link</span>
+                    Affecter
+                </button>
+                <a href="{% url 'liste_utilisateurs' %}"
+                   class="flex-1 flex items-center justify-center gap-2 text-gray font-heading text-sm px-5 py-3 rounded-md border border-border hover:bg-background transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">close</span>
+                    Annuler
+                </a>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}

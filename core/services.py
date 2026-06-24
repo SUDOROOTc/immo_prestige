@@ -488,3 +488,31 @@ class UtilisateurService:
             'agents': Agent.objects.all(),
             'managers': Manager.objects.all(),
         }
+
+    @staticmethod
+    def get_client_dashboard_data(client):
+        """
+        Retourne les données statistiques pour le dashboard client.
+        """
+        from core.models import Client
+        if not Client.objects.filter(pk=client.pk).exists():
+            raise PermissionDenied("Seul un client peut faire cette action.")
+
+        client_obj = Client.objects.get(pk=client.pk)
+        favoris_count = Favori.objects.filter(client=client_obj).count()
+        demandes_count = DemandeVisite.objects.filter(client=client_obj).count()
+        demandes_validees = DemandeVisite.objects.filter(
+            client=client_obj, statut='VALIDEE'
+        ).count()
+        dernieres_demandes = DemandeVisite.objects.filter(
+            client=client_obj
+        ).select_related(
+            'annonce', 'annonce__bien'
+        ).order_by('-date_demande')[:5]
+
+        return {
+            'favoris_count': favoris_count,
+            'demandes_count': demandes_count,
+            'demandes_validees': demandes_validees,
+            'dernieres_demandes': dernieres_demandes,
+        }

@@ -1,122 +1,109 @@
 {% extends 'base.html' %}
+{% load role_tags %}
+
+{% block title %}Ajouter une annonce d'agence — ImmoFaso{% endblock %}
 
 {% block content %}
+<div class="max-w-[800px] mx-auto px-4 py-8">
 
-<div class="container mt-4">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="font-heading font-bold text-2xl text-text">Ajouter une annonce d'agence</h1>
+        <p class="font-body text-sm text-gray mt-1">Créez une annonce directement au nom de l'agence ImmoFaso.</p>
+    </div>
 
-    <h2 class="mb-4">
-        Ajouter une annonce d'agence
-    </h2>
+    <div class="bg-white rounded-lg border border-border shadow-sm p-6 sm:p-8">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
 
-    <form method="POST" enctype="multipart/form-data">
-
-
-        {% csrf_token %}
-
-        <div class="row">
-
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Type de bien</label>
-
-                <select name="type" class="form-select" required>
-                    <option value="">Choisir...</option>
-                    <option value="TERRAIN">Terrain</option>
-                    <option value="BATIMENT">Bâtiment</option>
-                    <option value="APPARTEMENT">Appartement</option>
-                    <option value="VILLA">Villa</option>
-                    <option value="COMMERCE">Commerce</option>
-                </select>
+            <!-- Type et Usage -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block font-heading font-semibold text-sm text-text mb-1.5">Type de bien <span class="text-danger">*</span></label>
+                    <select name="type" class="w-full px-3 py-2.5 rounded-md border border-border bg-white font-body text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors" required>
+                        <option value="">Choisir...</option>
+                        <option value="TERRAIN">Terrain</option>
+                        <option value="BATIMENT">Bâtiment</option>
+                        <option value="APPARTEMENT">Appartement</option>
+                        <option value="VILLA">Villa</option>
+                        <option value="COMMERCE">Commerce</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-heading font-semibold text-sm text-text mb-1.5">Usage <span class="text-danger">*</span></label>
+                    <select name="usage" class="w-full px-3 py-2.5 rounded-md border border-border bg-white font-body text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors" required>
+                        <option value="">Choisir...</option>
+                        <option value="RESIDENCE">Résidence</option>
+                        <option value="BUREAU">Bureau</option>
+                        <option value="COMMERCE">Commerce</option>
+                        <option value="AGRICULTURE">Agriculture</option>
+                    </select>
+                </div>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Usage</label>
-
-                <select name="usage" class="form-select" required>
-                    <option value="">Choisir...</option>
-                    <option value="RESIDENCE">Résidence</option>
-                    <option value="BUREAU">Bureau</option>
-                    <option value="COMMERCE">Commerce</option>
-                    <option value="AGRICULTURE">Agriculture</option>
-                </select>
+            <!-- Superficie et Ville -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block font-heading font-semibold text-sm text-text mb-1.5">Superficie (m²) <span class="text-danger">*</span></label>
+                    <input type="number" step="0.01" name="superficie" class="w-full px-3 py-2.5 rounded-md border border-border font-body text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors" required>
+                </div>
+                <div>
+                    <label class="block font-heading font-semibold text-sm text-text mb-1.5">Ville <span class="text-danger">*</span></label>
+                    <input type="text" name="ville" class="w-full px-3 py-2.5 rounded-md border border-border font-body text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors" required>
+                </div>
             </div>
 
-        </div>
-
-        <div class="row">
-
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Superficie (m²)</label>
-
-                <input type="number" step="0.01" name="superficie" class="form-control" required>
+            <!-- Localisation -->
+            <div class="mb-4">
+                <label class="block font-heading font-semibold text-sm text-text mb-1.5">Localisation <span class="text-danger">*</span></label>
+                <input type="text" name="localisation" class="w-full px-3 py-2.5 rounded-md border border-border font-body text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors" required>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Ville</label>
+            <hr class="border-border my-6">
 
-                <input type="text" name="ville" class="form-control" required>
+            <!-- Option et Prix -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block font-heading font-semibold text-sm text-text mb-1.5">Type d'annonce <span class="text-danger">*</span></label>
+                    <select name="option" class="w-full px-3 py-2.5 rounded-md border border-border bg-white font-body text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors" required>
+                        <option value="">Choisir...</option>
+                        <option value="LOCATION">Location</option>
+                        <option value="VENTE">Vente</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-heading font-semibold text-sm text-text mb-1.5">Prix (FCFA) <span class="text-danger">*</span></label>
+                    <input type="number" step="0.01" name="prix" class="w-full px-3 py-2.5 rounded-md border border-border font-body text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors" required>
+                </div>
             </div>
 
-        </div>
+            <!-- Description -->
+            <div class="mb-4">
+                <label class="block font-heading font-semibold text-sm text-text mb-1.5">Description <span class="text-danger">*</span></label>
+                <textarea name="description" rows="5" class="w-full px-3 py-2.5 rounded-md border border-border font-body text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors resize-y" required></textarea>
+            </div>
 
-        <div class="mb-3">
+            <!-- Photos -->
+            <div class="mb-6">
+                <label class="block font-heading font-semibold text-sm text-text mb-1.5">Photos du bien</label>
+                <input type="file" name="photos" multiple
+                       class="w-full px-3 py-2 rounded-md border border-border font-body text-sm text-text file:mr-3 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-heading file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-colors">
+                <p class="font-body text-xs text-gray mt-1">Formats acceptés : JPG, PNG. Vous pouvez sélectionner plusieurs photos.</p>
+            </div>
 
-            <label class="form-label">
-                Localisation
-            </label>
-
-            <input type="text" name="localisation" class="form-control" required>
-
-        </div>
-
-        <div class="mb-3">
-
-            <label class="form-label">
-                Type d'annonce
-            </label>
-
-            <select name="option" class="form-select" required>
-                <option value="">Choisir...</option>
-                <option value="LOCATION">Location</option>
-                <option value="VENTE">Vente</option>
-            </select>
-
-        </div>
-
-        <div class="mb-3">
-
-            <label class="form-label">
-                Prix (FCFA)
-            </label>
-
-            <input type="number" step="0.01" name="prix" class="form-control" required>
-
-        </div>
-
-        <div class="mb-3">
-
-            <label class="form-label">
-                Description
-            </label>
-
-            <textarea name="description" rows="5" class="form-control" required></textarea>
-
-        </div>
-        <div class="mb-3">
-            <label class="form-label">
-                Photos du bien
-            </label>
-            <input type="file" name="photos" class="form-control" multiple>
-        </div>
-        <button type="submit" class="btn btn-success">
-            Publier l'annonce
-        </button>
-
-        <a href="{% url 'mes_annonces_agence' %}" class="btn btn-secondary">
-            Annuler
-        </a>
-
-    </form>
-
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button type="submit"
+                        class="flex-1 flex items-center justify-center gap-2 bg-primary text-white font-heading font-semibold text-sm px-6 py-3 rounded-md hover:bg-primary/90 transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">publish</span>
+                    Publier l'annonce
+                </button>
+                <a href="{% url 'mes_annonces_agence' %}"
+                   class="flex-1 flex items-center justify-center gap-2 text-gray font-heading text-sm px-5 py-3 rounded-md border border-border hover:bg-background transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">close</span>
+                    Annuler
+                </a>
+            </div>
+        </form>
+    </div>
 </div>
-
 {% endblock %}

@@ -8,5 +8,13 @@ urlpatterns = [
     path('', include('core.urls')),  # toutes les routes de core
 ]
 
+
+
+if settings.DEBUG:
+    urlpatterns += [
+        path("__reload__/", include("django_browser_reload.urls")),
+    ]
+
+    
 # Pour servir les fichiers médias (photos) en développement
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
