@@ -6,17 +6,26 @@
 {% block content %}
 <div class="max-w-[700px] mx-auto px-4 py-8">
 
+    <!-- Fil d'Ariane -->
+    <nav class="flex items-center gap-2 text-xs text-gray font-body mb-4">
+        <a href="{% url 'dashboard' %}" class="hover:text-primary transition-colors">Dashboard</a>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <a href="{% url 'liste_utilisateurs' %}" class="hover:text-primary transition-colors">Utilisateurs</a>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <span class="text-text font-medium">Créer un utilisateur</span>
+    </nav>
+
+    <!-- Retour -->
+    <a href="{% url 'liste_utilisateurs' %}"
+       class="inline-flex items-center gap-1 font-body text-sm text-gray hover:text-primary transition-colors mb-6">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+        Retour à la liste des utilisateurs
+    </a>
+
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-        <div>
-            <h1 class="font-heading font-bold text-2xl text-text">Créer un utilisateur</h1>
-            <p class="font-body text-sm text-gray mt-1">Créez un nouveau compte sur la plateforme.</p>
-        </div>
-        <a href="{% url 'liste_utilisateurs' %}"
-           class="inline-flex items-center gap-2 text-gray font-heading text-sm px-4 py-2 rounded-md border border-border hover:bg-background transition-colors">
-            <span class="material-symbols-outlined text-[18px]">arrow_back</span>
-            Retour à la liste
-        </a>
+    <div class="mb-8">
+        <h1 class="font-heading font-bold text-2xl text-text">Créer un utilisateur</h1>
+        <p class="font-body text-sm text-gray mt-1">Créez un nouveau compte sur la plateforme.</p>
     </div>
 
     <div class="bg-white rounded-lg border border-border shadow-sm p-6 sm:p-8">

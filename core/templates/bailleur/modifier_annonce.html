@@ -5,6 +5,22 @@
 {% block content %}
 <div class="max-w-[800px] mx-auto px-4 py-8">
 
+    <!-- Fil d'Ariane -->
+    <nav class="flex items-center gap-2 text-xs text-gray font-body mb-4">
+        <a href="{% url 'bailleur_dashboard' %}" class="hover:text-primary transition-colors">Espace Bailleur</a>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <a href="{% url 'mes_annonces_bailleur' %}" class="hover:text-primary transition-colors">Mes annonces</a>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <span class="text-text font-medium">Modifier</span>
+    </nav>
+
+    <!-- Retour -->
+    <a href="{% url 'mes_annonces_bailleur' %}"
+       class="inline-flex items-center gap-1 font-body text-sm text-gray hover:text-primary transition-colors mb-6">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+        Retour à mes annonces
+    </a>
+
     <!-- Header -->
     <div class="mb-8">
         <h1 class="font-heading font-bold text-2xl text-text">Modifier l'annonce</h1>

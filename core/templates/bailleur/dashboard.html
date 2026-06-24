@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load role_tags %}
+
+{% block title %}Tableau de bord bailleur — ImmoFaso{% endblock %}
+
+{% block content %}
+<div class="max-w-[1200px] mx-auto px-4 py-8">
+
+    <!-- Header with gradient -->
+    <div class="bg-gradient-to-br from-primary to-primary/80 rounded-lg p-8 mb-8 shadow-md relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+        <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+        <div class="relative z-10">
+            <h1 class="font-heading font-bold text-2xl text-white">Tableau de bord Bailleur</h1>
+            <p class="font-body text-white/80 mt-2">Que souhaitez-vous faire aujourd'hui, {{ user.first_name|default:user.username }} ?</p>
+        </div>
+    </div>
+
+    <!-- Action Cards -->
+    <div class="grid grid-cols-2 gap-6 mb-8 max-w-2xl mx-auto place-items-center">
+
+        <!-- Carte 1 : Mes annonces -->
+        <a href="{% url 'mes_annonces_bailleur' %}"
+           class="bg-white rounded-lg border border-border shadow-sm p-6 hover:shadow-md hover:border-primary/30 transition-all group block w-full">
+            <div class="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-3xl text-primary">list_alt</span>
+            </div>
+            <h3 class="font-heading font-bold text-base text-text mb-2">Mes Annonces</h3>
+            <p class="font-body text-sm text-gray leading-relaxed">Consultez et gérez toutes vos annonces immobilières en un seul endroit.</p>
+            <span class="inline-flex items-center gap-1 text-sm font-heading text-primary mt-3 group-hover:gap-2 transition-all">
+                Accéder
+                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </span>
+        </a>
+
+        <!-- Carte 2 : Déposer une annonce -->
+        <a href="{% url 'deposer_annonce' %}"
+           class="bg-white rounded-lg border border-border shadow-sm p-6 hover:shadow-md hover:border-secondary/30 transition-all group block w-full">
+            <div class="w-16 h-16 rounded-xl bg-secondary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-3xl text-secondary">add_circle</span>
+            </div>
+            <h3 class="font-heading font-bold text-base text-text mb-2">Déposer une Annonce</h3>
+            <p class="font-body text-sm text-gray leading-relaxed">Publiez une nouvelle propriété à la vente ou à la location.</p>
+            <span class="inline-flex items-center gap-1 text-sm font-heading text-secondary mt-3 group-hover:gap-2 transition-all">
+                Accéder
+                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </span>
+        </a>
+
+    </div>
+
+    <!-- Dernières annonces -->
+    <div class="bg-white rounded-lg border border-border shadow-sm">
+        <div class="px-6 py-4 border-b border-border flex items-center justify-between">
+            <h2 class="font-heading font-semibold text-base text-text">Dernières annonces</h2>
+            <a href="{% url 'mes_annonces_bailleur' %}" class="text-sm font-heading text-primary hover:underline">Voir tout</a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-border bg-background/50">
+                        <th class="text-left px-6 py-3 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Type</th>
+                        <th class="text-left px-6 py-3 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Ville</th>
+                        <th class="text-left px-6 py-3 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Option</th>
+                        <th class="text-left px-6 py-3 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Prix</th>
+                        <th class="text-left px-6 py-3 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Statut</th>
+                        <th class="text-left px-6 py-3 font-heading font-semibold text-xs text-gray uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for annonce in dernieres %}
+                    <tr class="border-b border-border last:border-0 hover:bg-background/30 transition-colors">
+                        <td class="px-6 py-4 font-body text-sm text-text">{{ annonce.bien.get_type_display }}</td>
+                        <td class="px-6 py-4 font-body text-sm text-text">{{ annonce.bien.ville }}</td>
+                        <td class="px-6 py-4">
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-heading font-semibold
+                                {% if annonce.option == 'LOCATION' %}bg-info/10 text-info{% else %}bg-success/10 text-success{% endif %}">
+                                {{ annonce.get_option_display }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 font-heading font-semibold text-sm text-primary">{{ annonce.prix|floatformat:0 }} FCFA</td>
+                        <td class="px-6 py-4">
+                            {% if annonce.statut == 'EN_ATTENTE' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold bg-secondary/10 text-secondary">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                    En attente
+                                </span>
+                            {% elif annonce.statut == 'PUBLIEE' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold bg-success/10 text-success">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                                    Publiée
+                                </span>
+                            {% elif annonce.statut == 'REFUSEE' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold bg-danger/10 text-danger">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-danger"></span>
+                                    Refusée
+                                </span>
+                            {% elif annonce.statut == 'RETIREE' %}
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-heading font-semibold bg-gray/10 text-gray">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-gray"></span>
+                                    Retirée
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-2">
+                                <a href="{% url 'modifier_annonce' annonce.id %}"
+                                   class="inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-heading font-semibold text-primary bg-primary/10 hover:bg-primary/20 transition-colors">
+                                    <span class="material-symbols-outlined text-[14px]">edit</span>
+                                    Modifier
+                                </a>
+                                <a href="{% url 'supprimer_annonce' annonce.id %}"
+                                   class="inline-flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-heading font-semibold text-danger bg-danger/10 hover:bg-danger/20 transition-colors">
+                                    <span class="material-symbols-outlined text-[14px]">delete</span>
+                                    Supprimer
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

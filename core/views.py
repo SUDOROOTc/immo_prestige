@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from django.core.exceptions import PermissionDenied as DjangoPermissionDenied
+from django.http import HttpResponse
 from .models import Annonce,DemandeVisite,Favori,Utilisateur,Agent,Client,Bailleur
 from .services import AnnonceService ,DemandeVisiteService,FavoriService,UtilisateurService
 
@@ -140,7 +141,13 @@ def mes_annonces_bailleur(request):
     annonces = Annonce.objects.filter(
         bailleur=request.user.bailleur
     ).order_by('-date_publication')
-    return render(request, 'bailleur/mes_annonces.html', {'annonces': annonces})
+    statut_filtre = request.GET.get('statut')
+    if statut_filtre:
+        annonces = annonces.filter(statut=statut_filtre)
+    return render(request, 'bailleur/mes_annonces.html', {
+        'annonces': annonces,
+        'statut_filtre': statut_filtre,
+    })
 
 @login_required
 def modifier_annonce(request, annonce_id):
@@ -448,7 +455,7 @@ def redirect_after_login(request):
     elif Agent.objects.filter(pk=user.pk).exists():
         return redirect('agent_dashboard')
     elif Bailleur.objects.filter(pk=user.pk).exists():
-        return redirect('mes_annonces_bailleur')
+        return redirect('bailleur_dashboard')
     elif Client.objects.filter(pk=user.pk).exists():
         return redirect('dashboard_client')
     
@@ -532,6 +539,21 @@ def mes_annonces_agence(request):
     )
 
 @login_required
+def bailleur_dashboard(request):
+    if not Bailleur.objects.filter(pk=request.user.pk).exists():
+        raise DjangoPermissionDenied("Accès réservé aux bailleurs.")
+    dernieres = Annonce.objects.filter(
+        bailleur=request.user.bailleur
+    ).order_by('-date_publication')[:5]
+    return render(
+        request,
+        'bailleur/dashboard.html',
+        {
+            'dernieres': dernieres,
+        }
+    )
+
+@login_required
 def client_dashboard(request):
     if not Client.objects.filter(pk=request.user.pk).exists():
         raise DjangoPermissionDenied("Accès réservé aux clients.")
@@ -545,6 +567,8 @@ def client_dashboard(request):
         'client/dashboard.html',
         data
     )
+
+
 
 @login_required
 def creer_utilisateur(request):

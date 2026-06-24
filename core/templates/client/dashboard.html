@@ -14,9 +14,9 @@
         <p class="font-body text-gray text-sm mt-1">Voici un résumé de votre activité sur ImmoFaso.</p>
     </div>
 
-    <!-- Cartes statistiques -->
+    <!-- Cartes statistiques cliquables -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white rounded-lg border border-border shadow-sm p-6 hover:shadow-md transition-shadow">
+        <a href="{% url 'mes_favoris_client' %}" class="bg-white rounded-lg border border-border shadow-sm p-6 hover:shadow-md transition-shadow block">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-lg bg-danger/10 flex items-center justify-center flex-shrink-0">
                     <span class="material-symbols-outlined text-2xl text-danger" style="font-variation-settings: 'FILL' 1">favorite</span>
@@ -26,9 +26,9 @@
                     <p class="text-sm font-body text-gray">Favoris</p>
                 </div>
             </div>
-        </div>
+        </a>
 
-        <div class="bg-white rounded-lg border border-border shadow-sm p-6 hover:shadow-md transition-shadow">
+        <a href="{% url 'mes_demandes_client' %}" class="bg-white rounded-lg border border-border shadow-sm p-6 hover:shadow-md transition-shadow block">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-lg bg-info/10 flex items-center justify-center flex-shrink-0">
                     <span class="material-symbols-outlined text-2xl text-info">schedule_send</span>
@@ -38,9 +38,9 @@
                     <p class="text-sm font-body text-gray">Demandes envoyées</p>
                 </div>
             </div>
-        </div>
+        </a>
 
-        <div class="bg-white rounded-lg border border-border shadow-sm p-6 hover:shadow-md transition-shadow">
+        <a href="{% url 'mes_demandes_client' %}" class="bg-white rounded-lg border border-border shadow-sm p-6 hover:shadow-md transition-shadow block">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-lg bg-success/10 flex items-center justify-center flex-shrink-0">
                     <span class="material-symbols-outlined text-2xl text-success">check_circle</span>
@@ -50,7 +50,7 @@
                     <p class="text-sm font-body text-gray">Visites validées</p>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- Demandes récentes -->

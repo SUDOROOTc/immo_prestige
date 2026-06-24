@@ -6,6 +6,20 @@
 {% block content %}
 <div class="max-w-[1200px] mx-auto px-4 py-8">
 
+    <!-- Fil d'Ariane -->
+    <nav class="flex items-center gap-2 text-xs text-gray font-body mb-4">
+        <a href="{% url 'bailleur_dashboard' %}" class="hover:text-primary transition-colors">Espace Bailleur</a>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <span class="text-text font-medium">Mes annonces</span>
+    </nav>
+
+    <!-- Retour -->
+    <a href="{% url 'bailleur_dashboard' %}"
+       class="inline-flex items-center gap-1 font-body text-sm text-gray hover:text-primary transition-colors mb-6">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+        Retour au tableau de bord
+    </a>
+
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>

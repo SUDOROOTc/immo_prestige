@@ -7,13 +7,20 @@
 <div class="max-w-[1200px] mx-auto px-4 py-8">
 
     <!-- Fil d'Ariane -->
-    <nav class="flex items-center gap-2 text-sm text-gray font-body mb-6">
+    <nav class="flex items-center gap-2 text-sm text-gray font-body mb-4">
         <a href="{% url 'accueil' %}" class="hover:text-primary transition-colors">Accueil</a>
         <span class="material-symbols-outlined text-[16px]">chevron_right</span>
         <a href="{% url 'liste_annonces' %}" class="hover:text-primary transition-colors">Annonces</a>
         <span class="material-symbols-outlined text-[16px]">chevron_right</span>
         <span class="text-text font-medium">{{ annonce.bien.get_type_display }} — {{ annonce.bien.ville }}</span>
     </nav>
+
+    <!-- Retour vers la liste -->
+    <a href="{% url 'liste_annonces' %}{% if request.GET %}{% for key, value in request.GET.items %}{% if forloop.first %}?{% endif %}{{ key }}={{ value }}{% if not forloop.last %}&{% endif %}{% endfor %}{% endif %}"
+       class="inline-flex items-center gap-1 font-body text-sm text-gray hover:text-primary transition-colors mb-6">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+        Retour aux annonces
+    </a>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
@@ -188,12 +195,31 @@
                 </a>
             </div>
 
-            <!-- Coordonnées bailleur : JAMAIS affichées (EF-A1) -->
-            {% if annonce.agent_createur %}
-            <div class="bg-white rounded-lg border border-border shadow-sm p-6">
-                <h3 class="font-heading font-semibold text-xs text-gray uppercase tracking-wider mb-2">Agence</h3>
-                <p class="font-body text-sm text-text">Annonce déposée par l'agence ImmoFaso</p>
-            </div>
+            <!-- Coordonnées bailleur : affichées uniquement pour les clients connectés -->
+            {% if user.is_authenticated and user|is_client %}
+                {% if annonce.bailleur %}
+                <div class="bg-white rounded-lg border border-border shadow-sm p-6">
+                    <h3 class="font-heading font-semibold text-xs text-gray uppercase tracking-wider mb-3">Coordonnées du bailleur</h3>
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2 text-sm text-gray font-body">
+                            <span class="material-symbols-outlined text-[18px] text-primary">person</span>
+                            <span class="font-medium text-text">{{ annonce.bailleur.get_full_name|default:annonce.bailleur.username }}</span>
+                        </div>
+                        {% if annonce.bailleur.telephone %}
+                        <div class="flex items-center gap-2 text-sm text-gray font-body">
+                            <span class="material-symbols-outlined text-[18px] text-primary">phone</span>
+                            <span class="font-medium text-text">{{ annonce.bailleur.telephone }}</span>
+                        </div>
+                        {% endif %}
+                        {% if annonce.bailleur.email %}
+                        <div class="flex items-center gap-2 text-sm text-gray font-body">
+                            <span class="material-symbols-outlined text-[18px] text-primary">email</span>
+                            <span class="font-medium text-text">{{ annonce.bailleur.email }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
             {% endif %}
 
         </div>

@@ -6,6 +6,22 @@
 {% block content %}
 <div class="max-w-[600px] mx-auto px-4 py-8">
 
+    <!-- Fil d'Ariane -->
+    <nav class="flex items-center gap-2 text-xs text-gray font-body mb-4">
+        <a href="{% url 'dashboard' %}" class="hover:text-primary transition-colors">Dashboard</a>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <a href="{% url 'liste_utilisateurs' %}" class="hover:text-primary transition-colors">Utilisateurs</a>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <span class="text-text font-medium">Confirmer suppression</span>
+    </nav>
+
+    <!-- Retour -->
+    <a href="{% url 'liste_utilisateurs' %}"
+       class="inline-flex items-center gap-1 font-body text-sm text-gray hover:text-primary transition-colors mb-6">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+        Retour à la liste des utilisateurs
+    </a>
+
     <!-- Header -->
     <div class="mb-8">
         <h1 class="font-heading font-bold text-2xl text-text">Confirmer la suppression</h1>

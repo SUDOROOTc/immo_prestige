@@ -6,95 +6,47 @@
 {% block content %}
 <div class="max-w-[1200px] mx-auto px-4 py-8">
 
-    <!-- Header -->
-    <div class="mb-8">
-        <h1 class="font-heading font-bold text-2xl text-text">Tableau de bord</h1>
-        <p class="font-body text-sm text-gray mt-1">Vue d'ensemble de la plateforme ImmoFaso.</p>
+    <!-- Header with gradient -->
+    <div class="bg-gradient-to-br from-primary to-primary/80 rounded-lg p-8 mb-8 shadow-md relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+        <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+        <div class="relative z-10">
+            <h1 class="font-heading font-bold text-2xl text-white">Tableau de bord</h1>
+            <p class="font-body text-white/80 mt-2">Vue d'ensemble de la plateforme ImmoFaso.</p>
+        </div>
     </div>
 
-    <!-- Stats annonces -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div class="bg-white rounded-lg border border-border shadow-sm p-5 hover:shadow-md transition-shadow">
-            <div class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <span class="material-symbols-outlined text-primary text-xl">real_estate_agent</span>
-                </div>
-                <div>
-                    <p class="text-2xl font-heading font-bold text-text">{{ stats.total_annonces }}</p>
-                    <p class="text-xs font-body text-gray">Total annonces</p>
-                </div>
-            </div>
-        </div>
-        <div class="bg-white rounded-lg border border-border shadow-sm p-5 hover:shadow-md transition-shadow">
-            <div class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                    <span class="material-symbols-outlined text-secondary text-xl">pending_actions</span>
-                </div>
-                <div>
-                    <p class="text-2xl font-heading font-bold text-text">{{ stats.en_attente }}</p>
-                    <p class="text-xs font-body text-gray">En attente</p>
-                </div>
-            </div>
-        </div>
-        <div class="bg-white rounded-lg border border-border shadow-sm p-5 hover:shadow-md transition-shadow">
-            <div class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-lg bg-success/10 flex items-center justify-center flex-shrink-0">
-                    <span class="material-symbols-outlined text-success text-xl">check_circle</span>
-                </div>
-                <div>
-                    <p class="text-2xl font-heading font-bold text-text">{{ stats.publiees }}</p>
-                    <p class="text-xs font-body text-gray">Publiées</p>
-                </div>
-            </div>
-        </div>
-        <div class="bg-white rounded-lg border border-border shadow-sm p-5 hover:shadow-md transition-shadow">
-            <div class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-lg bg-gray/10 flex items-center justify-center flex-shrink-0">
-                    <span class="material-symbols-outlined text-gray text-xl">archive</span>
-                </div>
-                <div>
-                    <p class="text-2xl font-heading font-bold text-text">{{ stats.retirees }}</p>
-                    <p class="text-xs font-body text-gray">Retirées</p>
-                </div>
-            </div>
+    <!-- Graphique des annonces -->
+    <div class="bg-white rounded-xl border border-border shadow-sm p-6 mb-8">
+        <h2 class="font-heading font-semibold text-base text-text mb-4">Aperçu des annonces</h2>
+        <div class="relative" style="height: 300px;">
+            <canvas id="annoncesChart"></canvas>
         </div>
     </div>
 
     <!-- Stats utilisateurs -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <div class="bg-white rounded-lg border border-border shadow-sm p-5 hover:shadow-md transition-shadow">
-            <div class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-lg bg-info/10 flex items-center justify-center flex-shrink-0">
-                    <span class="material-symbols-outlined text-info text-xl">group</span>
-                </div>
-                <div>
-                    <p class="text-2xl font-heading font-bold text-text">{{ stats.total_clients }}</p>
-                    <p class="text-xs font-body text-gray">Clients</p>
-                </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+        <a href="{% url 'liste_utilisateurs' %}" class="bg-gradient-to-br from-info/10 to-info/5 rounded-xl p-5 border border-info/20 hover:shadow-md transition-all block group">
+            <div class="flex items-center justify-between mb-3">
+                <span class="material-symbols-outlined text-3xl text-info">group</span>
+                <span class="text-2xl font-heading font-bold text-info">{{ stats.total_clients }}</span>
             </div>
-        </div>
-        <div class="bg-white rounded-lg border border-border shadow-sm p-5 hover:shadow-md transition-shadow">
-            <div class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-lg bg-danger/10 flex items-center justify-center flex-shrink-0">
-                    <span class="material-symbols-outlined text-danger text-xl">real_estate_agent</span>
-                </div>
-                <div>
-                    <p class="text-2xl font-heading font-bold text-text">{{ stats.total_bailleurs }}</p>
-                    <p class="text-xs font-body text-gray">Bailleurs</p>
-                </div>
+            <p class="text-sm font-body text-gray">Clients</p>
+        </a>
+        <a href="{% url 'liste_utilisateurs' %}" class="bg-gradient-to-br from-danger/10 to-danger/5 rounded-xl p-5 border border-danger/20 hover:shadow-md transition-all block group">
+            <div class="flex items-center justify-between mb-3">
+                <span class="material-symbols-outlined text-3xl text-danger">real_estate_agent</span>
+                <span class="text-2xl font-heading font-bold text-danger">{{ stats.total_bailleurs }}</span>
             </div>
-        </div>
-        <div class="bg-white rounded-lg border border-border shadow-sm p-5 hover:shadow-md transition-shadow">
-            <div class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-lg bg-dark/10 flex items-center justify-center flex-shrink-0">
-                    <span class="material-symbols-outlined text-text text-xl">badge</span>
-                </div>
-                <div>
-                    <p class="text-2xl font-heading font-bold text-text">{{ stats.total_agents }}</p>
-                    <p class="text-xs font-body text-gray">Agents</p>
-                </div>
+            <p class="text-sm font-body text-gray">Bailleurs</p>
+        </a>
+        <a href="{% url 'liste_utilisateurs' %}" class="bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl p-5 border border-primary/20 hover:shadow-md transition-all block group">
+            <div class="flex items-center justify-between mb-3">
+                <span class="material-symbols-outlined text-3xl text-primary">badge</span>
+                <span class="text-2xl font-heading font-bold text-primary">{{ stats.total_agents }}</span>
             </div>
-        </div>
+            <p class="text-sm font-body text-gray">Agents</p>
+        </a>
     </div>
 
     <!-- Cartes d'action -->
@@ -122,17 +74,75 @@
     </div>
 
     <!-- Carte demandes -->
-    <div class="bg-white rounded-lg border border-border shadow-sm p-6">
-        <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                <span class="material-symbols-outlined text-primary text-2xl">bar_chart</span>
-            </div>
-            <div>
-                <p class="font-heading font-bold text-lg text-text">{{ stats.total_demandes }}</p>
-                <p class="font-body text-sm text-gray">Total des demandes de visite</p>
+    <div class="bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl p-6 border border-primary/20">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-primary text-2xl">bar_chart</span>
+                </div>
+                <div>
+                    <p class="font-heading font-bold text-lg text-text">{{ stats.total_demandes }}</p>
+                    <p class="font-body text-sm text-gray">Total des demandes de visite</p>
+                </div>
             </div>
         </div>
     </div>
 
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('annoncesChart');
+    if (ctx && typeof Chart !== 'undefined') {
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Total', 'En attente', 'Publiées', 'Retirées'],
+                datasets: [{
+                    label: 'Annonces',
+                    data: [
+                        {{ stats.total_annonces }},
+                        {{ stats.en_attente }},
+                        {{ stats.publiees }},
+                        {{ stats.retirees }}
+                    ],
+                    backgroundColor: [
+                        'rgba(37, 99, 235, 0.8)',
+                        'rgba(245, 158, 11, 0.8)',
+                        'rgba(16, 185, 129, 0.8)',
+                        'rgba(107, 114, 128, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgb(37, 99, 235)',
+                        'rgb(245, 158, 11)',
+                        'rgb(16, 185, 129)',
+                        'rgb(107, 114, 128)'
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            font: { family: 'Inter' }
+                        },
+                        grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                    },
+                    x: {
+                        ticks: { font: { family: 'Poppins' } },
+                        grid: { display: false }
+                    }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+});
+</script>
 {% endblock %}
