@@ -4,7 +4,7 @@ from django.template.defaultfilters import stringfilter
 
 register = template.Library()
 
-SUPABASE_URL = "https://ufyorklvapdprugkxiem.supabase.co/storage/v1/object/public/media/photo/propriete"
+SUPABASE_URL = "https://ufyorklvapdprugkxiem.supabase.co/storage/v1/object/public/media/photos/proprietes"
 
 @register.filter
 @stringfilter
