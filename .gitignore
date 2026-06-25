@@ -3,9 +3,7 @@
 **pycache**/
 *.py[cod]
 
-# Environnement virtuel
 
-venv/
 .env
 
 # Base locale
