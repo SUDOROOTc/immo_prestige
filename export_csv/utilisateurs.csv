@@ -1,0 +1,8 @@
+id,username,password,email,telephone,first_name,last_name,role,matricule,agent_affecte_id
+1,agent1,pbkdf2_sha256$1200000$a4vDiOYs1A5xRk3H3ycvJ5$t5XkU3qNxJ+Ln3vxyt0TCUCj6GtKafD+C8dFMy8MUgI=,agent1@test.com,,,,AGENT,,
+2,agent2,pbkdf2_sha256$1200000$J3HuUHFlpzpTmYoiTELZWS$tP8p/Kik5iXPVAvy/+57WAQ527z7Yp3k09PD69L6dI4=,agent2@test.com,,,,AGENT,,
+3,bailleur1,pbkdf2_sha256$1200000$KfGkpXEmIHgbPQH8kgKWn5$0SxnqUP0o9pEeWC7DuxfwwJgaX0CiWkCBY5gJgCdZ6w=,bailleur1@test.com,,,,CLIENT,,
+4,bailleur2,pbkdf2_sha256$1200000$E4xdBUckG0eupYb0HBitIo$mvNs9kQRpyvXH2nVrLa7GKk5ryGCO3Lnv8ZbSFSy6EE=,bailleur2@test.com,,,,CLIENT,,
+5,client1,pbkdf2_sha256$1200000$1tHBQt1ObxKROwN3Ji3hrS$UwZmiT63bBA2215/xR12/KPwM+P3EEPpw1Cban9rCjQ=,client1@test.com,,,,CLIENT,,1
+6,client2,pbkdf2_sha256$1200000$yxxXztnF0KfRbowDTsiDzP$drbV7IvYXpxNdlM1mhz4mT0hl0LK/QrQAzzZ/zSzSOE=,client2@test.com,,,,CLIENT,,2
+7,manager,pbkdf2_sha256$1200000$B9KYgynUjhqSmSOW5oNlMx$6BBrV7kGDL0mbwPTIWYO6EqcqdHm9ZrwfgrcejTtFoM=,manager@test.com,,,,MANAGER,,

@@ -1,0 +1,49 @@
+═══════════════════════════════════════════════════════════
+   EXPORT DES DONNÉES — ImmoPrestige
+   Généré le 25/06/2026
+═══════════════════════════════════════════════════════════
+
+CONTENU DU DOSSIER "export_csv" :
+
+  FICHIERS CSV :
+
+  1. utilisateurs.csv
+     - Tous les comptes utilisateurs (CLIENT, BAILLEUR, AGENT, MANAGER)
+     - Colonnes : id, username, password, email, telephone, first_name, 
+       last_name, role, matricule, agent_affecte_id
+
+  2. annonces.csv
+     - Toutes les annonces publiées sur la plateforme
+     - Colonnes : id, bien_id, type_bien, ville, prix, option, statut,
+       date_publication, description, bailleur
+
+  3. biens.csv
+     - Tous les biens immobiliers avec leurs caractéristiques
+     - Colonnes : id, type, usage, superficie, ville, localisation,
+       description, prix, option, statut
+
+  4. photos.csv
+     - Liste de toutes les photos associées aux biens
+     - Colonnes : id, bien_id, chemin_fichier
+
+  5. demandes_visite.csv
+     - Toutes les demandes de visite effectuées par les clients
+     - Colonnes : id, client_id, annonce_id, date_demande, statut
+
+  6. favoris.csv
+     - Tous les favoris enregistrés par les clients
+     - Colonnes : id, client_id, annonce_id, date_ajout
+
+  DOSSIER IMAGES :
+
+  images/
+    ├── immeuble et duplex et appartement/   (25 images)
+    ├── local commercial et bureau et boutique/ (19 images)
+    ├── parcelle et terrain/                   (20 images)
+    ├── triplex/                               (16 images)
+    └── villa/                                 (21 images)
+
+  AUTRES FICHIERS :
+
+  - export_donnees.json  → Export complet au format JSON (pour Django loaddata)
+  - donnee_BD/informations.txt  → Descriptions détaillées des biens
