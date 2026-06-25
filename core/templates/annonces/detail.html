@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static role_tags %}
+{% load static role_tags supabase_tags %}
 
 {% block title %}{{ annonce.bien.get_type_display }} — {{ annonce.bien.ville }}{% endblock %}
 
@@ -41,7 +41,7 @@
                     {% if photos %}
                         <!-- Image principale -->
                         <div class="relative aspect-[16/9] bg-background">
-                            <img src="{{ photos.first.chemin_fichier.url }}"
+                            <img src="{{ photos.first.chemin_fichier|supabase_url }}"
                                  alt="Photo de {{ annonce.bien.type }}"
                                  class="w-full h-full object-cover" id="main-image">
                         </div>
@@ -49,9 +49,9 @@
                         {% if photos|length > 1 %}
                             <div class="flex gap-2 p-3 overflow-x-auto">
                                 {% for photo in photos %}
-                                    <button onclick="document.getElementById('main-image').src='{{ photo.chemin_fichier.url }}'; document.querySelectorAll('.thumb').forEach(t=>t.classList.remove('ring-2','ring-primary')); this.classList.add('ring-2','ring-primary')"
+                                    <button onclick="document.getElementById('main-image').src='{{ photo.chemin_fichier|supabase_url }}'; document.querySelectorAll('.thumb').forEach(t=>t.classList.remove('ring-2','ring-primary')); this.classList.add('ring-2','ring-primary')"
                                             class="thumb flex-shrink-0 w-20 h-16 rounded-md overflow-hidden border border-border {% if forloop.first %}ring-2 ring-primary{% endif %} hover:opacity-90 transition-opacity">
-                                        <img src="{{ photo.chemin_fichier.url }}" alt="Miniature" class="w-full h-full object-cover">
+                                        <img src="{{ photo.chemin_fichier|supabase_url }}" alt="Miniature" class="w-full h-full object-cover">
                                     </button>
                                 {% endfor %}
                             </div>

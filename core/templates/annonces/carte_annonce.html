@@ -1,10 +1,12 @@
-{% load role_tags %}
+{% load role_tags supabase_tags %}
 <div class="col-md-4 mb-4">
     <div class="card h-100 shadow-sm">
 
-        {% if annonce.bien.photos.first %}
-        <img src="{{ annonce.bien.photos.first.chemin_fichier.url }}" class="card-img-top" alt="Photo du bien">
+        {% with first_photo=annonce.bien.photos.first %}
+        {% if first_photo %}
+        <img src="{{ first_photo.chemin_fichier|supabase_url }}" class="card-img-top" alt="Photo du bien">
         {% endif %}
+        {% endwith %}
 
         <div class="card-body">
             <h5 class="card-title">
