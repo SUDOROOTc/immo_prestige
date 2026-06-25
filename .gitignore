@@ -1,0 +1,30 @@
+# Python
+
+**pycache**/
+*.py[cod]
+
+# Environnement virtuel
+
+venv/
+.env
+
+# Base locale
+
+db.sqlite3
+
+# Médias uploadés
+
+media/
+
+# Fichiers statiques collectés
+
+staticfiles/
+
+# IDE
+
+.vscode/
+.idea/
+
+# Logs
+
+*.log

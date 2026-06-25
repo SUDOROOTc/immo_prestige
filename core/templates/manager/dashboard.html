@@ -22,6 +22,13 @@
         <div class="relative" style="height: 300px;">
             <canvas id="annoncesChart"></canvas>
         </div>
+        <!-- Données pour le graphique -->
+        <div id="chart-data"
+             data-total="{{ stats.total_annonces }}"
+             data-en-attente="{{ stats.en_attente }}"
+             data-publiees="{{ stats.publiees }}"
+             data-retirees="{{ stats.retirees }}"
+             class="hidden"></div>
     </div>
 
     <!-- Stats utilisateurs -->
@@ -92,7 +99,15 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const ctx = document.getElementById('annoncesChart');
+    var chartContainer = document.getElementById('chart-data');
+    if (!chartContainer) return;
+
+    var total = parseInt(chartContainer.getAttribute('data-total')) || 0;
+    var enAttente = parseInt(chartContainer.getAttribute('data-en-attente')) || 0;
+    var publiees = parseInt(chartContainer.getAttribute('data-publiees')) || 0;
+    var retirees = parseInt(chartContainer.getAttribute('data-retirees')) || 0;
+
+    var ctx = document.getElementById('annoncesChart');
     if (ctx && typeof Chart !== 'undefined') {
         new Chart(ctx, {
             type: 'bar',
@@ -100,12 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 labels: ['Total', 'En attente', 'Publiées', 'Retirées'],
                 datasets: [{
                     label: 'Annonces',
-                    data: [
-                        {{ stats.total_annonces }},
-                        {{ stats.en_attente }},
-                        {{ stats.publiees }},
-                        {{ stats.retirees }}
-                    ],
+                    data: [total, enAttente, publiees, retirees],
                     backgroundColor: [
                         'rgba(37, 99, 235, 0.8)',
                         'rgba(245, 158, 11, 0.8)',
