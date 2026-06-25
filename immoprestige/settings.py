@@ -56,9 +56,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
-if DEBUG:
-    INSTALLED_APPS += ["django_browser_reload"]
-    MIDDLEWARE += ["django_browser_reload.middleware.BrowserReloadMiddleware"]
+
 
 TAILWIND_APP_NAME = "theme"
 
