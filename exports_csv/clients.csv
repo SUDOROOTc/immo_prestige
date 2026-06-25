@@ -1,0 +1,3 @@
+﻿id,password,last_login,is_superuser,username,first_name,last_name,email,is_staff,is_active,date_joined,telephone,agent_affecte_id
+5,pbkdf2_sha256$1200000$fMvOBck7gABJzhn5NlNPRD$NXAm3plasu6OMb4UDuZ5ytkGk+taRh9ktRlVka4byII=,2026-06-24 20:32:47.819619+00:00,False,client1,,,client1@test.com,False,True,2026-06-24 17:06:32.334763+00:00,,1
+6,pbkdf2_sha256$1200000$ezvTVr2DUr8fNIyFpadGkz$tkQm+WcnWb5nCrqRy/tc5vtDsTgG+re8e1kfgguVmUg=,,False,client2,,,client2@test.com,False,True,2026-06-24 17:06:32.342528+00:00,,2

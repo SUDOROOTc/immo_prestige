@@ -1,0 +1,2 @@
+﻿id,password,last_login,is_superuser,username,first_name,last_name,email,is_staff,is_active,date_joined,telephone,matricule
+7,pbkdf2_sha256$1200000$B9KYgynUjhqSmSOW5oNlMx$6BBrV7kGDL0mbwPTIWYO6EqcqdHm9ZrwfgrcejTtFoM=,2026-06-25 00:40:12.293219+00:00,False,manager,,,manager@test.com,False,True,2026-06-24 17:23:04.911809+00:00,,MGR001

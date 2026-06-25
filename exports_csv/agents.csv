@@ -1,0 +1,3 @@
+﻿id,password,last_login,is_superuser,username,first_name,last_name,email,is_staff,is_active,date_joined,telephone,matricule
+1,pbkdf2_sha256$1200000$u9Lf8SY8QQ7WqkutasbDBp$JfV4AkrQ6Z5K0JzJHOSoBmV5j2qIWBc2biAll9kNycM=,2026-06-24 20:33:57.566807+00:00,False,agent1,,,agent1@test.com,False,True,2026-06-24 17:06:30.450624+00:00,,AG001
+2,pbkdf2_sha256$1200000$FtMjPTfChZGmPnIUfs8nZa$81rMkrtJEO0KoYnocF7MeumDvozMWeKPobSWQUmrpDk=,2026-06-24 18:11:17.398353+00:00,False,agent2,,,agent2@test.com,False,True,2026-06-24 17:06:30.461711+00:00,,AG002
