@@ -13,7 +13,7 @@ db.sqlite3
 # Médias uploadés
 
 media/
-export_csv/
+exports_csv/
 
 # Fichiers statiques collectés
 
@@ -27,3 +27,6 @@ staticfiles/
 # Logs
 
 *.log
+
+hell -c from django.conf import settings; print(settings.DATABASES['default']['ENGINE'])
+

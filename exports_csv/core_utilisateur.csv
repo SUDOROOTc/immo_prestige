@@ -1,8 +1,8 @@
-id,password,last_login,is_superuser,username,first_name,last_name,is_staff,is_active,date_joined,telephone,email
-
-2,pbkdf2_sha256$1200000$FtMjPTfChZGmPnIUfs8nZa$81rMkrtJEO0KoYnocF7MeumDvozMWeKPobSWQUmrpDk=,2026-06-24 18:11:17.398353,False,agent2,,,False,True,2026-06-24 17:06:30.461711,,agent2@test.com
-3,pbkdf2_sha256$1200000$fN7gbc1KdbVuGjKsTtlZuW$p0DOwkHiQSgGDFgsD+fw/330Z+fmj2rzi9qbgjL1nAs=,2026-06-24 17:49:26.413899,False,bailleur1,,,False,True,2026-06-24 17:06:31.436435,,bailleur1@test.com
-4,pbkdf2_sha256$1200000$ASxBbpSGvRO3daWEtB31Wr$vcg3ror0tDMEUc31AV5QOfmp/RbaRSqhoTbdh60Kd6U=,2026-06-24 17:21:37.508621,False,bailleur2,,,False,True,2026-06-24 17:06:31.444731,,bailleur2@test.com
-5,pbkdf2_sha256$1200000$fMvOBck7gABJzhn5NlNPRD$NXAm3plasu6OMb4UDuZ5ytkGk+taRh9ktRlVka4byII=,2026-06-24 20:32:47.819619,False,client1,,,False,True,2026-06-24 17:06:32.334763,,client1@test.com
-6,pbkdf2_sha256$1200000$ezvTVr2DUr8fNIyFpadGkz$tkQm+WcnWb5nCrqRy/tc5vtDsTgG+re8e1kfgguVmUg=,,False,client2,,,False,True,2026-06-24 17:06:32.342528,,client2@test.com
-7,pbkdf2_sha256$1200000$B9KYgynUjhqSmSOW5oNlMx$6BBrV7kGDL0mbwPTIWYO6EqcqdHm9ZrwfgrcejTtFoM=,2026-06-25 00:40:12.293219,False,manager,,,False,True,2026-06-24 17:23:04.911809,,manager@test.com
+﻿id,password,last_login,is_superuser,username,first_name,last_name,is_staff,is_active,date_joined,telephone,email
+1,pbkdf2_sha256$1200000$QYM4T3VSYissd0ZVTCHOAU$6pSdrXb2+uqsAdW0nok+O++q8Kw/1jpO3PxBpOhDOYM=,,False,manager1,,,False,True,2026-06-25 21:35:53.113127,70-00-00-01,manager@immofaso.bf
+2,pbkdf2_sha256$1200000$LeutUkbPWe2N1oWngc32Pu$9eTGhgKan7CQYwzsLgJlDvd7slW6BIah3NGZcr2ssGk=,,False,agent1,,,False,True,2026-06-25 21:35:53.646486,70-00-00-02,agent1@immofaso.bf
+3,pbkdf2_sha256$1200000$q1HCVXLm4czJu4fVCjcBIr$/7N4y6Wc/C8sWmffe4FPtDZxGPFLSpbBgIZQ39ChN88=,,False,agent2,,,False,True,2026-06-25 21:35:54.140076,70-00-00-03,agent2@immofaso.bf
+4,pbkdf2_sha256$1200000$H0SAwe0YyHhFTVrXOOEpgZ$uTuCewL+47HgZk6r9N8jhwubT4crD/XV7z4vl5ZLThA=,,False,bailleur1,,,False,True,2026-06-25 21:35:54.629746,70-00-00-04,bailleur1@immofaso.bf
+5,pbkdf2_sha256$1200000$mMI17GRzAMb3zCbN2OFn5r$JJtmeCT4qBcT39awHV1WGXtqMIX3Kan7xENdPzvwWK0=,,False,bailleur2,,,False,True,2026-06-25 21:35:55.108117,70-00-00-05,bailleur2@immofaso.bf
+6,pbkdf2_sha256$1200000$LiH7GRG62a4vrPM1jtw99j$vrZj0ykc0mf7wRWROLnCq9yBtOaJvqdOASX5ILn4Xhw=,,False,client1,,,False,True,2026-06-25 21:35:55.596974,70-00-00-06,client1@immofaso.bf
+7,pbkdf2_sha256$1200000$UREG52jLxZaCY82qp4ayZY$HAKt/qFTXQmYJdV1KQ0rc6vdk/n9/PUM3oFScSTDVPU=,,False,client2,,,False,True,2026-06-25 21:35:56.079056,70-00-00-07,client2@immofaso.bf

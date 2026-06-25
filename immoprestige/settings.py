@@ -29,8 +29,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.environ.get("DEBUG", "True") == "True"
 
 
-ALLOWED_HOSTS = ["immo-prestige.onrender.com",
-                 "http://127.0.0.1:8000",]
+ALLOWED_HOSTS = ["immo-prestige.onrender.com"]
 
 # Application definition
 
