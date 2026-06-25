@@ -13,6 +13,7 @@ db.sqlite3
 # Médias uploadés
 
 media/
+export_csv/
 
 # Fichiers statiques collectés
 
