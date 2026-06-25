@@ -1,5 +1,5 @@
 """
-WSGI config for immofaso project.
+WSGI config for immoprestige project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'immofaso.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'immoprestige.settings')
 
 application = get_wsgi_application()

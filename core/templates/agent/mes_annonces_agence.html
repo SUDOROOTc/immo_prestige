@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load role_tags %}
 
-{% block title %}Mes annonces d'agence — ImmoFaso{% endblock %}
+{% block title %}Mes annonces d'agence — ImmoPrestige{% endblock %}
 
 {% block content %}
 <div class="max-w-[1200px] mx-auto px-4 py-8">
@@ -24,7 +24,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
             <h1 class="font-heading font-bold text-2xl text-text">Mes annonces d'agence</h1>
-            <p class="font-body text-sm text-gray mt-1">Annonces créées directement par l'agence ImmoFaso.</p>
+            <p class="font-body text-sm text-gray mt-1">Annonces créées directement par l'agence ImmoPrestige.</p>
         </div>
         <a href="{% url 'ajouter_annonce_agence' %}"
            class="inline-flex items-center gap-2 bg-primary text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-md hover:bg-primary/90 transition-colors">

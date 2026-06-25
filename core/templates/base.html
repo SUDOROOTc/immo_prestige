@@ -5,21 +5,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}ImmoFaso{% endblock %}</title>
+    <title>{% block title %}ImmoPrestige{% endblock %}</title>
 
     {% tailwind_css %}
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com" rel="preconnect">
-    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Material Symbols (icônes) -->
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <!-- Fonts locaux -->
+    <link rel="stylesheet" href="{% static 'fonts/local-fonts.css' %}">
     <script src="{% static 'chart.min.js' %}"></script>
     <style>
         .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-weight: 400;
         }
     </style>
 </head>
@@ -33,7 +28,7 @@
             <!-- Logo -->
             <a href="{% url 'accueil' %}" class="flex items-center gap-2 font-heading font-bold text-lg text-white">
                 <span class="material-symbols-outlined text-2xl text-secondary">home</span>
-                ImmoFaso
+                ImmoPrestige
             </a>
 
             <!-- Navigation -->
@@ -151,13 +146,13 @@
     <!-- FOOTER -->
     <footer class="bg-primary mt-auto">
         <div class="max-w-[1200px] mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-3">
-            <span class="font-heading font-semibold text-white">ImmoFaso</span>
+            <span class="font-heading font-semibold text-white">ImmoPrestige</span>
             <nav class="flex gap-4 text-sm text-white/80">
                 <a href="#" class="hover:text-secondary transition-colors">À propos</a>
                 <a href="#" class="hover:text-secondary transition-colors">Contact</a>
                 <a href="#" class="hover:text-secondary transition-colors">Mentions légales</a>
             </nav>
-            <span class="text-xs text-white/60">© 2026 ImmoFaso. Tous droits réservés.</span>
+            <span class="text-xs text-white/60">© 2026 ImmoPrestige. Tous droits réservés.</span>
         </div>
     </footer>
 
