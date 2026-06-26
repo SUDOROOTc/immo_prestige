@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static role_tags %}
+{% load static role_tags supabase_tags %}
 
 {% block title %}Annonces disponibles — ImmoPrestige{% endblock %}
 
@@ -73,7 +73,7 @@
                 <a href="{% url 'detail_annonce' annonce.id %}" class="block relative aspect-[4/3] bg-background overflow-hidden flex-shrink-0">
                     {% with photos=annonce.bien.photos.all %}
                         {% if photos %}
-                            <img src="{{ photos.first.chemin_fichier.url }}"
+                            <img src="{{ photos.first.chemin_fichier.name|supabase_url }}"
                                  alt="{{ annonce.bien.get_type_display }} — {{ annonce.bien.ville }}"
                                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                         {% else %}

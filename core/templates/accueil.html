@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load supabase_tags %}
 
 {% block title %}Accueil — ImmoPrestige{% endblock %}
 
@@ -89,7 +90,7 @@
                 <div class="relative h-40 bg-border">
                     {% with annonce.bien.photos.first as photo %}
                         {% if photo %}
-                            <img src="{{ photo.chemin_fichier.url }}" alt="{{ annonce.bien.type }}"
+                            <img src="{{ photo.chemin_fichier.name|supabase_url }}" alt="{{ annonce.bien.type }}"
                                  class="w-full h-full object-cover">
                         {% else %}
                             <div class="w-full h-full flex items-center justify-center text-gray">
